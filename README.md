@@ -6,7 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of TestGenerator is to …
+Creates tests on patient data for DARWIN EU studies. It accepts an Excel
+file with a sample of patients, and tests on an empty CDM if the results
+are correct from a particular study package.
 
 ## Installation
 
