@@ -2,16 +2,18 @@
 % Please edit documentation in R/readPatients.R
 \name{readPatients}
 \alias{readPatients}
-\title{`readPatients()` converts a test patients into a SQL file for testing.}
+\title{`readPatients()` converts a test patients into a JSON for testing.}
 \usage{
-readPatients(filePath = NULL)
+readPatients(path = NULL, testName = "test")
 }
 \arguments{
+\item{testName}{Name of the test in character.}
+
 \item{dataPath}{Path to the test patient data in Excel format.}
 }
 \value{
-A SQL file for testing
+A SQL file for testing inside the package directory of a DARWIN EU study.
 }
 \description{
-`readPatients()` converts a test patients into a SQL file for testing.
+`readPatients()` converts a test patients into a JSON for testing.
 }

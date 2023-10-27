@@ -1,27 +1,50 @@
-#' `readPatients()` converts a test patients into a SQL file for testing.
+#' `readPatients()` converts a test patients into a JSON for testing.
 #'
 #' @param dataPath Path to the test patient data in Excel format.
+#' @param testName Name of the test in character.
 #'
-#' @return A SQL file for testing
+#' @return A SQL file for testing inside the package directory of a DARWIN EU study.
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
 #' @importFrom usethis use_directory
 #' @importFrom fs path
 #' @importFrom ParallelLogger logInfo
+#' @importFrom usethis proj_path
 #'
 #' @export
-readPatients <- function(filePath = NULL) {
+readPatients <- function(path = NULL, testName = "test") {
 
-  patientTables <- readxl::excel_sheets(filePath)
-  listPatientTables <- lapply(patientTables, readxl::read_excel, path = filePath)
+  checkmate::checkFile(path)
+  patientTables <- readxl::excel_sheets(path)
+  checkmate::assert(all(patientTables %in% c("Person",
+                                             "observation_period",
+                                             "drug_exposure",
+                                             "condition_occurrence",
+                                             "visit_occurrence" )))
+  listPatientTables <- lapply(patientTables, readxl::read_excel, path = path)
   names(listPatientTables) <- tolower(paste0("cdm.", patientTables))
   testCaseFile <- jsonlite::toJSON(listPatientTables,
                               dataframe = "rows",
                               pretty = TRUE)
   usethis::use_directory(fs::path("inst", "testCases"))
-  pathToTestCases <- fs::path("inst", "testCases")
-  pathToSqlFiles <- file.path(pathToTestCases, "sql")
+  write(testCaseFile, file = paste0(proj_path(), "/",
+                                    "inst", "/", "testCases",
+                                    "/", testName, ".json"))
+
+  TestGenerator::patientSQL()
+}
+
+#' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#'
+#' @param testCaseFile Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
+#'
+#' @return Study results in the specified folder
+#' @importFrom usethis proj_path
+#' @export
+patientSQL <- function() {
+
+  pathToTestCases <- proj_path("inst", "testCases")
   # Clear any existing SQL file
   pathToSqlFiles <- file.path(pathToTestCases, "sql")
   # Initialize the sql path - careful, this will automatically remove prior results!
@@ -29,42 +52,54 @@ readPatients <- function(filePath = NULL) {
     unlink(pathToSqlFiles, recursive = TRUE)
   }
   dir.create(pathToSqlFiles)
-  # Read the JSON structure
-  jsonTestCase <- jsonlite::parse_json(testCaseFile)
-  # Initialze the test case
-  sql <- initTestCase()
-  # Person records
-  if (!is.null(jsonTestCase$cdm.person)) {
-    for(p in 1:length(jsonTestCase$cdm.person)) {
-      sql <- paste(sql, createCdmPerson(jsonTestCase$cdm.person[[p]]), sep="\n")
+
+  checkmate::test_directory_exists(pathToTestCases)
+  testCaseFiles <- list.files(pathToTestCases, pattern = ".json")
+
+  for (i in 1:length(testCaseFiles)) {
+    testCaseFile <- testCaseFiles[i]
+    ParallelLogger::logInfo(paste("Creating SQL for", testCaseFile))
+
+    # Read the JSON structure
+    jsonTestCase <- jsonlite::read_json(file.path(pathToTestCases, testCaseFile))
+    # Initialze the test case
+    sql <- initTestCase()
+    # Person records
+    if (!is.null(jsonTestCase$cdm.person)) {
+      for(p in 1:length(jsonTestCase$cdm.person)) {
+        sql <- paste(sql, createCdmPerson(jsonTestCase$cdm.person[[p]]), sep="\n")
+      }
+    }
+    # Observation period records
+    if (!is.null(jsonTestCase$cdm.observation_period)) {
+      for(p in 1:length(jsonTestCase$cdm.observation_period)) {
+        sql <- paste(sql, createCdmObservationPeriod(jsonTestCase$cdm.observation_period[[p]]), sep="\n")
+      }
+    }
+    # Drug exposure records
+    if (!is.null(jsonTestCase$cdm.drug_exposure)) {
+      for(p in 1:length(jsonTestCase$cdm.drug_exposure)) {
+        sql <- paste(sql, createCdmDrugExposure(jsonTestCase$cdm.drug_exposure[[p]]), sep="\n")
+      }
+    }
+    # Condition occurrence records
+    if (!is.null(jsonTestCase$cdm.condition_occurrence)) {
+      for(p in 1:length(jsonTestCase$cdm.condition_occurrence)) {
+        sql <- paste(sql, createCdmConditionOccurrence(jsonTestCase$cdm.condition_occurrence[[p]]), sep="\n")
+      }
+    }
+    # Visit occurrence records
+    if (!is.null(jsonTestCase$cdm.visit_occurrence)) {
+      for(p in 1:length(jsonTestCase$cdm.visit_occurrence)) {
+        sql <- paste(sql, createCdmVisitOccurrence(jsonTestCase$cdm.visit_occurrence[[p]]), sep="\n")
+      }
+    }
+    sqlFilePath <- file.path(pathToTestCases, "sql", paste0(tools::file_path_sans_ext(testCaseFile), ".sql"))
+    SqlRender::writeSql(sql, targetFile = sqlFilePath)
+    if (file.exists(sqlFilePath)) {
+      ParallelLogger::logInfo(testCaseFile, " successfully created")
     }
   }
-  # Observation period records
-  if (!is.null(jsonTestCase$cdm.observation_period)) {
-    for(p in 1:length(jsonTestCase$cdm.observation_period)) {
-      sql <- paste(sql, createCdmObservationPeriod(jsonTestCase$cdm.observation_period[[p]]), sep="\n")
-    }
-  }
-  # Drug exposure records
-  if (!is.null(jsonTestCase$cdm.drug_exposure)) {
-    for(p in 1:length(jsonTestCase$cdm.drug_exposure)) {
-      sql <- paste(sql, createCdmDrugExposure(jsonTestCase$cdm.drug_exposure[[p]]), sep="\n")
-    }
-  }
-  # Condition occurrence records
-  if (!is.null(jsonTestCase$cdm.condition_occurrence)) {
-    for(p in 1:length(jsonTestCase$cdm.condition_occurrence)) {
-      sql <- paste(sql, createCdmConditionOccurrence(jsonTestCase$cdm.condition_occurrence[[p]]), sep="\n")
-    }
-  }
-  # Visit occurrence records
-  if (!is.null(jsonTestCase$cdm.visit_occurrence)) {
-    for(p in 1:length(jsonTestCase$cdm.visit_occurrence)) {
-      sql <- paste(sql, createCdmVisitOccurrence(jsonTestCase$cdm.visit_occurrence[[p]]), sep="\n")
-    }
-  }
-  SqlRender::writeSql(sql, targetFile = file.path(pathToTestCases, "sql", paste0(tools::file_path_sans_ext("testCaseFile"), ".sql")))
-  ParallelLogger::logInfo(("testCaseFile.sql successfully created"))
 }
 
 # Helper Functions ------------
@@ -160,4 +195,6 @@ createCdmVisitOccurrence <- function (vo) {
                            visit_type_concept_id = vo$visit_type_concept_id,
                            visit_source_concept_id = vo$visit_source_concept_id)
   return(sql)
+
 }
+
