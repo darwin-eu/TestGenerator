@@ -7,6 +7,7 @@
 #' @return Study results in the specified folder
 #' @export
 testPatients <- function(dbConnection,
+                         functionsToTest = NULL,
                          createSchemaPerTest = FALSE,
                          cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
                          cohortDatabaseSchema = Sys.getenv("UT_COHORT_SCHEMA"),
@@ -17,8 +18,8 @@ testPatients <- function(dbConnection,
                          dbname = Sys.getenv("UT_DB_NAME"),
                          server = Sys.getenv("UT_DB_SERVER"),
                          port = Sys.getenv("UT_DB_PORT"),
-                         functionsTest = NULL,
-                         cdm_version = "5.4") {
+                         cdm_version = "5.4",
+                         outputFolder = here::here("results")) {
 
   connectionDetails <- DatabaseConnector::createConnectionDetails(dbms = dbms,
                                                                   server = paste0(server, "/", dbname),
@@ -66,22 +67,20 @@ testPatients <- function(dbConnection,
                                     paste0("CREATE SCHEMA ", resultsSchema, ";"),
                                     progressBar = TRUE)
 
-      for (i in functions) {
-        eval(parse(i))
+      for (i in functionsToTest) {
+        outputFolder <- file.path(unitTestOutputFolder, testCaseSql[i])
+        eval(parse(text = i))
       }
-
-
-
     } else {
       resultsSchema <- cohortDatabaseSchema
       cdm <- CDMConnector::cdm_from_con(con = dbConnection,
                                         cdm_schema = cdmDatabaseSchema,
                                         write_schema = resultsSchema,
                                         cdm_version = cdm_version)
-      for (i in functions) {
-        outputFolder <- file.path(unitTestOutputFolder, testCaseSql[i])
-        dir.create(outputFolder)
-        eval(parse(i))
+      # outputFolder <- file.path(outputFolder, tools::file_path_sans_ext(testCaseSql[i]))
+      # dir.create(outputFolder)
+      for (i in functionsToTest) {
+        eval(parse(text = i))
       }
     }
   }

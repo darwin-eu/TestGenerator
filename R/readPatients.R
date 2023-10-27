@@ -1,6 +1,7 @@
 #' `readPatients()` converts a test patients into a JSON for testing.
 #'
 #' @param dataPath Path to the test patient data in Excel format.
+#' @param testName Name of the test in character.
 #'
 #' @return A SQL file for testing inside the package directory of a DARWIN EU study.
 #'
@@ -14,14 +15,14 @@
 #' @export
 readPatients <- function(path = NULL, testName = "test") {
 
-  checkmate::checkFile(filePath)
-  patientTables <- readxl::excel_sheets(filePath)
+  checkmate::checkFile(path)
+  patientTables <- readxl::excel_sheets(path)
   checkmate::assert(all(patientTables %in% c("Person",
                                              "observation_period",
                                              "drug_exposure",
                                              "condition_occurrence",
                                              "visit_occurrence" )))
-  listPatientTables <- lapply(patientTables, readxl::read_excel, path = filePath)
+  listPatientTables <- lapply(patientTables, readxl::read_excel, path = path)
   names(listPatientTables) <- tolower(paste0("cdm.", patientTables))
   testCaseFile <- jsonlite::toJSON(listPatientTables,
                               dataframe = "rows",
