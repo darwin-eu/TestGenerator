@@ -6,6 +6,7 @@
 \usage{
 testPatients(
   dbConnection,
+  functionsToTest = NULL,
   createSchemaPerTest = FALSE,
   cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
   cohortDatabaseSchema = Sys.getenv("UT_COHORT_SCHEMA"),
@@ -16,8 +17,8 @@ testPatients(
   dbname = Sys.getenv("UT_DB_NAME"),
   server = Sys.getenv("UT_DB_SERVER"),
   port = Sys.getenv("UT_DB_PORT"),
-  functionsTest = NULL,
-  cdm_version = "5.4"
+  cdm_version = "5.4",
+  outputFolder = here::here("results")
 )
 }
 \arguments{
