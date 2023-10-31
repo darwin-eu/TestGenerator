@@ -3,7 +3,7 @@
 #' @param filePath Path to the test patient data in Excel format.
 #' @param testName Name of the test in character.
 #' @param sheets The sheets to be converted
-#' @param outputPath Path of the output file
+#' @param outputPath Path of the output file. If NULL
 #'
 #' @return A SQL file for testing inside the package directory of a DARWIN EU study.
 #'
@@ -48,7 +48,7 @@ readPatients <- function(filePath = NULL,
 
 #' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
-#' @param pathToTestCases Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
+#' @param pathToTestCases If NULL, takes the project path to create the SQL files.
 #'
 #' @return Study results in the specified folder
 #' @importFrom usethis proj_path
@@ -137,7 +137,6 @@ nullify <- function(val) {
   }
   return(returnVal)
 }
-
 createCdmPerson <- function(person) {
   templateSql <- "INSERT INTO @cdm_database_schema.PERSON (person_id, gender_concept_id, year_of_birth, race_concept_id, ethnicity_concept_id, person_source_value)
                   SELECT @person_id, @gender_concept_id, @year_of_birth, @race_concept_id, @ethnicity_concept_id, @person_source_value;"
@@ -151,7 +150,6 @@ createCdmPerson <- function(person) {
                            person_source_value = nullify(person$person_source_value))
   return(sql)
 }
-
 createCdmObservationPeriod <- function(op) {
   templateSql <- "INSERT INTO @cdm_database_schema.OBSERVATION_PERIOD (observation_period_id, person_id, observation_period_start_date, observation_period_end_date, period_type_concept_id)
                   SELECT @observation_period_id, @person_id, '@observation_period_start_date', '@observation_period_end_date', @period_type_concept_id;"
@@ -164,7 +162,6 @@ createCdmObservationPeriod <- function(op) {
                            period_type_concept_id = op$period_type_concept_id)
   return(sql)
 }
-
 createCdmDrugExposure <- function(de) {
   templateSql <- "INSERT INTO @cdm_database_schema.DRUG_EXPOSURE (drug_exposure_id, person_id, drug_concept_id, drug_exposure_start_date, drug_exposure_end_date, quantity, drug_type_concept_id)
                   SELECT @drug_exposure_id, @person_id, @drug_concept_id, '@drug_exposure_start_date', '@drug_exposure_end_date', @quantity, @drug_type_concept_id;"
@@ -179,7 +176,6 @@ createCdmDrugExposure <- function(de) {
                            drug_type_concept_id = de$drug_type_concept_id)
   return(sql)
 }
-
 createCdmConditionOccurrence <- function (co) {
   templateSql <- "INSERT INTO @cdm_database_schema.CONDITION_OCCURRENCE (condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id, condition_status_concept_id, condition_source_concept_id)
                   SELECT @condition_occurrence_id, @person_id, @condition_concept_id, '@condition_start_date', @condition_type_concept_id, @condition_status_concept_id, @condition_source_concept_id;"
@@ -208,6 +204,5 @@ createCdmVisitOccurrence <- function (vo) {
                            visit_type_concept_id = vo$visit_type_concept_id,
                            visit_source_concept_id = vo$visit_source_concept_id)
   return(sql)
-
 }
 
