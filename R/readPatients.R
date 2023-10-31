@@ -1,8 +1,9 @@
 #' `readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.
 #'
-#' @param dataPath Path to the test patient data in Excel format.
+#' @param filePath Path to the test patient data in Excel format.
 #' @param testName Name of the test in character.
 #' @param sheets The sheets to be converted
+#' @param outputPath Path of the output file
 #'
 #' @return A SQL file for testing inside the package directory of a DARWIN EU study.
 #'
@@ -14,42 +15,49 @@
 #' @importFrom usethis proj_path
 #'
 #' @export
-readPatients <- function(path = NULL,
+readPatients <- function(filePath = NULL,
                          testName = "test",
-                         sheets = c("person", "observation_period", "drug_exposure",
-                                    "condition_occurrence", "visit_occurrence", "visit_context")) {
+                         sheets = c("person",
+                                    "observation_period",
+                                    "drug_exposure",
+                                    "condition_occurrence",
+                                    "visit_occurrence",
+                                    "visit_context"),
+                         outputPath = NULL) {
 
-  checkmate::assert_character(path)
-  checkmate::checkFile(path)
-  checkmate::assert_character(outputPath)
+  checkmate::assert_character(filePath)
+  checkmate::checkFile(filePath)
 
-  patientTables <- readxl::excel_sheets(path)
+  patientTables <- readxl::excel_sheets(filePath)
   checkmate::assert(all(patientTables %in% sheets))
 
-  listPatientTables <- lapply(patientTables, readxl::read_excel, path = path)
+  listPatientTables <- lapply(patientTables, readxl::read_excel, path = filePath)
   names(listPatientTables) <- tolower(paste0("cdm.", patientTables))
 
   testCaseFile <- jsonlite::toJSON(listPatientTables,
                                    dataframe = "rows",
                                    pretty = TRUE)
 
-  usethis::use_directory(fs::path("inst", "testCases"))
-  write(testCaseFile, file = paste0(proj_path(), "/",
-                                    "inst", "/", "testCases",
-                                    "/", testName, ".json"))
-  TestGenerator::patientSQL()
+  if (is.null(outputPath)) {
+    usethis::use_directory(fs::path("inst", "testCases"))
+    outputPath <- paste0(proj_path(), "/", fs::path("inst", "testCases"), "/", testName, ".json")
+  }
+  checkmate::assert_character(outputPath)
+  write(testCaseFile, file = outputPath)
 }
 
 #' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
-#' @param testCaseFile Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
+#' @param pathToTestCases Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
 #'
 #' @return Study results in the specified folder
 #' @importFrom usethis proj_path
 #' @export
-patientSQL <- function() {
+patientSQL <- function(pathToTestCases = NULL) {
 
-  pathToTestCases <- proj_path("inst", "testCases")
+  if (is.null(pathToTestCases)) {
+    pathToTestCases <- proj_path("inst", "testCases")
+  }
   # Clear any existing SQL file
   pathToSqlFiles <- file.path(pathToTestCases, "sql")
   # Initialize the sql path - careful, this will automatically remove prior results!
