@@ -205,4 +205,3 @@ createCdmVisitOccurrence <- function (vo) {
                            visit_source_concept_id = vo$visit_source_concept_id)
   return(sql)
 }
-
