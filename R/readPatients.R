@@ -1,7 +1,8 @@
-#' `readPatients()` converts a test patients into a JSON for testing.
+#' `readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.
 #'
 #' @param dataPath Path to the test patient data in Excel format.
 #' @param testName Name of the test in character.
+#' @param sheets The sheets to be converted
 #'
 #' @return A SQL file for testing inside the package directory of a DARWIN EU study.
 #'
@@ -13,25 +14,29 @@
 #' @importFrom usethis proj_path
 #'
 #' @export
-readPatients <- function(path = NULL, testName = "test") {
+readPatients <- function(path = NULL,
+                         testName = "test",
+                         sheets = c("person", "observation_period", "drug_exposure",
+                                    "condition_occurrence", "visit_occurrence", "visit_context")) {
 
+  checkmate::assert_character(path)
   checkmate::checkFile(path)
+  checkmate::assert_character(outputPath)
+
   patientTables <- readxl::excel_sheets(path)
-  checkmate::assert(all(patientTables %in% c("Person",
-                                             "observation_period",
-                                             "drug_exposure",
-                                             "condition_occurrence",
-                                             "visit_occurrence" )))
+  checkmate::assert(all(patientTables %in% sheets))
+
   listPatientTables <- lapply(patientTables, readxl::read_excel, path = path)
   names(listPatientTables) <- tolower(paste0("cdm.", patientTables))
+
   testCaseFile <- jsonlite::toJSON(listPatientTables,
-                              dataframe = "rows",
-                              pretty = TRUE)
+                                   dataframe = "rows",
+                                   pretty = TRUE)
+
   usethis::use_directory(fs::path("inst", "testCases"))
   write(testCaseFile, file = paste0(proj_path(), "/",
                                     "inst", "/", "testCases",
                                     "/", testName, ".json"))
-
   TestGenerator::patientSQL()
 }
 
