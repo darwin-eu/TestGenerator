@@ -4,10 +4,10 @@
 \alias{patientSQL}
 \title{`testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.}
 \usage{
-patientSQL()
+patientSQL(pathToTestCases = NULL)
 }
 \arguments{
-\item{testCaseFile}{Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.}
+\item{pathToTestCases}{If NULL, takes the project path to create the SQL files.}
 }
 \value{
 Study results in the specified folder

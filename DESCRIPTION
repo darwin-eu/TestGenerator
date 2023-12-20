@@ -1,22 +1,26 @@
 Package: TestGenerator
-Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Generate and execute integration tests
+Version: 1.0.0
+Authors@R: c(
+    person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
+    person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut", comment = c(ORCID = "0000-0001-8993-8748"))
+  )
+Description: Package to run integration tests against a database. The testcases are specified in an xlsx file and these are run against a given database.
+License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
 RoxygenNote: 7.2.3
+Depends:
+    R (>= 4.1.0)
 Imports: 
     DatabaseConnector,
+    CDMConnector,
+    SqlRender,
+    checkmate,
     fs,
     jsonlite,
     ParallelLogger,
     readxl,
     usethis
+Suggests: 
+    testthat (>= 3.0.0)

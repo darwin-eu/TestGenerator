@@ -1,6 +1,19 @@
 #' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
-#' @param testCaseFile Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
+#' @param dbConnection database connection
+#' @param functionsToTest the functions to test
+#' @param createSchemaPerTest if a schema should be created per test
+#' @param cdmDatabaseSchema cdm schema
+#' @param cohortDatabaseSchema cohort schema
+#' @param unitTestOutputFolder unit test output folder
+#' @param user db username
+#' @param password db pwd
+#' @param dbms dbms name
+#' @param dbname database name
+#' @param server database server
+#' @param port database port number
+#' @param cdm_version cdm version number
+#' @param outputFolder output folder
 #'
 #' @importFrom DatabaseConnector createConnectionDetails connect
 #'
@@ -19,7 +32,7 @@ testPatients <- function(dbConnection,
                          server = Sys.getenv("UT_DB_SERVER"),
                          port = Sys.getenv("UT_DB_PORT"),
                          cdm_version = "5.4",
-                         outputFolder = here::here("results")) {
+                         outputFolder = "results") {
 
   connectionDetails <- DatabaseConnector::createConnectionDetails(dbms = dbms,
                                                                   server = paste0(server, "/", dbname),

@@ -2,18 +2,28 @@
 % Please edit documentation in R/readPatients.R
 \name{readPatients}
 \alias{readPatients}
-\title{`readPatients()` converts a test patients into a JSON for testing.}
+\title{`readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.}
 \usage{
-readPatients(path = NULL, testName = "test")
+readPatients(
+  filePath = NULL,
+  testName = "test",
+  sheets = c("person", "observation_period", "drug_exposure", "condition_occurrence",
+    "visit_occurrence", "visit_context"),
+  outputPath = NULL
+)
 }
 \arguments{
+\item{filePath}{Path to the test patient data in Excel format.}
+
 \item{testName}{Name of the test in character.}
 
-\item{dataPath}{Path to the test patient data in Excel format.}
+\item{sheets}{The sheets to be converted}
+
+\item{outputPath}{Path of the output file. If NULL}
 }
 \value{
 A SQL file for testing inside the package directory of a DARWIN EU study.
 }
 \description{
-`readPatients()` converts a test patients into a JSON for testing.
+`readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.
 }

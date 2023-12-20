@@ -18,11 +18,37 @@ testPatients(
   server = Sys.getenv("UT_DB_SERVER"),
   port = Sys.getenv("UT_DB_PORT"),
   cdm_version = "5.4",
-  outputFolder = here::here("results")
+  outputFolder = "results"
 )
 }
 \arguments{
-\item{testCaseFile}{Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.}
+\item{dbConnection}{database connection}
+
+\item{functionsToTest}{the functions to test}
+
+\item{createSchemaPerTest}{if a schema should be created per test}
+
+\item{cdmDatabaseSchema}{cdm schema}
+
+\item{cohortDatabaseSchema}{cohort schema}
+
+\item{unitTestOutputFolder}{unit test output folder}
+
+\item{user}{db username}
+
+\item{password}{db pwd}
+
+\item{dbms}{dbms name}
+
+\item{dbname}{database name}
+
+\item{server}{database server}
+
+\item{port}{database port number}
+
+\item{cdm_version}{cdm version number}
+
+\item{outputFolder}{output folder}
 }
 \value{
 Study results in the specified folder
