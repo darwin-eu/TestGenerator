@@ -1,11 +1,11 @@
-#' `readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.
+#' `convertXLSXTestDataToJSON()` converts test patients in XLSX format into a JSON in the inst/testCases folder.
 #'
 #' @param filePath Path to the test patient data in Excel format.
 #' @param testName Name of the test in character.
 #' @param sheets The sheets to be converted
 #' @param outputPath Path of the output file. If NULL
 #'
-#' @return A SQL file for testing inside the package directory of a DARWIN EU study.
+#' @return NULL, it writes a json file.
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
@@ -15,15 +15,15 @@
 #' @importFrom usethis proj_path
 #'
 #' @export
-readPatients <- function(filePath = NULL,
-                         testName = "test",
-                         sheets = c("person",
-                                    "observation_period",
-                                    "drug_exposure",
-                                    "condition_occurrence",
-                                    "visit_occurrence",
-                                    "visit_context"),
-                         outputPath = NULL) {
+convertXLSXTestDataToJSON <- function(filePath = NULL,
+                                      testName = "testdata",
+                                      sheets = c("person",
+                                                "observation_period",
+                                                "drug_exposure",
+                                                "condition_occurrence",
+                                                "visit_occurrence",
+                                                "visit_detail"),
+                                      outputPath = NULL) {
 
   checkmate::assert_character(filePath)
   checkmate::checkFile(filePath)
@@ -40,20 +40,20 @@ readPatients <- function(filePath = NULL,
 
   if (is.null(outputPath)) {
     usethis::use_directory(fs::path("inst", "testCases"))
-    outputPath <- paste0(proj_path(), "/", fs::path("inst", "testCases"), "/", testName, ".json")
+    outputPath <- file.path(proj_path(), fs::path("inst", "testCases"), past0(testName, ".json"))
   }
   checkmate::assert_character(outputPath)
   write(testCaseFile, file = outputPath)
 }
 
-#' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#' `convertJSONTestDataToSQL()` transforms patient json files to a SQL file.
 #'
 #' @param pathToTestCases If NULL, takes the project path to create the SQL files.
 #'
-#' @return Study results in the specified folder
+#' @return NULL, it writes a SQL file to disk
 #' @importFrom usethis proj_path
 #' @export
-patientSQL <- function(pathToTestCases = NULL) {
+convertJSONTestDataToSQL <- function(pathToTestCases = NULL) {
 
   if (is.null(pathToTestCases)) {
     pathToTestCases <- proj_path("inst", "testCases")

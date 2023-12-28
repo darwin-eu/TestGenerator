@@ -1,4 +1,4 @@
-#' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#' `executeTests()` takes a file with patients in SQL format, pushes them into the blank CDM and performs the test.
 #'
 #' @param dbConnection database connection
 #' @param functionsToTest the functions to test
@@ -19,7 +19,7 @@
 #'
 #' @return Study results in the specified folder
 #' @export
-testPatients <- function(dbConnection,
+executeTests <- function(dbConnection,
                          functionsToTest = NULL,
                          createSchemaPerTest = FALSE,
                          cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
