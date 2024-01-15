@@ -17,13 +17,13 @@
 #' @export
 readPatients <- function(filePath = NULL,
                          testName = "test",
-                         sheets = c("person",
-                                    "observation_period",
-                                    "drug_exposure",
-                                    "condition_occurrence",
-                                    "visit_occurrence",
-                                    "visit_context",
-                                    "visit_detail"),
+                         # sheets = c("person",
+                         #            "observation_period",
+                         #            "drug_exposure",
+                         #            "condition_occurrence",
+                         #            "visit_occurrence",
+                         #            "visit_context",
+                         #            "visit_detail"),
                          outputPath = NULL) {
 
   checkmate::assert_character(filePath)
