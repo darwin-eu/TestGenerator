@@ -22,7 +22,8 @@ readPatients <- function(filePath = NULL,
                                     "drug_exposure",
                                     "condition_occurrence",
                                     "visit_occurrence",
-                                    "visit_context"),
+                                    "visit_context",
+                                    "visit_detail"),
                          outputPath = NULL) {
 
   checkmate::assert_character(filePath)
@@ -105,6 +106,12 @@ patientSQL <- function(pathToTestCases = NULL) {
     if (!is.null(jsonTestCase$cdm.visit_occurrence)) {
       for(p in 1:length(jsonTestCase$cdm.visit_occurrence)) {
         sql <- paste(sql, createCdmVisitOccurrence(jsonTestCase$cdm.visit_occurrence[[p]]), sep="\n")
+      }
+    }
+    # Visit detail records
+    if (!is.null(jsonTestCase$cdm.visit_detail)) {
+      for(p in 1:length(jsonTestCase$cdm.visit_detail)) {
+        sql <- paste(sql, createCdmVisitDetail(jsonTestCase$cdm.visit_detail[[p]]), sep="\n")
       }
     }
     sqlFilePath <- file.path(pathToTestCases, "sql", paste0(tools::file_path_sans_ext(testCaseFile), ".sql"))
@@ -203,5 +210,21 @@ createCdmVisitOccurrence <- function (vo) {
                            visit_end_date = vo$visit_end_date,
                            visit_type_concept_id = vo$visit_type_concept_id,
                            visit_source_concept_id = vo$visit_source_concept_id)
+  return(sql)
+}
+
+createCdmVisitDetail <- function (vd) {
+  templateSql <- "INSERT INTO @cdm_database_schema.VISIT_DETAIL (visit_detail_id, person_id, visit_detail_concept_id, visit_detail_start_date, visit_detail_end_date, visit_detail_type_concept_id, visit_detail_source_concept_id, visit_occurrence_id)
+                  SELECT @visit_detail_id, @person_id, @visit_detail_concept_id, '@visit_detail_start_date', '@visit_detail_end_date', @visit_detail_type_concept_id, @visit_detail_source_concept_id, @visit_occurrence_id;"
+
+  sql <- SqlRender::render(sql=templateSql,
+                           visit_detail_id = vd$visit_detail_id,
+                           person_id = vd$person_id,
+                           visit_detail_concept_id = vd$visit_detail_concept_id,
+                           visit_detail_start_date = vd$visit_detail_start_date,
+                           visit_detail_end_date = vd$visit_detail_end_date,
+                           visit_detail_type_concept_id = vd$visit_detail_type_concept_id,
+                           visit_detail_source_concept_id = vd$visit_detail_source_concept_id,
+                           visit_occurrence_id = vd$visit_occurrence_id)
   return(sql)
 }
