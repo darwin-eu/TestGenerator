@@ -27,14 +27,8 @@ default, it generates a JSON files in the inst/testCases folders.
 
 ``` r
 library(TestGenerator)
-#> Warning: replacing previous import 'dbplyr::ident' by 'dplyr::ident' when
-#> loading 'TestGenerator'
-#> Warning: replacing previous import 'dbplyr::sql' by 'dplyr::sql' when loading
-#> 'TestGenerator'
 
 TestGenerator::readPatients(here::here("extras", "RSV_Test_Data.xlsx"))
-#> ✔ Setting active project to
-#> 'D:/Users/cbarboza/Documents/darwin-docs/darwinTest/TestGenerator'
 ```
 
 Data then can be pushed to a blank CDM with the complete vocabulary.
