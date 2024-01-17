@@ -18,11 +18,11 @@
 convertXLSXTestDataToJSON <- function(filePath = NULL,
                                       testName = "testdata",
                                       sheets = c("person",
-                                                "observation_period",
-                                                "drug_exposure",
-                                                "condition_occurrence",
-                                                "visit_occurrence",
-                                                "visit_detail"),
+                                                 "observation_period",
+                                                 "drug_exposure",
+                                                 "condition_occurrence",
+                                                 "visit_occurrence",
+                                                 "visit_detail"),
                                       outputPath = NULL) {
 
   checkmate::assert_character(filePath)
@@ -40,7 +40,7 @@ convertXLSXTestDataToJSON <- function(filePath = NULL,
 
   if (is.null(outputPath)) {
     usethis::use_directory(fs::path("inst", "testCases"))
-    outputPath <- file.path(proj_path(), fs::path("inst", "testCases"), past0(testName, ".json"))
+    outputPath <- file.path(proj_path(), fs::path("inst", "testCases"), paste0(testName, ".json"))
   }
   checkmate::assert_character(outputPath)
   write(testCaseFile, file = outputPath)
@@ -48,23 +48,26 @@ convertXLSXTestDataToJSON <- function(filePath = NULL,
 
 #' `convertJSONTestDataToSQL()` transforms patient json files to a SQL file.
 #'
-#' @param pathToTestCases If NULL, takes the project path to create the SQL files.
+#' @param pathToTestCases If NULL, takes the project path
+#' @param pathToSqlFiles path where SQL file is stored. If NULL, it's using the pathToTestCases
 #'
 #' @return NULL, it writes a SQL file to disk
 #' @importFrom usethis proj_path
 #' @export
-convertJSONTestDataToSQL <- function(pathToTestCases = NULL) {
+convertJSONTestDataToSQL <- function(pathToTestCases = NULL, pathToSqlFiles = NULL) {
 
   if (is.null(pathToTestCases)) {
     pathToTestCases <- proj_path("inst", "testCases")
   }
-  # Clear any existing SQL file
-  pathToSqlFiles <- file.path(pathToTestCases, "sql")
-  # Initialize the sql path - careful, this will automatically remove prior results!
-  if (dir.exists(pathToSqlFiles)) {
-    unlink(pathToSqlFiles, recursive = TRUE)
+  if (is.null(pathToSqlFiles)) {
+    # Clear any existing SQL file
+    pathToSqlFiles <- file.path(pathToTestCases, "sql")
+    # Initialize the sql path - careful, this will automatically remove prior results!
+    if (dir.exists(pathToSqlFiles)) {
+      unlink(pathToSqlFiles, recursive = TRUE)
+    }
+    dir.create(pathToSqlFiles)
   }
-  dir.create(pathToSqlFiles)
 
   checkmate::test_directory_exists(pathToTestCases)
   testCaseFiles <- list.files(pathToTestCases, pattern = ".json")

@@ -4,10 +4,12 @@
 \alias{convertJSONTestDataToSQL}
 \title{`convertJSONTestDataToSQL()` transforms patient json files to a SQL file.}
 \usage{
-convertJSONTestDataToSQL(pathToTestCases = NULL)
+convertJSONTestDataToSQL(pathToTestCases = NULL, pathToSqlFiles = NULL)
 }
 \arguments{
-\item{pathToTestCases}{If NULL, takes the project path to create the SQL files.}
+\item{pathToTestCases}{If NULL, takes the project path}
+
+\item{pathToSqlFiles}{path where SQL file is stored. If NULL, it's using the pathToTestCases}
 }
 \value{
 NULL, it writes a SQL file to disk
