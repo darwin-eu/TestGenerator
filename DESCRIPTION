@@ -14,13 +14,17 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     DatabaseConnector,
-    CDMConnector,
-    SqlRender,
-    checkmate,
     fs,
     jsonlite,
     ParallelLogger,
     readxl,
-    usethis
+    usethis,
+    CDMConnector,
+    DBI,
+    dplyr
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    duckdb,
+    SqlRender,
+    checkmate,
+    glue
