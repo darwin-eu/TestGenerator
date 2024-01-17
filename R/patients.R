@@ -1,11 +1,11 @@
 #' `readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.
 #'
 #' @param filePath Path to the test patient data in Excel format.
-#' @param testName Name of the test in character.
-#' @param sheets The sheets to be converted
+#' @param testName Name of the test population in character.
+#' @param sheets List of sheets to be converted into tables.
 #' @param outputPath Path of the output file. If NULL
 #'
-#' @return A SQL file for testing inside the package directory of a DARWIN EU study.
+#' @return A JSON file for testing inside the package directory of a DARWIN EU study.
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
@@ -53,7 +53,7 @@ readPatients <- function(filePath = NULL,
   write(testCaseFile, file = testName)
 }
 
-#' `pushPatientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#' `patientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
 #' @param filePathJson If NULL, takes the project path to create the SQL files.
 #' @param testName Name of the test patients files.
@@ -72,7 +72,7 @@ patientCDM <- function(filePathJson = NULL,
   if (is.null(testName)) {
     testName <- "test.json"
   }
-  # testName <-
+  # testName <- "test.json"
 
   # Download vocabulary
   if (!file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip"))) {

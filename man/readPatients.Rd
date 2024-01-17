@@ -15,14 +15,14 @@ readPatients(
 \arguments{
 \item{filePath}{Path to the test patient data in Excel format.}
 
-\item{testName}{Name of the test in character.}
+\item{testName}{Name of the test population in character.}
 
-\item{sheets}{The sheets to be converted}
+\item{sheets}{List of sheets to be converted into tables.}
 
 \item{outputPath}{Path of the output file. If NULL}
 }
 \value{
-A SQL file for testing inside the package directory of a DARWIN EU study.
+A JSON file for testing inside the package directory of a DARWIN EU study.
 }
 \description{
 `readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/patients.R
 \name{patientCDM}
 \alias{patientCDM}
-\title{`pushPatientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.}
+\title{`patientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.}
 \usage{
 patientCDM(filePathJson = NULL, testName = NULL)
 }
@@ -15,5 +15,5 @@ patientCDM(filePathJson = NULL, testName = NULL)
 Study results in the specified folder
 }
 \description{
-`pushPatientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+`patientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 }
