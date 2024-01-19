@@ -1,5 +1,5 @@
 test_that("Reading patients", {
-  filePath <- testthat::test_path("TestPatientsTemplateComorbidities.xlsx")
+  filePath <- testthat::test_path("testPatientsRSV.xlsx")
   outputPath <- tempdir()
   readPatients(filePath = filePath, outputPath = outputPath)
   expect_true(file.exists(outputPath))
@@ -7,13 +7,14 @@ test_that("Reading patients", {
 })
 
 test_that("Patients to CDM", {
-  filePath <- testthat::test_path("TestPatientsTemplateComorbidities.xlsx")
+  filePath <- testthat::test_path("testPatientsRSV.xlsx")
   outputPath <- tempdir()
+  dir.create(outputPath)
   readPatients(filePath = filePath, outputPath = outputPath)
-  cdm <- patientCDM(filePath = outputPath, testName = "test.json")
+  cdm <- patientsCDM(pathJson = outputPath, testName = "test")
   expect_equal(class(cdm), "cdm_reference")
-  number_persons <- cdm[["person"]] %>% pull(person_id)
-  expect_equal(length(number_persons), 11)
+  number_persons <- cdm[["person"]] %>% dplyr::pull(person_id)
+  expect_equal(length(number_persons), 20)
   unlink(outputPath, recursive = TRUE)
 })
 

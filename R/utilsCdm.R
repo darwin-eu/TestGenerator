@@ -32,7 +32,7 @@ emptyCDM <- function(conn, cdm) {
                           "condition_era",
                           "metadata",
                           "cdm_source")) {
-      DBI::dbExecute(con, glue::glue("TRUNCATE TABLE {table_name}"))
+      DBI::dbExecute(conn, glue::glue("TRUNCATE TABLE {table_name}"))
     }
   }
   return(cdm)
