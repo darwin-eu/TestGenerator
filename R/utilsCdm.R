@@ -1,5 +1,8 @@
 #' `emptyCDM()` truncates all the tables except those from the vocabulary for testing purposes
 #'
+#' @param conn A DBI connection
+#' @param cdm A CDM reference object
+#'
 #' @return A blank CDM with vocabulary
 #' @import dplyr
 #' @importFrom DBI dbConnect dbExecute

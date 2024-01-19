@@ -5,7 +5,7 @@ Version:  0.1.0
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut", comment = c(ORCID = "0000-0001-8993-8748")),
-    person("Adam", "Black", , "black@ohdsi.org", role = "aut", comment = c(ORCID = "0000-0001-5576-8701")),
+    person("Adam", "Black", , "black@ohdsi.org", role = "aut", comment = c(ORCID = "0000-0001-5576-8701"))
   )
 Description: Pushes a sample population to a blank CDM with a full vocabulary for testing on the OMOP-CDM.
 License: Apache License (>= 2)
@@ -26,4 +26,5 @@ Imports:
     dplyr,
     checkmate,
     glue,
-    duckdb
+    duckdb,
+    SqlRender

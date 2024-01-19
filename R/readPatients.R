@@ -116,7 +116,7 @@ patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
   for (tableName in names(jsonData)) {
     # tableName <- "visit_occurrence"
     currentCoulumns <- names(jsonData[[tableName]])
-    expectedColumns <- CDMConnector:::spec_cdm_field[["5.3"]] %>%
+    expectedColumns <- spec_cdm_field[["5.3"]] %>%
       dplyr::filter(cdmTableName == tableName) %>%
       dplyr::pull(cdmFieldName)
     jsonData[[tableName]] <- jsonData[[tableName]] %>%

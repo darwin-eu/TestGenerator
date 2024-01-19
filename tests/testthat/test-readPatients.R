@@ -7,7 +7,7 @@ test_that("Reading patients", {
 })
 
 test_that("Patients to CDM", {
-  filePath <- testthat::test_path("testPatientsRSV.xlsx")
+  filePath <- test_path("testPatientsRSV.xlsx")
   outputPath <- tempdir()
   dir.create(outputPath)
   readPatients(filePath = filePath, outputPath = outputPath)
