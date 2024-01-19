@@ -1,6 +1,6 @@
 #' `emptyCDM()` truncates all the tables except those from the vocabulary for testing purposes
 #' @return A blanck CDM with vocabulary
-#' @import dbplyr
+#' @import dplyr
 #' @importFrom DBI dbConnect dbExecute
 #' @importFrom CDMConnector downloadEunomiaData cdmFromCon
 #' @export

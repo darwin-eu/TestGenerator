@@ -3,6 +3,7 @@
 #' @param testCaseFile Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
 #'
 #' @importFrom DatabaseConnector createConnectionDetails connect
+#' @importFrom usethis proj_path
 #'
 #' @return Study results in the specified folder
 #' @export
@@ -33,7 +34,7 @@ testPatients <- function(dbConnection,
   }
   dir.create(unitTestOutputFolder)
 
-  pathToTestCaseSql <- proj_path("inst", "testCases", "sql")
+  pathToTestCaseSql <- usethis::proj_path("inst", "testCases", "sql")
   testCaseSql <- list.files(path = pathToTestCaseSql, pattern=".*.sql", include.dirs = FALSE)
 
   for (i in 1:length(testCaseSql)) {

@@ -6,20 +6,19 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Does my cohort is including the correct number and type of patients? Am
-I calculating a cohort intersection the right way? Is that the expected
-value for treatment duration? It requires just one incorrect parameter
-to get incoherent results from a pharmacoepidemiological study, and it
-is challenging to test if our calculations are correct on huge
-databases.
+Does my cohort is including the correct patients? Am I calculating an
+intersection in the right way? Is that the expected value for treatment
+duration? It just takes one incorrect parameter to get incoherent
+results in a pharmacoepidemiological study, and it is challenging to
+test calculations on huge and complex databases.
 
 That is why TestGenerator is useful to push a micro sample of around 10
 patients to unit test a study on the OMOP-CDM. It includes tools to
-create a blank CDM with a complete vocabulary to perform unit testing on
-the results and check if the code is doing what we expect.
+create a blank CDM with a complete vocabulary and check if the code is
+doing what we expect.
 
-This package is based on the unit testing performed on some OHDSI
-studies.
+This package is based on the unit testing of the [Eramus MC Ranitidine
+Study](https://github.com/mi-erasmusmc/RanitidineStudy/blob/master/unitTesting_README.md).
 
 ## Installation
 
@@ -42,9 +41,14 @@ file. This is useful if the user wants to create more than one sets of
 test populations for testing.
 
 ``` r
-library(TestGenerator)
 
-TestGenerator::readPatients(here::here("extras", "RSV_Test_Data.xlsx"))
+TestGenerator::readPatients(
+  filePath = "~/pathto/test_data.xlsx",
+  sampleName = "test",
+  tables = c("person", "observation_period", "drug_exposure", "condition_occurrence",
+    "visit_occurrence", "visit_context", "visit_detail", "death"),
+  outputPath = "inst/testCases"
+)
 ```
 
 `patientCDM()` pushes one of those test populations into a blank CDM
@@ -52,7 +56,9 @@ reference.
 
 ``` r
 
-cdm <- TestGenerator::patientCDM()
+cdm <- TestGenerator::patientCDM(
+  pathJson = "inst/testCases", 
+  sampleName = "test")
 ```
 
 Now the user has a CDM reference with a complete vocabulary and a
