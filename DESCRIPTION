@@ -1,12 +1,13 @@
 Package: TestGenerator
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Creates Unit Test Definitions for data analysis on the OMOP-CDM
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: c(
+    person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071"))
+    )
+Maintainer: <c.barboza@darwin-eu.org>
+Description: It pushes a sample population of a handful of subjects to a blank CDM with a complete vocabulary to test data analyses on the OMOP-CDM.
+License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
 Suggests: 
