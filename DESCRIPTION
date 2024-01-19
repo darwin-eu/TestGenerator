@@ -25,4 +25,5 @@ Imports:
     DBI,
     dplyr,
     checkmate,
-    glue
+    glue,
+    duckdb

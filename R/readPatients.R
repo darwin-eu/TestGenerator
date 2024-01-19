@@ -70,6 +70,7 @@ readPatients <- function(filePath = NULL,
 #' @return Study results in the specified folder
 #' @import dplyr
 #' @importFrom usethis proj_path
+#' @importFrom duckdb duckdb
 #' @export
 patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
                         testName = NULL) {
@@ -134,10 +135,12 @@ patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
 
 #' `pushPatientSQL()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
-#' @param pathJson If NULL, takes the project path to create the SQL files.
+#' @param pathJson If NULL, takes the project path to create the SQL files
 #'
 #' @return Study results in the specified folder
 #' @importFrom usethis proj_path
+#' @importFrom SqlRender writeSql
+#' @importFrom SqlRender render
 #' @export
 pushPatientSQL <- function(pathJson = NULL) {
 

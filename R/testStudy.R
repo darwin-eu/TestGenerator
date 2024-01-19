@@ -4,23 +4,24 @@
 #'
 #' @importFrom DatabaseConnector createConnectionDetails connect
 #' @importFrom usethis proj_path
+#' @importFrom SqlRender readSql render
 #'
 #' @return Study results in the specified folder
 #' @export
 testStudy <- function(dbConnection,
-                         functionsToTest = NULL,
-                         createSchemaPerTest = FALSE,
-                         cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
-                         cohortDatabaseSchema = Sys.getenv("UT_COHORT_SCHEMA"),
-                         unitTestOutputFolder = Sys.getenv("UT_TEST_CASES_RESULTS_LOCATION"),
-                         user = Sys.getenv("UT_DB_USER"),
-                         password = Sys.getenv("UT_DB_PASSWORD"),
-                         dbms = Sys.getenv("UT_DBMS"),
-                         dbname = Sys.getenv("UT_DB_NAME"),
-                         server = Sys.getenv("UT_DB_SERVER"),
-                         port = Sys.getenv("UT_DB_PORT"),
-                         cdm_version = "5.4",
-                         outputFolder = here::here("results")) {
+                      functionsToTest = NULL,
+                      createSchemaPerTest = FALSE,
+                      cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
+                      cohortDatabaseSchema = Sys.getenv("UT_COHORT_SCHEMA"),
+                      unitTestOutputFolder = Sys.getenv("UT_TEST_CASES_RESULTS_LOCATION"),
+                      user = Sys.getenv("UT_DB_USER"),
+                      password = Sys.getenv("UT_DB_PASSWORD"),
+                      dbms = Sys.getenv("UT_DBMS"),
+                      dbname = Sys.getenv("UT_DB_NAME"),
+                      server = Sys.getenv("UT_DB_SERVER"),
+                      port = Sys.getenv("UT_DB_PORT"),
+                      cdm_version = "5.4",
+                      outputFolder = here::here("results")) {
 
   connectionDetails <- DatabaseConnector::createConnectionDetails(dbms = dbms,
                                                                   server = paste0(server, "/", dbname),
