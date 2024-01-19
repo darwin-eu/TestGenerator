@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Does my cohort pick the correct number patients? Am I calculating an
+Does my cohort picked the correct number patients? Am I calculating an
 intersection in the right way? Is that the expected value for treatment
 duration? It just takes one incorrect parameter to get incoherent
 results in a pharmacoepidemiological study, and it is challenging to
@@ -43,10 +43,8 @@ Definitions.
 
 ``` r
 TestGenerator::readPatients(
-  filePath = "~/pathto/test_data.xlsx",
-  sampleName = "test",
-  tables = c("person", "observation_period", "drug_exposure", "condition_occurrence",
-    "visit_occurrence", "visit_context", "visit_detail", "death"),
+  filePath = "~/pathto/testPatients.xlsx",
+  testName = "test",
   outputPath = "inst/testCases"
 )
 ```
@@ -57,7 +55,7 @@ CDM reference with a complete version of the vocabulary.
 ``` r
 cdm <- TestGenerator::patientCDM(
   pathJson = "inst/testCases", 
-  sampleName = "test")
+  testName = "test")
 ```
 
 Now the user has a CDM reference with a complete vocabulary and a

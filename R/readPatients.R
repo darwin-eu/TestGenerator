@@ -1,41 +1,43 @@
-#' `readPatients()` converts a test patients in XLSX format into a JSON for testing, and creates a JSON in the a inst/testCases folder.
+#' `readPatients()` converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
 #'
 #' @param filePath Path to the test patient data in Excel format.
 #' @param testName Name of the test population in character.
-#' @param sheets List of sheets to be converted into tables.
-#' @param outputPath Path of the output file. If NULL
+#' @param outputPath Path of the output file, iff NULL, a folder will be created in the project folder inst/testCases
 #'
-#' @return A JSON file for testing inside the package directory of a DARWIN EU study.
+#' @return A JSON file for testing inside the project directory.
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
 #' @importFrom usethis use_directory
 #' @importFrom fs path
-#' @importFrom ParallelLogger logInfo
 #' @importFrom usethis proj_path
+#' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
+#' @importFrom glue glue
 #'
 #' @export
 readPatients <- function(filePath = NULL,
                          testName = "test",
-                         sheets = c("person",
-                                    "observation_period",
-                                    "drug_exposure",
-                                    "condition_occurrence",
-                                    "visit_occurrence",
-                                    "visit_context",
-                                    "visit_detail",
-                                    "death"),
                          outputPath = NULL) {
 
-  # filePath <- here::here("extras", "RSV_Test_Data.xlsx")
+  # filePath <- here::here("extras", "testPatients.xlsx")
+  checkmate::assertCharacter(filePath)
+  checkmate::assertFileExists(filePath)
 
-  checkmate::assert_character(filePath)
-  checkmate::checkFile(filePath)
+  sheets <- c("person",
+              "observation_period",
+              "drug_exposure",
+              "condition_occurrence",
+              "visit_occurrence",
+              "visit_context",
+              "visit_detail",
+              "death")
 
   patientTables <- readxl::excel_sheets(filePath)
   checkmate::assert(all(patientTables %in% sheets))
 
-  listPatientTables <- lapply(patientTables, readxl::read_excel, path = filePath)
+  listPatientTables <- lapply(patientTables,
+                              readxl::read_excel,
+                              path = filePath)
   # names(listPatientTables) <- tolower(paste0("cdm.", patientTables))
   names(listPatientTables) <- tolower(patientTables)
 
@@ -45,74 +47,99 @@ readPatients <- function(filePath = NULL,
 
   if (is.null(outputPath)) {
     usethis::use_directory(fs::path("inst", "testCases"))
-    testName <- paste0(proj_path(), "/", fs::path("inst", "testCases"), "/", testName, ".json")
+    outputPath <- fs::path("inst", "testCases")
+    testName <- paste0(outputPath, "/", testName, ".json")
   } else {
+    checkmate::assertCharacter(outputPath)
+    checkmate::assertDirectoryExists(outputPath)
     testName <- paste0(outputPath, "/", testName, ".json")
   }
-  checkmate::assert_character(testName)
   write(testCaseFile, file = testName)
+  if (checkmate::checkFileExists(testName)) {
+    message(glue::glue("Unit Test Definition created in {outputPath}"))
+  } else {
+    stop("Unit Test Definition creation failed")
+  }
 }
 
 #' `patientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
-#' @param filePathJson If NULL, takes the project path to create the SQL files.
-#' @param testName Name of the test patients files.
+#' @param pathJson If NULL, takes the project path to create the SQL files.
+#' @param testName Name of the Unit Test Definition, if NULL it will push the first sample population in the testCases directory.
 #'
 #' @return Study results in the specified folder
 #' @import dplyr
 #' @importFrom usethis proj_path
 #' @export
-patientCDM <- function(filePathJson = NULL,
-                       testName = NULL) {
+patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
+                        testName = NULL) {
 
-  if (is.null(filePathJson)) {
-    filePathJson <- proj_path("inst", "testCases")
+  checkmate::assertClass(pathJson, "character")
+  checkmate::assertDirectoryExists(pathJson)
+  checkmate::assertDirectoryExists(Sys.getenv("EUNOMIA_DATA_FOLDER"))
+
+  if (identical(list.files(pathJson), character(0))) {
+    stop("Directory empty. Provide Unit Test Definitions")
   }
+
+  testFiles <- list.files(pathJson, pattern = ".json")
 
   if (is.null(testName)) {
-    testName <- "test.json"
+    testName <- testFiles[1]
+  } else {
+    checkmate::checkClass(testName, "character")
+    testName <- paste0(testName, ".json")
+    fileName <- file.path(pathJson, testName)
+    checkmate::checkFileExists(fileName)
   }
-  # testName <- "test.json"
 
-  # Download vocabulary
-  if (!file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip"))) {
+  # Check/Download vocabulary
+  vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip")
+
+  if (!file.exists(vocabPath)) {
     CDMConnector::downloadEunomiaData(datasetName = "synthea-allergies-10k")
   }
-  con <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomia_dir("synthea-allergies-10k"))
-  cdm <- CDMConnector::cdmFromCon(con, cdmSchema = "main", writeSchema = "main")
-  cdm <- emptyCDM(cdm = cdm, con = con)
+
+  # Empty CDM
+  conn <- DBI::dbConnect(duckdb::duckdb(),
+                         CDMConnector::eunomia_dir("synthea-allergies-10k"))
+  cdm <- CDMConnector::cdmFromCon(con = conn,
+                                  cdmSchema = "main",
+                                  writeSchema = "main")
+  cdm <- emptyCDM(conn = conn, cdm = cdm)
 
   # Read the JSON file into R
-  jsonData <- jsonlite::fromJSON(file.path(filePathJson, testName))
+  jsonData <- jsonlite::fromJSON(fileName)
 
+  # Check for the expected columns in the CDM
   for (tableName in names(jsonData)) {
     # tableName <- "visit_occurrence"
     currentCoulumns <- names(jsonData[[tableName]])
     expectedColumns <- CDMConnector:::spec_cdm_field[["5.3"]] %>%
       dplyr::filter(cdmTableName == tableName) %>%
       dplyr::pull(cdmFieldName)
-
     jsonData[[tableName]] <- jsonData[[tableName]] %>%
       select(currentCoulumns[currentCoulumns %in% expectedColumns])
-
   }
-  # Convert the JSON data into a data frame
+
+  # Convert the JSON data into a data frame and append it to the blank CDM
   for (tableName in names(jsonData)) {
     # tableName <- "visit_occurrence"
     patientData <- as.data.frame(jsonData[[tableName]])
-    DBI::dbAppendTable(con, tableName, patientData)
+    DBI::dbAppendTable(conn, tableName, patientData)
   }
+
   return(cdm)
 }
 
 #' `pushPatientSQL()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
 #'
-#' @param pathToTestCases If NULL, takes the project path to create the SQL files.
+#' @param pathJson If NULL, takes the project path to create the SQL files.
 #'
 #' @return Study results in the specified folder
 #' @importFrom usethis proj_path
 #' @export
-pushPatientSQL <- function(pathToTestCases = NULL) {
+pushPatientSQL <- function(pathJson = NULL) {
 
   if (is.null(pathToTestCases)) {
     pathToTestCases <- proj_path("inst", "testCases")

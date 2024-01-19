@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-Does my cohort pick the correct number patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It just takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and it is challenging to test calculations on huge and complex databases. 
+Does my cohort picked the correct number patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It just takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and it is challenging to test calculations on huge and complex databases. 
 
 That is why TestGenerator is useful to push a micro sample of around 10 patients to unit test a study on the OMOP-CDM. It includes tools to create a blank CDM with a complete vocabulary and check if the code is doing what we expect. 
 
@@ -41,10 +41,8 @@ The user should provide an Excel file with a micro population of around 10 patie
 
 ```{r, eval=FALSE}
 TestGenerator::readPatients(
-  filePath = "~/pathto/test_data.xlsx",
-  sampleName = "test",
-  tables = c("person", "observation_period", "drug_exposure", "condition_occurrence",
-    "visit_occurrence", "visit_context", "visit_detail", "death"),
+  filePath = "~/pathto/testPatients.xlsx",
+  testName = "test",
   outputPath = "inst/testCases"
 )
 
@@ -55,7 +53,7 @@ TestGenerator::readPatients(
 ```{r, eval=FALSE}
 cdm <- TestGenerator::patientCDM(
   pathJson = "inst/testCases", 
-  sampleName = "test")
+  testName = "test")
 
 ```
 

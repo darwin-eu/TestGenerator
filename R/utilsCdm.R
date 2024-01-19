@@ -4,7 +4,7 @@
 #' @importFrom DBI dbConnect dbExecute
 #' @importFrom CDMConnector downloadEunomiaData cdmFromCon
 #' @export
-emptyCDM <- function(con, cdm) {
+emptyCDM <- function(conn, cdm) {
 
   for (table_name in names(cdm)) {
     if (table_name %in% c("person",

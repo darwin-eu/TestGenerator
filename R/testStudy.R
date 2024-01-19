@@ -7,7 +7,7 @@
 #'
 #' @return Study results in the specified folder
 #' @export
-testPatients <- function(dbConnection,
+testStudy <- function(dbConnection,
                          functionsToTest = NULL,
                          createSchemaPerTest = FALSE,
                          cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
