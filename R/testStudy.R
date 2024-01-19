@@ -16,6 +16,8 @@
 #' @param outputFolder output folder
 #'
 #' @importFrom DatabaseConnector createConnectionDetails connect
+#' @importFrom usethis proj_path
+#' @importFrom SqlRender readSql render
 #'
 #' @return Study results in the specified folder
 #' @export
@@ -46,7 +48,7 @@ testPatients <- function(dbConnection,
   }
   dir.create(unitTestOutputFolder)
 
-  pathToTestCaseSql <- proj_path("inst", "testCases", "sql")
+  pathToTestCaseSql <- usethis::proj_path("inst", "testCases", "sql")
   testCaseSql <- list.files(path = pathToTestCaseSql, pattern=".*.sql", include.dirs = FALSE)
 
   for (i in 1:length(testCaseSql)) {

@@ -1,13 +1,11 @@
 #' `emptyCDM()` truncates all the tables except those from the vocabulary for testing purposes
 #'
-#' @param con database connection
-#' @param cdm cdm object
-#'
 #' @return A blank CDM with vocabulary
+#' @import dplyr
 #' @importFrom DBI dbConnect dbExecute
 #' @importFrom CDMConnector downloadEunomiaData cdmFromCon
 #' @export
-emptyCDM <- function(con, cdm) {
+emptyCDM <- function(conn, cdm) {
 
   for (table_name in names(cdm)) {
     if (table_name %in% c("person",
@@ -35,7 +33,7 @@ emptyCDM <- function(con, cdm) {
                           "condition_era",
                           "metadata",
                           "cdm_source")) {
-      DBI::dbExecute(con, glue::glue("TRUNCATE TABLE {table_name}"))
+      DBI::dbExecute(conn, glue::glue("TRUNCATE TABLE {table_name}"))
     }
   }
   return(cdm)
