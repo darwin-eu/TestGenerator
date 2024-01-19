@@ -6,9 +6,20 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Creates tests on patient data for DARWIN EU studies. It accepts an Excel
-file with a sample of patients, and tests on an empty CDM if the results
-are correct from a particular study package.
+Does my cohort is including the correct number and type of patients? Am
+I calculating a cohort intersection the right way? Is that the expected
+value for treatment duration? It requires just one incorrect parameter
+to get incoherent results from a pharmacoepidemiological study, and it
+is challenging to test if our calculations are correct on huge
+databases.
+
+That is why TestGenerator is useful to push a micro sample of around 10
+patients to unit test a study on the OMOP-CDM. It includes tools to
+create a blank CDM with a complete vocabulary to perform unit testing on
+the results and check if the code is doing what we expect.
+
+This package is based on the unit testing performed on some OHDSI
+studies.
 
 ## Installation
 
@@ -22,8 +33,13 @@ devtools::install_github("darwin-eu-dev/TestGenerator")
 
 ## Example
 
-Function to read the .xls file with data generally from 10 patients. By
-default, it generates a JSON files in the inst/testCases folders.
+The user should create an Excel file with a micro population of around
+10 patients for testing purposes. That can include any table from the
+OMOP-CDM.
+
+`readPatients()` will read the Excel file, and saves the data in a JSON
+file. This is useful if the user wants to create more than one sets of
+test populations for testing.
 
 ``` r
 library(TestGenerator)
@@ -31,9 +47,14 @@ library(TestGenerator)
 TestGenerator::readPatients(here::here("extras", "RSV_Test_Data.xlsx"))
 ```
 
-Data then can be pushed to a blank CDM with the complete vocabulary.
+`patientCDM()` pushes one of those test populations into a blank CDM
+reference.
 
 ``` r
 
 cdm <- TestGenerator::patientCDM()
 ```
+
+Now the user has a CDM reference with a complete vocabulary and a
+universe of just 10 patients to unit test functions of a particular
+study.
