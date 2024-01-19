@@ -1,3 +1,5 @@
+library(testthat)
+
 test_that("Reading patients", {
   filePath <- testthat::test_path("testPatientsRSV.xlsx")
   outputPath <- tempdir()
