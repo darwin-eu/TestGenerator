@@ -1,6 +1,19 @@
-#' `testPatients()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#' `testPatients()` takes a file with patients in SQL format, pushes them into the blank CDM and performs the test.
 #'
-#' @param testCaseFile Path to JSON test files. Those should contain patients, observation period, drug exposure, condition and visit occurrence.
+#' @param dbConnection database connection
+#' @param functionsToTest the functions to test
+#' @param createSchemaPerTest if a schema should be created per test
+#' @param cdmDatabaseSchema cdm schema
+#' @param cohortDatabaseSchema cohort schema
+#' @param unitTestOutputFolder unit test output folder
+#' @param user db username
+#' @param password db pwd
+#' @param dbms dbms name
+#' @param dbname database name
+#' @param server database server
+#' @param port database port number
+#' @param cdm_version cdm version number
+#' @param outputFolder output folder
 #'
 #' @importFrom DatabaseConnector createConnectionDetails connect
 #' @importFrom usethis proj_path
@@ -8,20 +21,20 @@
 #'
 #' @return Study results in the specified folder
 #' @export
-testStudy <- function(dbConnection,
-                      functionsToTest = NULL,
-                      createSchemaPerTest = FALSE,
-                      cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
-                      cohortDatabaseSchema = Sys.getenv("UT_COHORT_SCHEMA"),
-                      unitTestOutputFolder = Sys.getenv("UT_TEST_CASES_RESULTS_LOCATION"),
-                      user = Sys.getenv("UT_DB_USER"),
-                      password = Sys.getenv("UT_DB_PASSWORD"),
-                      dbms = Sys.getenv("UT_DBMS"),
-                      dbname = Sys.getenv("UT_DB_NAME"),
-                      server = Sys.getenv("UT_DB_SERVER"),
-                      port = Sys.getenv("UT_DB_PORT"),
-                      cdm_version = "5.4",
-                      outputFolder = here::here("results")) {
+testPatients <- function(dbConnection,
+                         functionsToTest = NULL,
+                         createSchemaPerTest = FALSE,
+                         cdmDatabaseSchema = Sys.getenv("UT_CDM_SCHEMA"),
+                         cohortDatabaseSchema = Sys.getenv("UT_COHORT_SCHEMA"),
+                         unitTestOutputFolder = Sys.getenv("UT_TEST_CASES_RESULTS_LOCATION"),
+                         user = Sys.getenv("UT_DB_USER"),
+                         password = Sys.getenv("UT_DB_PASSWORD"),
+                         dbms = Sys.getenv("UT_DBMS"),
+                         dbname = Sys.getenv("UT_DB_NAME"),
+                         server = Sys.getenv("UT_DB_SERVER"),
+                         port = Sys.getenv("UT_DB_PORT"),
+                         cdm_version = "5.4",
+                         outputFolder = "results") {
 
   connectionDetails <- DatabaseConnector::createConnectionDetails(dbms = dbms,
                                                                   server = paste0(server, "/", dbname),
