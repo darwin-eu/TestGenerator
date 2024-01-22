@@ -78,7 +78,6 @@ patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
 
   checkmate::assertClass(pathJson, "character")
   checkmate::assertDirectoryExists(pathJson)
-  checkmate::assertDirectoryExists(Sys.getenv("EUNOMIA_DATA_FOLDER"))
 
   if (identical(list.files(pathJson), character(0))) {
     stop("Directory empty. Provide Unit Test Definitions")
@@ -96,20 +95,43 @@ patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
   fileName <- file.path(pathJson, testName)
   checkmate::assertFileExists(fileName)
 
-  # Check/Download vocabulary
-  vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip")
+  # Folder to download empty CDM
 
-  if (!file.exists(vocabPath)) {
-    CDMConnector::downloadEunomiaData(datasetName = "synthea-allergies-10k")
+  if (!dir.exists(Sys.getenv("EUNOMIA_DATA_FOLDER"))) {
+    Sys.setenv(EUNOMIA_DATA_FOLDER = tempdir())
   }
 
-  # Empty CDM
-  conn <- DBI::dbConnect(duckdb::duckdb(),
-                         CDMConnector::eunomia_dir("synthea-allergies-10k"))
-  cdm <- CDMConnector::cdmFromCon(con = conn,
-                                  cdmSchema = "main",
-                                  writeSchema = "main")
-  cdm <- emptyCDM(conn = conn, cdm = cdm)
+  # Check/Download vocabulary
+
+  if ("empty_cdm" %in% CDMConnector::example_datasets()) {
+
+    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "empty_cdm_5.3.zip")
+
+    if (!file.exists(vocabPath)) {
+      CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
+                                        cdmVersion = "5.3",
+                                        pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
+                                        overwrite = TRUE)
+    }
+
+    conn <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomia_dir("empty_cdm"))
+    cdm <- CDMConnector::cdmFromCon(con = conn, cdmSchema = "main", writeSchema = "main")
+
+  } else {
+
+    # Get allergies 10K dataset
+    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip")
+
+    if (!file.exists(vocabPath)) {
+      CDMConnector::downloadEunomiaData(datasetName = "synthea-allergies-10k")
+    }
+
+    # Empty CDM
+    conn <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomia_dir("synthea-allergies-10k"))
+    cdm <- CDMConnector::cdmFromCon(con = conn, cdmSchema = "main", writeSchema = "main")
+    cdm <- emptyCDM(conn = conn, cdm = cdm)
+
+  }
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
