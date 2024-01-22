@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/github/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/TestGenerator?branch=main)
 <!-- badges: end -->
 
 Does my cohort picked the correct number patients? Am I calculating an
