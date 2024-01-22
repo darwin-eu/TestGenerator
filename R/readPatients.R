@@ -90,9 +90,10 @@ patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
   } else {
     checkmate::checkClass(testName, "character")
     testName <- paste0(testName, ".json")
-    fileName <- file.path(pathJson, testName)
-    checkmate::checkFileExists(fileName)
   }
+
+  fileName <- file.path(pathJson, testName)
+  checkmate::checkFileExists(fileName)
 
   # Check/Download vocabulary
   vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip")
