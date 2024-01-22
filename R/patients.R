@@ -71,6 +71,7 @@ readPatients <- function(filePath = NULL,
 #' @import dplyr
 #' @importFrom usethis proj_path
 #' @importFrom duckdb duckdb
+#' @importFrom jsonlite fromJSON
 #' @export
 patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
                         testName = NULL) {
@@ -93,7 +94,7 @@ patientsCDM <- function(pathJson = proj_path("inst", "testCases"),
   }
 
   fileName <- file.path(pathJson, testName)
-  checkmate::checkFileExists(fileName)
+  checkmate::assertFileExists(fileName)
 
   # Check/Download vocabulary
   vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip")
