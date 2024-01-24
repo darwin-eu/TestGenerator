@@ -41,7 +41,9 @@ testPatients <- function(dbConnection,
                                                                   user = user,
                                                                   password = password,
                                                                   port = port)
-  connection <- DatabaseConnector::connect(connectionDetails)
+  # connection <- DatabaseConnector::connect(connectionDetails)
+
+  connection <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomia_dir("empty_cdm"))
 
   if (dir.exists(unitTestOutputFolder)) {
     unlink(unitTestOutputFolder, recursive = TRUE)
@@ -51,7 +53,7 @@ testPatients <- function(dbConnection,
   pathToTestCaseSql <- usethis::proj_path("inst", "testCases", "sql")
   testCaseSql <- list.files(path = pathToTestCaseSql, pattern=".*.sql", include.dirs = FALSE)
 
-  for (i in 1:length(testCaseSql)) {
+
     sql <- SqlRender::readSql(file.path(pathToTestCaseSql, testCaseSql[i]))
     sql <- SqlRender::render(sql = sql, cdm_database_schema = cdmDatabaseSchema)
     ParallelLogger::logInfo(testCaseSql[i])
@@ -98,7 +100,7 @@ testPatients <- function(dbConnection,
         eval(parse(text = i))
       }
     }
-  }
+
 }
 
 

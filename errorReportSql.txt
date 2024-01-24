@@ -1,0 +1,40 @@
+DBMS:
+duckdb
+
+Error:
+rapi_prepare: Failed to prepare query INSERT INTO main.PERSON (person_id, gender_concept_id, year_of_birth, month_of_birth, day_of_birth, birth_datetime,
+  race_concept_id, ethnicity_concept_id, location_id, provider_id, care_site_id, person_source_value, gender_source_value, gender_source_concept_id,
+  race_source_value, race_source_concept_id, ethnicity_source_value, ethnicity_source_concept_id)
+  SELECT 1, 8532, 1980, NA, NA, NA, 0, 0,
+  NA, NA, NA, NA, NA, NA, NA, NA,
+  NA, NA
+Error: Binder Error: Referenced column "NA" not found in FROM clause!
+
+SQL:
+INSERT INTO main.PERSON (person_id, gender_concept_id, year_of_birth, month_of_birth, day_of_birth, birth_datetime,
+  race_concept_id, ethnicity_concept_id, location_id, provider_id, care_site_id, person_source_value, gender_source_value, gender_source_concept_id,
+  race_source_value, race_source_concept_id, ethnicity_source_value, ethnicity_source_concept_id)
+  SELECT 1, 8532, 1980, NA, NA, NA, 0, 0,
+  NA, NA, NA, NA, NA, NA, NA, NA,
+  NA, NA
+
+R version:
+R version 4.3.1 (2023-06-16 ucrt)
+
+Platform:
+x86_64-w64-mingw32
+
+Attached base packages:
+- stats
+- graphics
+- grDevices
+- utils
+- datasets
+- methods
+- base
+
+Other attached packages:
+- TestGenerator (0.1.0)
+- testthat (3.2.0)
+- devtools (2.4.5)
+- usethis (2.2.2)
