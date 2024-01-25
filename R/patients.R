@@ -207,7 +207,9 @@ pushPatients <- function(connection,
                                   cdmSchema = cdmSchema,
                                   writeSchema = cdmSchema)
 
-  cdm <- emptyCDM(conn = connection, cdmSchema = cdmSchema, cdm = cdm)
+  cdm <- emptyCDM(conn = connection,
+                  cdmSchema = cdmSchema,
+                  cdm = cdm)
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
@@ -224,9 +226,9 @@ pushPatients <- function(connection,
 
   # Convert the JSON data into a data frame and append it to the blank CDM
   for (tableName in names(jsonData)) {
-    # tableName <- "visit_occurrence"
+    # tableName <- "visit_detail"
     patientData <- as.data.frame(jsonData[[tableName]])
-    DBI::dbAppendTable(connection, tableName, patientData)
+    DBI::dbAppendTable(connection, DBI::Id(schema = cdmSchema, table = tableName), patientData)
   }
   return(cdm)
   }
