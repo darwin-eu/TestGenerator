@@ -28,39 +28,38 @@ test_that("Patients to CDM", {
   unlink(outputPath, recursive = TRUE)
 })
 
-test_that("SQL exists proj", {
-connectionDetails <- DatabaseConnector::createConnectionDetails(dbms = "duckdb",
-                                                                server = CDMConnector::eunomia_dir("empty_cdm"))
+test_that("Pushing patients PostgreSQL", {
+
+  user <- Sys.getenv("UT_DB_USER")
+  password <- Sys.getenv("UT_DB_PASSWORD")
+  cdmSchema <- Sys.getenv("UT_CDM_SCHEMA")
+  writeSchema <- Sys.getenv("UT_COHORT_SCHEMA")
+  dbms <- Sys.getenv("UT_DBMS")
+  dbname <- Sys.getenv("UT_DB_NAME")
+  server <- Sys.getenv("UT_DB_SERVER")
+  port <- Sys.getenv("UT_DB_PORT")
+
+  conn <- DBI::dbConnect(RPostgres::Postgres(),
+                         dbname = dbname,
+                         port = port,
+                         host = server,
+                         user = user,
+                         password = password)
+
+  DBI::dbExecute(conn, "SELECT * FROM cdm.person;")
+
+  cdm <- pushPatients(connection = conn,
+                      cdmSchema,
+                      writeSchema,
+                      pathJson = NULL,
+                      testName = NULL)
+
+  class(cdm)
+
+  expect_class(cdm, "cdm reference")
 
 
-connnection <- DatabaseConnector::connect(connectionDetails)
 
-pushSQLpatients(connection = connnection,
-                connectionDetails,
-                cdmDatabaseSchema = "main",
-                pathSQL = NULL,
-                testName = NULL)
-
-DatabaseConnector::querySql(connnection, "SELECT * FROM main.person;")
-
-
-filePath <- testthat::test_path("TestPatientsTemplateComorbidities.xlsx")
-  outputPath <- paste0(proj_path(), "/", fs::path("inst", "testCases"), "/", "test", ".json")
-  testDir <- paste0(proj_path(), "/", fs::path("inst", "testCases"))
-  readPatients(filePath = filePath, outputPath = NULL)
-  patientSQL(pathToTestCases = NULL)
-  expect_true(dir.exists(paste0(testDir, "/", "sql")))
-  expect_true(file.exists(outputPath))
-  unlink(outputPath, recursive = TRUE)
-  unlink(testDir, recursive = TRUE)
 })
 
-# test_that("SQL exists temp", {
-#   filePath <- testthat::test_path("TestPatientsTemplateComorbidities.xlsx")
-#   outputPath <- tempfile(fileext = ".json")
-#   pathToTestCases <- tempdir()
-#   readPatients(filePath = filePath, outputPath = outputPath)
-#   patientSQL(pathToTestCases = pathToTestCases)
-#   expect_true(dir.exists(paste0(pathToTestCases, "/", "sql")))
-#   unlink(outputPath, recursive = TRUE)
-# })
+

@@ -62,18 +62,18 @@ readPatients <- function(filePath = NULL,
   }
 }
 
-#' `patientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#' `patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
 #'
-#' @param pathJson If NULL, takes the project path to create the SQL files.
-#' @param testName Name of the Unit Test Definition, if NULL it will push the first sample population in the testCases directory.
+#' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
+#' @param testName Name of the sample population json file. If NULL it will push the first sample population in the testCases directory.
 #'
-#' @return Study results in the specified folder
+#' @return A CDM reference object with a sample population.
 #' @import dplyr
 #' @importFrom usethis proj_path
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
 #' @export
-cdmPatients <- function(pathJson = NULL,
+patientsCDM <- function(pathJson = NULL,
                         testName = NULL) {
 
   if (is.null(pathJson)) {
@@ -148,11 +148,6 @@ cdmPatients <- function(pathJson = NULL,
       dplyr::pull(cdmFieldName)
     jsonData[[tableName]] <- jsonData[[tableName]] %>%
       select(currentCoulumns[currentCoulumns %in% expectedColumns])
-    # for (column in expectedColumns) {
-    #   if (!column %in% names(jsonData[[tableName]])) {
-    #     jsonData[[tableName]][, column] <- NA
-    #   }
-    # }
   }
 
   # Convert the JSON data into a data frame and append it to the blank CDM
@@ -161,43 +156,40 @@ cdmPatients <- function(pathJson = NULL,
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
-
   return(cdm)
 }
 
-#' `sqlPatients()` takes a file with patients in JSON format, pushes them into the blank CDM using DatabaseConnector.
+#' `pushPatients()` pushes sample patients into a blank CDM if a connection is provided.
 #'
-#' @param pathJson If NULL, takes the project path to create the SQL files
+#' @param connection A DBI connection to a blank CDM.
+#' @param cdmSchema CDM schema of the database. E.g. "cdm" or "main".
+#' @param writeSchema Writing schema of the database.
+#' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
+#' @param testName Name of the sample population json file. If NULL it will push the first sample population in the testCases directory.
 #'
-#' @return Study results in the specified folder
+#' @return A CDM reference object.
+#' @import dplyr
+#' @importFrom CDMConnector cdmFromCon
 #' @importFrom usethis proj_path
-#' @importFrom SqlRender writeSql
-#' @importFrom SqlRender render
+#' @importFrom duckdb duckdb
+#' @importFrom jsonlite fromJSON
 #' @export
-sqlPatients <- function(pathJson = NULL,
-                        testName = NULL) {
+pushPatients <- function(connection,
+                         cdmSchema,
+                         writeSchema,
+                         pathJson = NULL,
+                         testName = NULL) {
 
-  pathJson = NULL
-  testName = NULL
-
-  # Set project folder
   if (is.null(pathJson)) {
-    pathJson <- usethis::proj_path("inst", "testCases")
+    pathJson <- proj_path("inst", "testCases")
   }
 
-  # Checks
   checkmate::assertClass(pathJson, "character")
   checkmate::assertDirectoryExists(pathJson)
 
-  # Clear any existing SQL file
-  pathSQL <- file.path(pathJson, "sql")
-
-  # Initialize the sql path
-  # ! This will automatically remove sample patients SQL instructions
-  if (dir.exists(pathSQL)) {
-    unlink(pathSQL, recursive = TRUE)
+  if (identical(list.files(pathJson), character(0))) {
+    stop("Directory empty. Provide Unit Test Definitions")
   }
-  dir.create(pathSQL)
 
   testFiles <- list.files(pathJson, pattern = ".json")
 
@@ -208,118 +200,34 @@ sqlPatients <- function(pathJson = NULL,
     testName <- paste0(testName, ".json")
   }
 
-  testCaseFile <- testName
-  ParallelLogger::logInfo(paste("Creating SQL for", testCaseFile))
+  fileName <- file.path(pathJson, testName)
+  checkmate::assertFileExists(fileName)
 
-  # Read the JSON structure
-  jsonData <- jsonlite::fromJSON(file.path(pathJson, testCaseFile))
+  cdm <- CDMConnector::cdmFromCon(con = connection,
+                                  cdmSchema = cdmSchema,
+                                  writeSchema = cdmSchema)
 
-  # jsonData <- jsonlite::read_json(file.path(pathJson, testCaseFile))
+  cdm <- emptyCDM(conn = connection, cdmSchema = cdmSchema, cdm = cdm)
 
+  # Read the JSON file into R
+  jsonData <- jsonlite::fromJSON(fileName)
   # Check for the expected columns in the CDM
   for (tableName in names(jsonData)) {
-    # tableName <- "person"
+    # tableName <- "visit_detail"
     currentCoulumns <- names(jsonData[[tableName]])
     expectedColumns <- spec_cdm_field[["5.3"]] %>%
       dplyr::filter(cdmTableName == tableName) %>%
       dplyr::pull(cdmFieldName)
     jsonData[[tableName]] <- jsonData[[tableName]] %>%
       select(currentCoulumns[currentCoulumns %in% expectedColumns])
-    for (column in expectedColumns) {
-      if (!column %in% names(jsonData[[tableName]])) {
-        jsonData[[tableName]][, column] <- NA
-      }
-    }
   }
 
-  # Initialze the test case
-  sql <- initTestCase()
-  # Person records
-  if (!is.null(jsonData$person)) {
-    for(p in 1:length(jsonData$person)) {
-      sql <- paste(sql, createCdmPerson(jsonData$person[p,]), sep="\n")
-    }
+  # Convert the JSON data into a data frame and append it to the blank CDM
+  for (tableName in names(jsonData)) {
+    # tableName <- "visit_occurrence"
+    patientData <- as.data.frame(jsonData[[tableName]])
+    DBI::dbAppendTable(connection, tableName, patientData)
   }
-  # Observation period records
-  if (!is.null(jsonData$observation_period)) {
-    for(p in 1:length(jsonData$observation_period)) {
-      sql <- paste(sql, createCdmObservationPeriod(jsonData$observation_period[p,]), sep="\n")
-    }
+  return(cdm)
   }
-  # Drug exposure records
-  if (!is.null(jsonData$drug_exposure)) {
-    for(p in 1:length(jsonData$drug_exposure)) {
-      sql <- paste(sql, createCdmDrugExposure(jsonData$drug_exposure[p,]), sep="\n")
-    }
-  }
-  # Condition occurrence records
-  if (!is.null(jsonData$condition_occurrence)) {
-    for(p in 1:length(jsonData$condition_occurrence)) {
-      sql <- paste(sql, createCdmConditionOccurrence(jsonData$condition_occurrence[p,]), sep="\n")
-    }
-  }
-  # Visit occurrence records
-  if (!is.null(jsonData$visit_occurrence)) {
-    for(p in 1:length(jsonData$visit_occurrence)) {
-      sql <- paste(sql, createCdmVisitOccurrence(jsonData$visit_occurrence[p,]), sep="\n")
-    }
-  }
-  # Visit detail records
-  if (!is.null(jsonData$visit_detail)) {
-    for(p in 1:length(jsonData$visit_detail)) {
-      sql <- paste(sql, createCdmVisitDetail(jsonData$visit_detail[p,]), sep="\n")
-    }
-  }
-  # Death records
-  if (!is.null(jsonData$death)) {
-    for(p in 1:length(jsonData$death)) {
-      p <- 1
-      sql <- paste(sql, createCdmDeath(jsonData$death[p,]), sep="\n")
-    }
-  }
-  sqlFilePath <- file.path(pathJson, "sql", paste0(tools::file_path_sans_ext(testCaseFile), ".sql"))
-  SqlRender::writeSql(sql, targetFile = sqlFilePath)
-  if (file.exists(sqlFilePath)) {
-    ParallelLogger::logInfo("SQL for ", testCaseFile, " successfully created")
-  }
-}
-
-pushSQLpatients <- function(connection,
-                            connectionDetails,
-                            cdmDatabaseSchema,
-                            pathSQL = NULL,
-                            testName = NULL) {
-  cdmDatabaseSchema = "main"
-  pathSQL = NULL
-  testName = NULL
-
-  # Set project folder
-  if (is.null(pathSQL)) {
-    pathSQL <- proj_path("inst", "testCases", "sql")
-  }
-
-  # Checks
-  checkmate::assertClass(pathSQL, "character")
-  checkmate::assertDirectoryExists(pathSQL)
-
-  testFiles <- list.files(path = pathSQL,
-                          pattern = ".sql",
-                          include.dirs = FALSE)
-
-  if (is.null(testName)) {
-    testName <- testFiles[1]
-  } else {
-    checkmate::checkClass(testName, "character")
-    testName <- paste0(testName, ".sql")
-  }
-
-  sql <- SqlRender::readSql(file.path(pathSQL, testFiles))
-
-  sql <- SqlRender::render(sql = sql, cdm_database_schema = cdmDatabaseSchema)
-  ParallelLogger::logInfo("Pushing ", testName, " patients to cdm")
-  DatabaseConnector::executeSql(connection = connnection,
-                                sql = sql,
-                                progressBar = TRUE)
-
-}
 
