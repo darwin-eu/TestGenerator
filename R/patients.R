@@ -70,6 +70,7 @@ readPatients <- function(filePath = NULL,
 #' @return A CDM reference object with a sample population.
 #' @import dplyr
 #' @importFrom usethis proj_path
+#' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
 #' @export
@@ -109,7 +110,8 @@ patientsCDM <- function(pathJson = NULL,
 
   if ("empty_cdm" %in% CDMConnector::example_datasets()) {
 
-    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "empty_cdm_5.3.zip")
+    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
+                           "empty_cdm_5.3.zip")
 
     if (!file.exists(vocabPath)) {
       CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
@@ -118,22 +120,28 @@ patientsCDM <- function(pathJson = NULL,
                                         overwrite = TRUE)
     }
 
-    conn <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomia_dir("empty_cdm"))
-    cdm <- CDMConnector::cdmFromCon(con = conn, cdmSchema = "main", writeSchema = "main")
+    conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
+    cdm <- CDMConnector::cdmFromCon(con = conn,
+                                    cdmSchema = "main",
+                                    writeSchema = "main")
 
   } else {
 
     # Get allergies 10K dataset
-    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "synthea-allergies-10k_5.3.zip")
+    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
+                           "synthea-allergies-10k_5.3.zip")
 
     if (!file.exists(vocabPath)) {
       CDMConnector::downloadEunomiaData(datasetName = "synthea-allergies-10k")
     }
 
     # Empty CDM
-    conn <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomia_dir("synthea-allergies-10k"))
-    cdm <- CDMConnector::cdmFromCon(con = conn, cdmSchema = "main", writeSchema = "main")
-    cdm <- emptyCDM(conn = conn, cdm = cdm)
+    conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("synthea-allergies-10k")))
+    cdm <- CDMConnector::cdmFromCon(con = conn,
+                                    cdmSchema = "main",
+                                    writeSchema = "main")
+    cdm <- emptyCDM(conn = conn,
+                    cdm = cdm)
 
   }
 
@@ -156,5 +164,6 @@ patientsCDM <- function(pathJson = NULL,
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
+
   return(cdm)
 }
