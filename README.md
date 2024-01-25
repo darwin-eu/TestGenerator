@@ -5,8 +5,8 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/darwin-eu-dev/TestGenerator)
+[![R-CMD-check](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator)
 <!-- badges: end -->
 
 Does my cohort picked the correct number patients? Am I calculating an

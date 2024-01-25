@@ -89,7 +89,7 @@ readPatients <- function(filePath = NULL,
 #' TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
 #'
 #' # Push the patients to a blank CDM
-#' cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+#' cdm <- TestGenerator::patientsCDM(pathJson = tempdir(), testName = "test")
 #'
 #' # Shutdown the connection
 #' duckdb::duckdb_shutdown(duckdb::duckdb())
