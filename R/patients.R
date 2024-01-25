@@ -82,6 +82,7 @@ readPatients <- function(filePath = NULL,
 #' @importFrom jsonlite fromJSON
 #'
 #' @examples
+#' \donttest{
 #' # Excel file with mock data
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
 #'
@@ -93,7 +94,7 @@ readPatients <- function(filePath = NULL,
 #'
 #' # Shutdown the connection
 #' duckdb::duckdb_shutdown(duckdb::duckdb())
-#'
+#' }
 #' @export
 patientsCDM <- function(pathJson = NULL,
                         testName = NULL) {
