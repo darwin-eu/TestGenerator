@@ -62,18 +62,18 @@ readPatients <- function(filePath = NULL,
   }
 }
 
-#' `patientCDM()` takes a file with patients in JSON format, pushes them into the blank CDM and performs the test.
+#' `patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
 #'
-#' @param pathJson If NULL, takes the project path to create the SQL files.
-#' @param testName Name of the Unit Test Definition, if NULL it will push the first sample population in the testCases directory.
+#' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
+#' @param testName Name of the sample population json file. If NULL it will push the first sample population in the testCases directory.
 #'
-#' @return Study results in the specified folder
+#' @return A CDM reference object with a sample population.
 #' @import dplyr
 #' @importFrom usethis proj_path
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
 #' @export
-cdmPatients <- function(pathJson = NULL,
+patientsCDM <- function(pathJson = NULL,
                         testName = NULL) {
 
   if (is.null(pathJson)) {
@@ -148,11 +148,6 @@ cdmPatients <- function(pathJson = NULL,
       dplyr::pull(cdmFieldName)
     jsonData[[tableName]] <- jsonData[[tableName]] %>%
       select(currentCoulumns[currentCoulumns %in% expectedColumns])
-    # for (column in expectedColumns) {
-    #   if (!column %in% names(jsonData[[tableName]])) {
-    #     jsonData[[tableName]][, column] <- NA
-    #   }
-    # }
   }
 
   # Convert the JSON data into a data frame and append it to the blank CDM
@@ -161,7 +156,5 @@ cdmPatients <- function(pathJson = NULL,
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
-
   return(cdm)
 }
-
