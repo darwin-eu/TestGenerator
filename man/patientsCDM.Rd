@@ -9,11 +9,25 @@ patientsCDM(pathJson = NULL, testName = NULL)
 \arguments{
 \item{pathJson}{Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.}
 
-\item{testName}{Name of the sample population json file. If NULL it will push the first sample population in the testCases directory.}
+\item{testName}{Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.}
 }
 \value{
 A CDM reference object with a sample population.
 }
 \description{
 `patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
+}
+\examples{
+# Excel file with mock data
+filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
+
+# Save population in JSON
+TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
+
+# Push the patients to a blank CDM
+cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+
+# Shutdown the connection
+duckdb::duckdb_shutdown(duckdb::duckdb())
+
 }

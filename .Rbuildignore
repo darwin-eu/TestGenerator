@@ -6,3 +6,4 @@
 ^\.github$
 ^NOTES\.R$
 ^errorReportSql\.txt$
+^cran-comments\.md$

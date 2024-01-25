@@ -1,13 +1,3 @@
-#' `emptyCDM()` truncates all the tables except those from the vocabulary for testing purposes
-#'
-#' @param conn A DBI connection
-#' @param cdm A CDM reference object
-#'
-#' @return A blank CDM with vocabulary
-#' @import dplyr
-#' @importFrom DBI dbConnect dbExecute
-#' @importFrom CDMConnector downloadEunomiaData cdmFromCon
-#' @export
 emptyCDM <- function(conn, cdm) {
 
   for (table_name in names(cdm)) {

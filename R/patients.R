@@ -1,10 +1,10 @@
 #' `readPatients()` converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
 #'
-#' @param filePath Path to the test patient data in Excel format.
-#' @param testName Name of the test population in character.
-#' @param outputPath Path of the output file, iff NULL, a folder will be created in the project folder inst/testCases
+#' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
+#' @param testName A name of the test population in character.
+#' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
 #'
-#' @return A JSON file for testing inside the project directory.
+#' @return A JSON file with sample patients inside the project directory.
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
@@ -13,6 +13,13 @@
 #' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
+#'
+#' @examples
+#' # Excel file with mock data
+#' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
+#'
+#' # Save population in JSON
+#' readPatients(filePath = filePath, outputPath = tempdir())
 #'
 #' @export
 readPatients <- function(filePath = NULL,
@@ -65,7 +72,7 @@ readPatients <- function(filePath = NULL,
 #' `patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
-#' @param testName Name of the sample population json file. If NULL it will push the first sample population in the testCases directory.
+#' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.
 #'
 #' @return A CDM reference object with a sample population.
 #' @import dplyr
@@ -73,6 +80,20 @@ readPatients <- function(filePath = NULL,
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
+#'
+#' @examples
+#' # Excel file with mock data
+#' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
+#'
+#' # Save population in JSON
+#' TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
+#'
+#' # Push the patients to a blank CDM
+#' cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+#'
+#' # Shutdown the connection
+#' duckdb::duckdb_shutdown(duckdb::duckdb())
+#'
 #' @export
 patientsCDM <- function(pathJson = NULL,
                         testName = NULL) {

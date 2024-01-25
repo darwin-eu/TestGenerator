@@ -7,15 +7,23 @@
 readPatients(filePath = NULL, testName = "test", outputPath = NULL)
 }
 \arguments{
-\item{filePath}{Path to the test patient data in Excel format.}
+\item{filePath}{Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.}
 
-\item{testName}{Name of the test population in character.}
+\item{testName}{A name of the test population in character.}
 
-\item{outputPath}{Path of the output file, iff NULL, a folder will be created in the project folder inst/testCases}
+\item{outputPath}{Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.}
 }
 \value{
-A JSON file for testing inside the project directory.
+A JSON file with sample patients inside the project directory.
 }
 \description{
 `readPatients()` converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
+}
+\examples{
+# Excel file with mock data
+filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
+
+# Save population in JSON
+readPatients(filePath = filePath, outputPath = tempdir())
+
 }

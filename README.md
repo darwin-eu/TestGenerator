@@ -26,12 +26,14 @@ Study](https://github.com/mi-erasmusmc/RanitidineStudy/blob/master/unitTesting_R
 
 ## Installation
 
-You can install the development version of TestGenerator from
-[GitHub](https://github.com/) with:
+To install the development version of TestGenerator:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("darwin-eu-dev/TestGenerator")
+# From CRAN
+install.packages("TestGenerator")
+
+# Development version
+remotes::install_github("darwin-eu-dev/TestGenerator")
 ```
 
 ## Example
