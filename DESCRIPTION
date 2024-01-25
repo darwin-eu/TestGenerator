@@ -15,10 +15,8 @@ RoxygenNote: 7.2.3
 Depends:
     R (>= 4.1.0)
 Imports: 
-    DatabaseConnector,
     fs,
     jsonlite,
-    ParallelLogger,
     readxl,
     usethis,
     CDMConnector,
@@ -27,7 +25,6 @@ Imports:
     checkmate,
     glue,
     duckdb,
-    SqlRender
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

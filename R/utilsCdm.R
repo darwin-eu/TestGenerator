@@ -2,14 +2,13 @@
 #'
 #' @param conn A DBI connection
 #' @param cdm A CDM reference object
-#' @param cdmSchema CDM schema.
 #'
 #' @return A blank CDM with vocabulary
 #' @import dplyr
 #' @importFrom DBI dbConnect dbExecute
 #' @importFrom CDMConnector downloadEunomiaData cdmFromCon
 #' @export
-emptyCDM <- function(conn, cdm, cdmSchema) {
+emptyCDM <- function(conn, cdm) {
 
   for (table_name in names(cdm)) {
     if (table_name %in% c("person",
