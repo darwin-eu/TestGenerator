@@ -18,6 +18,7 @@ A CDM reference object with a sample population.
 `patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
 }
 \examples{
+\donttest{
 # Excel file with mock data
 filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
 
@@ -29,5 +30,5 @@ cdm <- TestGenerator::patientsCDM(pathJson = tempdir(), testName = "test")
 
 # Shutdown the connection
 duckdb::duckdb_shutdown(duckdb::duckdb())
-
+}
 }
