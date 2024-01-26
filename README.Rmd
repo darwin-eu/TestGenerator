@@ -16,8 +16,9 @@ knitr::opts_chunk$set(
 # TestGenerator
 
 <!-- badges: start -->
-[![R-CMD-check](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator)
+[![R-CMD-check](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/darwin-eu-dev/TestGenerator)
+[![CRAN status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
 <!-- badges: end -->
 
 Does my cohort picked the correct number patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It just takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and it is challenging to test calculations on huge and complex databases. 
@@ -40,7 +41,7 @@ remotes::install_github("darwin-eu-dev/TestGenerator")
 
 ## Example
 
-The user should provide an Excel file with a micro population of around 10 patients for testing purposes. That can include any table from the OMOP-CDM. 
+The user should provide an Excel file [(link to sample)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/testPatientsRSV.xlsx) with a micro population of around 10 patients for testing purposes. That can include any table from the OMOP-CDM. 
 
 `readPatients()` will read the Excel file, and saves the data in a JSON file. This is useful if the user wants to create more than one Unit Test Definitions. 
 
@@ -63,3 +64,18 @@ cdm <- TestGenerator::patientCDM(
 ```
 
 Now the user has a CDM reference with a complete vocabulary and a universe of just 10 patients to unit test functions of a particular study. 
+
+```{r, echo=FALSE}
+filePath <- system.file("extdata/testPatientsRSV.xlsx", package = "TestGenerator")
+outputPath <- file.path(tempdir(), "test")
+dir.create(outputPath)
+TestGenerator::readPatients(filePath = filePath, outputPath = outputPath)
+cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+print(cdm)
+unlink(outputPath, recursive = TRUE)
+```
+
+```{r, echo=FALSE}
+print(cdm$person)
+duckdb::duckdb_shutdown(duckdb::duckdb())
+```

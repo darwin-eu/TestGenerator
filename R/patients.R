@@ -1,4 +1,4 @@
-#' `readPatients()` converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
+#' Converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
 #'
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
@@ -69,7 +69,7 @@ readPatients <- function(filePath = NULL,
   }
 }
 
-#' `patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
+#' Pushes test population into a blank CDM.
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
 #' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.

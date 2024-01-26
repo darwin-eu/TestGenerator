@@ -5,8 +5,10 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/gh/darwin-eu-dev/TestGenerator)
+[![R-CMD-check](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/darwin-eu-dev/TestGenerator)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
 <!-- badges: end -->
 
 Does my cohort picked the correct number patients? Am I calculating an
@@ -38,9 +40,10 @@ remotes::install_github("darwin-eu-dev/TestGenerator")
 
 ## Example
 
-The user should provide an Excel file with a micro population of around
-10 patients for testing purposes. That can include any table from the
-OMOP-CDM.
+The user should provide an Excel file [(link to
+sample)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/testPatientsRSV.xlsx)
+with a micro population of around 10 patients for testing purposes. That
+can include any table from the OMOP-CDM.
 
 `readPatients()` will read the Excel file, and saves the data in a JSON
 file. This is useful if the user wants to create more than one Unit Test
@@ -66,3 +69,30 @@ cdm <- TestGenerator::patientCDM(
 Now the user has a CDM reference with a complete vocabulary and a
 universe of just 10 patients to unit test functions of a particular
 study.
+
+    #> Unit Test Definition created in C:\Users\cbarboza\AppData\Local\Temp\RtmpicTS7O/test
+    #> # OMOP CDM reference (tbl_duckdb_connection)
+    #> 
+    #> Tables: person, observation_period, visit_occurrence, visit_detail, condition_occurrence, drug_exposure, procedure_occurrence, device_exposure, measurement, observation, death, note, note_nlp, specimen, fact_relationship, location, care_site, provider, payer_plan_period, cost, drug_era, dose_era, condition_era, metadata, cdm_source, concept, vocabulary, domain, concept_class, concept_relationship, relationship, concept_synonym, concept_ancestor, source_to_concept_map, drug_strength, cohort_definition, attribute_definition
+
+    #> # Source:   table<person> [?? x 18]
+    #> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpicTS7O\file264829f6330b.duckdb]
+    #>    person_id gender_concept_id year_of_birth month_of_birth day_of_birth
+    #>        <int>             <int>         <int>          <int>        <int>
+    #>  1         1              8532          1980             NA           NA
+    #>  2         2              8507          1980             NA           NA
+    #>  3         3              8532          1965             NA           NA
+    #>  4         4              8532          2010             NA           NA
+    #>  5         5              8532          1936             NA           NA
+    #>  6         6              8532          1970             NA           NA
+    #>  7         7              8532          1988             NA           NA
+    #>  8         8              8507          1998             NA           NA
+    #>  9         9              8507          1990             NA           NA
+    #> 10        10              8532          1945             NA           NA
+    #> # ℹ more rows
+    #> # ℹ 13 more variables: birth_datetime <dttm>, race_concept_id <int>,
+    #> #   ethnicity_concept_id <int>, location_id <int>, provider_id <int>,
+    #> #   care_site_id <int>, person_source_value <chr>, gender_source_value <chr>,
+    #> #   gender_source_concept_id <int>, race_source_value <chr>,
+    #> #   race_source_concept_id <int>, ethnicity_source_value <chr>,
+    #> #   ethnicity_source_concept_id <int>

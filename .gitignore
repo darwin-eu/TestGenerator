@@ -5,3 +5,5 @@
 inst/testCases
 NOTES.R
 errorReportSql.txt
+inst/doc
+docs

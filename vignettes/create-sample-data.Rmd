@@ -1,0 +1,55 @@
+---
+title: "Create Sample Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Create Sample Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(TestGenerator)
+```
+
+`TestGenerator` takes as an input an Excel file with sheets that represent a table in the OMOP-CDM. The following example [(testPatientsRSV.xlsx)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/testPatientsRSV.xlsx) represents a population of 10 patients, some of them with RSV.
+
+```{r, echo=FALSE}
+personTable <- readxl::read_xlsx(system.file("extdata/testPatientsRSV.xlsx", 
+                                               package = "TestGenerator"),
+                                               sheet = "person")
+head(personTable, n = 10)
+```
+The user can include only the tables that are relevant to the analysis. 
+
+```{r, echo=FALSE}
+patientTables <- readxl::excel_sheets(system.file("extdata/testPatientsRSV.xlsx", 
+                                                  package = "TestGenerator"))
+patientTables
+```
+
+`TestGenerator::readPatients()` converts the file into JSON format and saves it in the project. The sample data is then pushed to a blank CDM with `patientsCDM()`. 
+
+```{r, echo=FALSE}
+filePath <- system.file("extdata/testPatientsRSV.xlsx", package = "TestGenerator")
+outputPath <- file.path(tempdir(), "test")
+dir.create(outputPath)
+TestGenerator::readPatients(filePath = filePath, outputPath = outputPath)
+cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+print(cdm)
+unlink(outputPath, recursive = TRUE)
+```
+
+That returns a CDM reference object that now can be used to perform unit tests.
+
+```{r, echo=FALSE}
+print(cdm$person)
+duckdb::duckdb_shutdown(duckdb::duckdb())
+```
+
