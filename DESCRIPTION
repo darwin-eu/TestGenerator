@@ -30,6 +30,6 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/darwin-eu-dev/TestGenerator
+URL: https://github.com/darwin-eu-dev/TestGenerator, https://darwin-eu-dev.github.io/TestGenerator/
 BugReports: https://github.com/darwin-eu-dev/TestGenerator/issues
 VignetteBuilder: knitr
