@@ -2,7 +2,7 @@
 % Please edit documentation in R/patients.R
 \name{patientsCDM}
 \alias{patientsCDM}
-\title{`patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.}
+\title{Pushes test population into a blank CDM.}
 \usage{
 patientsCDM(pathJson = NULL, testName = NULL)
 }
@@ -15,7 +15,7 @@ patientsCDM(pathJson = NULL, testName = NULL)
 A CDM reference object with a sample population.
 }
 \description{
-`patientsCDM()` takes a file with patients in JSON format and pushes them into a blank CDM.
+Pushes test population into a blank CDM.
 }
 \examples{
 \donttest{

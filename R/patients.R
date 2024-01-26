@@ -55,14 +55,14 @@ readPatients <- function(filePath = NULL,
   if (is.null(outputPath)) {
     usethis::use_directory(fs::path("inst", "testCases"))
     outputPath <- fs::path("inst", "testCases")
-    testName <- paste0(outputPath, "/", testName, ".json")
+    testPath <- paste0(outputPath, "/", testName, ".json")
   } else {
     checkmate::assertCharacter(outputPath)
     checkmate::assertDirectoryExists(outputPath)
-    testName <- paste0(outputPath, "/", testName, ".json")
+    testPath <- paste0(outputPath, "/", testName, ".json")
   }
-  write(testCaseFile, file = testName)
-  if (checkmate::checkFileExists(testName)) {
+  write(testCaseFile, file = testPath)
+  if (checkmate::checkFileExists(testPath)) {
     message(glue::glue("Unit Test Definition created successfully: {testName}"))
   } else {
     stop("Unit Test Definition creation failed")

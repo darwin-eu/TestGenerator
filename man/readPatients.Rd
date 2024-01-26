@@ -2,7 +2,7 @@
 % Please edit documentation in R/patients.R
 \name{readPatients}
 \alias{readPatients}
-\title{`readPatients()` converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.}
+\title{Converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.}
 \usage{
 readPatients(filePath = NULL, testName = "test", outputPath = NULL)
 }
@@ -17,7 +17,7 @@ readPatients(filePath = NULL, testName = "test", outputPath = NULL)
 A JSON file with sample patients inside the project directory.
 }
 \description{
-`readPatients()` converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
+Converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
 }
 \examples{
 # Excel file with mock data

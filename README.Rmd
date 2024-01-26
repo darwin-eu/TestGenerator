@@ -57,7 +57,7 @@ TestGenerator::readPatients(
 `patientCDM()` pushes one of those Unit Test Definitions into a blank CDM reference with a complete version of the vocabulary.
 
 ```{r, eval=FALSE}
-cdm <- TestGenerator::patientCDM(
+cdm <- TestGenerator::patientsCDM(
   pathJson = "inst/testCases", 
   testName = "test")
 
