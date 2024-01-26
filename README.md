@@ -66,18 +66,17 @@ cdm <- TestGenerator::patientsCDM(
   testName = "test")
 ```
 
-Now the user has a CDM reference with a complete vocabulary and a
-universe of just 10 patients to unit test functions of a particular
-study.
+Now the user has a CDM reference with a complete vocabulary and just 10
+patients to unit test functions of a particular study.
 
-    #> Unit Test Definition created successfully: C:\Users\cbarboza\AppData\Local\Temp\RtmpiqaYIy/test/test.json
+    #> Unit Test Definition created successfully: test
     #> Patients pushes to blanck CDM successfully
     #> # OMOP CDM reference (tbl_duckdb_connection)
     #> 
     #> Tables: person, observation_period, visit_occurrence, visit_detail, condition_occurrence, drug_exposure, procedure_occurrence, device_exposure, measurement, observation, death, note, note_nlp, specimen, fact_relationship, location, care_site, provider, payer_plan_period, cost, drug_era, dose_era, condition_era, metadata, cdm_source, concept, vocabulary, domain, concept_class, concept_relationship, relationship, concept_synonym, concept_ancestor, source_to_concept_map, drug_strength, cohort_definition, attribute_definition
 
     #> # Source:   table<person> [?? x 18]
-    #> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpiqaYIy\file33f87bf01089.duckdb]
+    #> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmpo1GB6k\file5e2c3c3a6f6b.duckdb]
     #>    person_id gender_concept_id year_of_birth month_of_birth day_of_birth
     #>        <int>             <int>         <int>          <int>        <int>
     #>  1         1              8532          1980             NA           NA
