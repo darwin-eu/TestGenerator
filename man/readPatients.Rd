@@ -20,10 +20,7 @@ A JSON file with sample patients inside the project directory.
 Converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.
 }
 \examples{
-# Excel file with mock data
 filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
-
-# Save population in JSON
 readPatients(filePath = filePath, outputPath = tempdir())
 
 }

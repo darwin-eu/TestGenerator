@@ -15,10 +15,7 @@
 #' @importFrom glue glue
 #'
 #' @examples
-#' # Excel file with mock data
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
-#'
-#' # Save population in JSON
 #' readPatients(filePath = filePath, outputPath = tempdir())
 #'
 #' @export
@@ -83,16 +80,9 @@ readPatients <- function(filePath = NULL,
 #'
 #' @examples
 #' \donttest{
-#' # Excel file with mock data
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
-#'
-#' # Save population in JSON
 #' TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
-#'
-#' # Push the patients to a blank CDM
 #' cdm <- TestGenerator::patientsCDM(pathJson = tempdir(), testName = "test")
-#'
-#' # Shutdown the connection
 #' duckdb::duckdb_shutdown(duckdb::duckdb())
 #' }
 #' @export
