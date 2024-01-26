@@ -1,3 +1,7 @@
+# TestGenerator 0.2.2
+
+* Updated messages in functions.
+
 # TestGenerator 0.2.1
 
 * Updated documentation and vignette explaining sample data.
