@@ -1,6 +1,6 @@
 Package: TestGenerator
 Type: Package
-Title: Integration Tests for Studies on the OMOP-CDM
+Title: Integration Unit Tests for Studies on the OMOP-CDM
 Version: 0.2.2
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
