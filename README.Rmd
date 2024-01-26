@@ -32,9 +32,6 @@ This package is based on the unit testing written for the [Eramus MC Ranitidine 
 To install the development version of TestGenerator:
 
 ```{r, eval=FALSE}
-# From CRAN
-install.packages("TestGenerator")
-
 # Development version
 remotes::install_github("darwin-eu-dev/TestGenerator")
 ```

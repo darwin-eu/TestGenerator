@@ -186,6 +186,6 @@ patientsCDM <- function(pathJson = NULL,
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
-  message(glue::glue("Patients pushes to blanck CDM successfully"))
+  message(glue::glue("Patients pushed to blank CDM successfully"))
   return(cdm)
 }
