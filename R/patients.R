@@ -63,7 +63,7 @@ readPatients <- function(filePath = NULL,
   }
   write(testCaseFile, file = testName)
   if (checkmate::checkFileExists(testName)) {
-    message(glue::glue("Unit Test Definition created in {outputPath}"))
+    message(glue::glue("Unit Test Definition created successfully: {testName}"))
   } else {
     stop("Unit Test Definition creation failed")
   }
@@ -186,6 +186,6 @@ patientsCDM <- function(pathJson = NULL,
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
-
+  message(glue::glue("Patients pushes to blanck CDM successfully"))
   return(cdm)
 }
