@@ -1,3 +1,7 @@
+# TestGenerator 0.2.1
+
+* Updated documentation and vignette explaining sample data.
+
 # TestGenerator 0.2.0
 
 * Initial CRAN submission.
