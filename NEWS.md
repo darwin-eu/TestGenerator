@@ -1,3 +1,7 @@
+# TestGenerator 0.2.3
+
+* Updated examples.
+
 # TestGenerator 0.2.2
 
 * Updated messages in functions.
