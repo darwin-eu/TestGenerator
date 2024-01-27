@@ -7,7 +7,7 @@ Authors@R: c(
     person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut", comment = c(ORCID = "0000-0001-8993-8748")),
     person("Adam", "Black", , "black@ohdsi.org", role = "aut", comment = c(ORCID = "0000-0001-5576-8701"))
   )
-Description: Push a sample population for unit testing on data mapped to the Observational Medical Outcomes Partnership (OMOP) Common Data Model
+Description: Push a sample population for unit testing on data mapped to the Observational Medical Outcomes Partnership (OMOP) Common Data Model.
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
