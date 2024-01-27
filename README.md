@@ -14,8 +14,8 @@ status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-proj
 Does my cohort picked the correct number patients? Am I calculating an
 intersection in the right way? Is that the expected value for treatment
 duration? It just takes one incorrect parameter to get incoherent
-results in a pharmacoepidemiological study, and it is challenging to
-test calculations on huge and complex databases.
+results in a pharmacoepidemiological study, and it is very challenging
+to test calculations on huge and complex databases.
 
 That is why TestGenerator is useful to push a micro sample of around 10
 patients to unit test a study on the OMOP-CDM. It includes tools to
@@ -73,7 +73,7 @@ patients to unit test functions of a particular study.
     #> Tables: person, observation_period, visit_occurrence, visit_detail, condition_occurrence, drug_exposure, procedure_occurrence, device_exposure, measurement, observation, death, note, note_nlp, specimen, fact_relationship, location, care_site, provider, payer_plan_period, cost, drug_era, dose_era, condition_era, metadata, cdm_source, concept, vocabulary, domain, concept_class, concept_relationship, relationship, concept_synonym, concept_ancestor, source_to_concept_map, drug_strength, cohort_definition, attribute_definition
 
     #> # Source:   table<person> [?? x 18]
-    #> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpOkRH5L\file6b2815fa5970.duckdb]
+    #> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmpyk7YO6\file1b60470f3ac1.duckdb]
     #>    person_id gender_concept_id year_of_birth month_of_birth day_of_birth
     #>        <int>             <int>         <int>          <int>        <int>
     #>  1         1              8532          1980             NA           NA
