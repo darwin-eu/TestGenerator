@@ -1,3 +1,7 @@
+# TestGenerator 0.2.4
+
+* Updated DESCRIPTION.
+
 # TestGenerator 0.2.3
 
 * Updated examples.
