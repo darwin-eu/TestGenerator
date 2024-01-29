@@ -1,3 +1,7 @@
+# TestGenerator 0.2.5
+
+* Using omopgenerics for checking Excel data.
+
 # TestGenerator 0.2.4
 
 * Updated DESCRIPTION.
