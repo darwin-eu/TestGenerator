@@ -69,6 +69,7 @@ readPatients <- function(filePath = NULL,
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
+#' @importFrom CDMConnector downloadEunomiaData example_datasets eunomia_dir cdmFromCon
 #'
 #' @examples
 #' \donttest{
