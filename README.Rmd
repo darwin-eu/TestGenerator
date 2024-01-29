@@ -17,11 +17,11 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/darwin-eu-dev/TestGenerator)
+[![codecov](https://codecov.io/github/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/TestGenerator?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
 <!-- badges: end -->
 
-Does my cohort picked the correct number patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It just takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and it is challenging to test calculations on huge and complex databases. 
+Does my cohort picked the correct number patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It just takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and it is very challenging to test calculations on huge and complex databases. 
 
 That is why TestGenerator is useful to push a micro sample of around 10 patients to unit test a study on the OMOP-CDM. It includes tools to create a blank CDM with a complete vocabulary and check if the code is doing what we expect. 
 
