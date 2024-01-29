@@ -13,6 +13,7 @@
 #' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
+#' @importFrom omopgenerics omopTables
 #'
 #' @examples
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
@@ -27,17 +28,8 @@ readPatients <- function(filePath = NULL,
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
 
-  sheets <- c("person",
-              "observation_period",
-              "drug_exposure",
-              "condition_occurrence",
-              "visit_occurrence",
-              "visit_context",
-              "visit_detail",
-              "death")
-
   patientTables <- readxl::excel_sheets(filePath)
-  checkmate::assert(all(patientTables %in% sheets))
+  checkmate::assert(all(patientTables %in% omopgenerics::omopTables()))
 
   listPatientTables <- lapply(patientTables,
                               readxl::read_excel,

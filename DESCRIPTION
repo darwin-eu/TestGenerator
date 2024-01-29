@@ -25,6 +25,7 @@ Imports:
     checkmate,
     glue,
     duckdb,
+    omopgenerics
 Suggests: 
     knitr,
     rmarkdown,
