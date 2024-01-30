@@ -1,6 +1,6 @@
 Package: TestGenerator
 Type: Package
-Title: Integration Unit Tests for Pharmacoepidemiolological Studies
+Title: Integration Unit Tests for Pharmacoepidemiological Studies
 Version: 0.2.5
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
@@ -25,8 +25,7 @@ Imports:
     dplyr,
     checkmate,
     glue,
-    duckdb,
-    omopgenerics
+    duckdb
 Suggests: 
     knitr,
     rmarkdown,
