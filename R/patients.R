@@ -13,7 +13,6 @@
 #' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
-#' @importFrom omopgenerics omopTables
 #'
 #' @examples
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
@@ -24,17 +23,19 @@ readPatients <- function(filePath = NULL,
                          testName = "test",
                          outputPath = NULL) {
 
-  # filePath <- here::here("extras", "testPatients.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
 
+  expectedTables <- spec_cdm_field[["5.3"]] %>%
+    dplyr::pull(cdmTableName)
+
   patientTables <- readxl::excel_sheets(filePath)
-  checkmate::assert(all(patientTables %in% omopgenerics::omopTables()))
+  checkmate::assert(all(patientTables %in% unique(expectedTables)))
 
   listPatientTables <- lapply(patientTables,
                               readxl::read_excel,
                               path = filePath)
-  # names(listPatientTables) <- tolower(paste0("", patientTables))
+
   names(listPatientTables) <- tolower(patientTables)
 
   testCaseFile <- jsonlite::toJSON(listPatientTables,
