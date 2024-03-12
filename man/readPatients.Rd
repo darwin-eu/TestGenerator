@@ -4,7 +4,12 @@
 \alias{readPatients}
 \title{Converts a sample of patients in XLSX format into Unit Testing Definition in JSON format.}
 \usage{
-readPatients(filePath = NULL, testName = "test", outputPath = NULL)
+readPatients(
+  filePath = NULL,
+  testName = "test",
+  outputPath = NULL,
+  cdmVersion = "5.3"
+)
 }
 \arguments{
 \item{filePath}{Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.}
@@ -12,6 +17,8 @@ readPatients(filePath = NULL, testName = "test", outputPath = NULL)
 \item{testName}{A name of the test population in character.}
 
 \item{outputPath}{Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.}
+
+\item{cdmVersion}{cdm version, default "5.3".}
 }
 \value{
 A JSON file with sample patients inside the project directory.
