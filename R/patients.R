@@ -3,6 +3,7 @@
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
+#' @param cdmVersion cdm version, default "5.3".
 #'
 #' @return A JSON file with sample patients inside the project directory.
 #'
@@ -21,12 +22,13 @@
 #' @export
 readPatients <- function(filePath = NULL,
                          testName = "test",
-                         outputPath = NULL) {
+                         outputPath = NULL,
+                         cdmVersion = "5.3") {
 
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
 
-  expectedTables <- spec_cdm_field[["5.3"]] %>%
+  expectedTables <- spec_cdm_field[[cdmVersion]] %>%
     dplyr::pull(cdmTableName)
 
   patientTables <- readxl::excel_sheets(filePath)
@@ -63,6 +65,7 @@ readPatients <- function(filePath = NULL,
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
 #' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.
+#' @param cdmVersion cdm version, default "5.3".
 #'
 #' @return A CDM reference object with a sample population.
 #' @import dplyr
@@ -81,7 +84,8 @@ readPatients <- function(filePath = NULL,
 #' }
 #' @export
 patientsCDM <- function(pathJson = NULL,
-                        testName = NULL) {
+                        testName = NULL,
+                        cdmVersion = "5.3") {
 
   if (is.null(pathJson)) {
     pathJson <- proj_path("inst", "testCases")
@@ -117,11 +121,11 @@ patientsCDM <- function(pathJson = NULL,
   if ("empty_cdm" %in% CDMConnector::example_datasets()) {
 
     vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                           "empty_cdm_5.3.zip")
+                           glue::glue("empty_cdm_{cdmVersion}.zip"))
 
     if (!file.exists(vocabPath)) {
       CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
-                                        cdmVersion = "5.3",
+                                        cdmVersion = cdmVersion,
                                         pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
                                         overwrite = TRUE)
     }
@@ -135,7 +139,7 @@ patientsCDM <- function(pathJson = NULL,
 
     # Get allergies 10K dataset
     vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                           "synthea-allergies-10k_5.3.zip")
+                           glue::glue("synthea-allergies-10k_{cdmVersion}.zip"))
 
     if (!file.exists(vocabPath)) {
       CDMConnector::downloadEunomiaData(datasetName = "synthea-allergies-10k")
@@ -157,7 +161,7 @@ patientsCDM <- function(pathJson = NULL,
   for (tableName in names(jsonData)) {
     # tableName <- "visit_detail"
     currentCoulumns <- names(jsonData[[tableName]])
-    expectedColumns <- spec_cdm_field[["5.3"]] %>%
+    expectedColumns <- spec_cdm_field[[cdmVersion]] %>%
       dplyr::filter(cdmTableName == tableName) %>%
       dplyr::pull(cdmFieldName)
     jsonData[[tableName]] <- jsonData[[tableName]] %>%
