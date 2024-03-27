@@ -19,6 +19,7 @@ Imports:
     fs,
     jsonlite,
     readxl,
+    readr,
     usethis,
     CDMConnector,
     DBI,
