@@ -137,8 +137,6 @@ readPatients.csv <- function(filePath = NULL,
   }
 }
 
-
-
 #' Pushes test population into a blank CDM.
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
