@@ -1,3 +1,22 @@
+#' Download Test Data Files
+#'
+#' @param datasetName The data set name as found on https://github.com/darwin-eu/EunomiaDatasets. The
+#'  data set name corresponds to the folder with the data set ZIP files
+#' @param cdmVersion The OMOP CDM version. This version will appear in the suffix of the data file,
+#'  for example: synpuf_5.3.zip. Default: '5.3'
+#' @param pathToData The path where the Eunomia data is stored on the file system., By default the
+#'  value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
+#' @param overwrite Control whether the existing archive file will be overwritten should it already exist.
+#' @return
+#' Invisibly returns the destination if the download was successful.
+#'
+#' @importFrom utils download.file
+#'
+#' @examples
+#' \dontrun{
+#' downloadTestData()
+#' }
+#' @export
 downloadTestData <- function(datasetName = "mimicIV",
                              cdmVersion = "5.3",
                              pathToData = Sys.getenv("STUDY_DATASETS"),
