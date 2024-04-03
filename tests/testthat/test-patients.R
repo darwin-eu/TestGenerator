@@ -43,7 +43,15 @@ test_that("Reading sample MIMIC patients CSV files and JSON creation", {
 })
 
 test_that("Reading MIMIC patients CSV files and JSON creation", {
-  filePath <- "C:/Users/cbarboza/OneDrive - Darwin EU Coordination Centre/TestGenerator_docs/MIMIC_5.3"
+  pathToData <- tempdir()
+  pathToZipFile <- downloadTestData(datasetName = "mimicIV",
+                                    cdmVersion = "5.3",
+                                    pathToData = pathToData,
+                                    overwrite = TRUE)
+  unzip(pathToZipFile, exdir = pathToData)
+  filePath <- file.path(pathToData,
+                        "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
+                        "1_omop_data_csv")
   outputPath <- file.path(tempdir(), "test1")
   dir.create(outputPath)
   testName <- "test"
@@ -57,11 +65,19 @@ test_that("Reading MIMIC patients CSV files and JSON creation", {
 })
 
 test_that("Mimic data Patients to CDM function", {
-  filePath <- "C:/Users/cbarboza/OneDrive - Darwin EU Coordination Centre/TestGenerator_docs/MIMIC_5.3"
+  pathToData <- tempdir()
+  cdmVersion <- "5.3"
+  pathToZipFile <- downloadTestData(datasetName = "mimicIV",
+                                    cdmVersion = cdmVersion,
+                                    pathToData = pathToData,
+                                    overwrite = TRUE)
+  unzip(pathToZipFile, exdir = pathToData)
+  filePath <- file.path(pathToData,
+                        "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
+                        "1_omop_data_csv")
   outputPath <- file.path(tempdir(), "test1")
   dir.create(outputPath)
   testName <- "test"
-  cdmVersion <- "5.3"
   readPatients.csv(filePath = filePath,
                    testName = testName,
                    outputPath = outputPath,
@@ -76,12 +92,23 @@ test_that("Mimic data Patients to CDM function", {
 })
 
 test_that("conver ids function", {
-  filePath <- "C:/Users/cbarboza/OneDrive - Darwin EU Coordination Centre/TestGenerator_docs/MIMIC_5.3"
+  pathToData <- tempdir()
   cdmVersion <- "5.3"
+  pathToZipFile <- downloadTestData(datasetName = "mimicIV",
+                                    cdmVersion = cdmVersion,
+                                    pathToData = pathToData,
+                                    overwrite = TRUE)
+  unzip(pathToZipFile, exdir = pathToData)
+  filePath <- file.path(pathToData,
+                        "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
+                        "1_omop_data_csv")
   cdmTables <- fileColumnCheck(filePath, cdmVersion)
   cdmTables <- convertIds(cdmTables)
   measurement_ids <- cdmTables$measurement %>% pull(measurement_id)
   expect_equal(measurement_ids, seq(1, length(measurement_ids)))
+  unlink(pathToData, recursive = TRUE)
+  unlink(filePath, recursive = TRUE)
+  duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
 

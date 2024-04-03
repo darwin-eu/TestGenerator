@@ -8,7 +8,8 @@ readPatients.csv(
   filePath = NULL,
   testName = "test",
   outputPath = NULL,
-  cdmVersion = "5.3"
+  cdmVersion = "5.3",
+  reduceLargeIds = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ readPatients.csv(
 \item{outputPath}{Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.}
 
 \item{cdmVersion}{cdm version, default "5.3".}
+
+\item{reduceLargeIds}{Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.}
 }
 \value{
 A JSON file with sample patients inside the project directory.

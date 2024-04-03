@@ -96,8 +96,7 @@ readPatients.csv <- function(filePath = NULL,
   checkmate::assertTRUE(cdmVersion %in% c("5.3", "5.4"))
 
   # Check column
-  cdmTables <- fileColumnCheck(filePath,
-                                       cdmVersion)
+  cdmTables <- fileColumnCheck(filePath, cdmVersion)
 
   if (reduceLargeIds) {
     cdmTables <- convertIds(cdmTables)
@@ -134,8 +133,8 @@ fileColumnCheck <- function(filePath, cdmVersion) {
   checkmate::assertTRUE(cdmVersion %in% c("5.3", "5.4"))
   csvFiles <- list.files(filePath, pattern = ".csv", full.names = TRUE)
   csvFilesNames <- list.files(filePath, pattern = ".csv")
-  checkmate::assertCharacter(csvFiles)
-  checkmate::assertCharacter(csvFilesNames)
+  checkmate::assertCharacter(csvFiles, any.missing = FALSE, min.len = 1)
+  checkmate::assertCharacter(csvFilesNames, any.missing = FALSE, min.len = 1)
   currentTables <- spec_cdm_field[[cdmVersion]] %>%
     dplyr::pull(cdmTableName) %>%
     unique()
@@ -217,7 +216,6 @@ convertIds <- function(cdmTables) {
   }
   return(cdmTables)
 }
-
 
 #' Pushes test population into a blank CDM.
 #'
