@@ -34,13 +34,13 @@ readPatients.xl <- function(filePath = NULL,
   patientTables <- readxl::excel_sheets(filePath)
   checkmate::assert(all(patientTables %in% unique(expectedTables)))
 
-  listPatientTables <- lapply(patientTables,
+  cdmTables <- lapply(patientTables,
                               readxl::read_excel,
                               path = filePath)
 
-  names(listPatientTables) <- tolower(patientTables)
+  names(cdmTables) <- tolower(patientTables)
 
-  testCaseFile <- jsonlite::toJSON(listPatientTables,
+  testCaseFile <- jsonlite::toJSON(cdmTables,
                                    dataframe = "rows",
                                    pretty = TRUE)
 
@@ -67,6 +67,7 @@ readPatients.xl <- function(filePath = NULL,
 #' @param testName Name for the test population file in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
 #' @param cdmVersion cdm version, default "5.3".
+#' @param reduceLargeIds Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.
 #'
 #' @return A JSON file with sample patients inside the project directory.
 #'
@@ -87,39 +88,27 @@ readPatients.xl <- function(filePath = NULL,
 readPatients.csv <- function(filePath = NULL,
                              testName = "test",
                              outputPath = NULL,
-                             cdmVersion = "5.3") {
+                             cdmVersion = "5.3",
+                             reduceLargeIds = FALSE) {
 
   checkmate::assertDirectoryExists(filePath)
+  checkmate::assertCharacter(cdmVersion)
+  checkmate::assertTRUE(cdmVersion %in% c("5.3", "5.4"))
 
-  # Read list of csv files
-  csvFiles <- list.files(filePath, pattern = ".csv", full.names = TRUE)
-  csvFilesNames <- list.files(filePath, pattern = ".csv")
+  # Check column
+  cdmTables <- fileColumnCheck(filePath,
+                                       cdmVersion)
 
-  checkmate::assertCharacter(csvFiles)
-
-  listPatientTables <- list()
-  # Check for the expected columns in the CDM
-  for (i in 1:length(csvFiles)) {
-    # i <- 2
-    tableName <- tools::file_path_sans_ext(csvFilesNames[i])
-    cdmTable <- readr::read_csv(csvFiles[i], show_col_types = FALSE)
-    currentCoulumns <- names(cdmTable)
-    expectedColumns <- spec_cdm_field[[cdmVersion]] %>%
-      dplyr::filter(cdmTableName == tableName) %>%
-      dplyr::pull(cdmFieldName)
-    if (all(currentCoulumns %in% expectedColumns)) {
-      listPatientTables[[tableName]] <- cdmTable
-    } else {
-      stop(glue::glue("{tableName} table columns do not match"))
-    }
+  if (reduceLargeIds) {
+    cdmTables <- convertIds(cdmTables)
   }
 
-  names(listPatientTables) <- tolower(listPatientTables)
-
-  testCaseFile <- jsonlite::toJSON(listPatientTables,
+  # Convert to JSON
+  testCaseFile <- jsonlite::toJSON(cdmTables,
                                    dataframe = "rows",
                                    pretty = TRUE)
 
+  # Check folders
   if (is.null(outputPath)) {
     usethis::use_directory(fs::path("inst", "testCases"))
     outputPath <- fs::path("inst", "testCases")
@@ -129,6 +118,8 @@ readPatients.csv <- function(filePath = NULL,
     checkmate::assertDirectoryExists(outputPath)
     testPath <- paste0(outputPath, "/", testName, ".json")
   }
+
+  # Write file
   write(testCaseFile, file = testPath)
   if (checkmate::checkFileExists(testPath)) {
     message(glue::glue("Unit Test Definition created successfully: {testName}"))
@@ -136,6 +127,97 @@ readPatients.csv <- function(filePath = NULL,
     stop("Unit Test Definition creation failed")
   }
 }
+
+fileColumnCheck <- function(filePath, cdmVersion) {
+  checkmate::assertDirectoryExists(filePath)
+  checkmate::assertCharacter(cdmVersion)
+  checkmate::assertTRUE(cdmVersion %in% c("5.3", "5.4"))
+  csvFiles <- list.files(filePath, pattern = ".csv", full.names = TRUE)
+  csvFilesNames <- list.files(filePath, pattern = ".csv")
+  checkmate::assertCharacter(csvFiles)
+  checkmate::assertCharacter(csvFilesNames)
+  currentTables <- spec_cdm_field[[cdmVersion]] %>%
+    dplyr::pull(cdmTableName) %>%
+    unique()
+  patientTables <- list()
+  for (i in 1:length(csvFiles)) {
+    tableName <- tools::file_path_sans_ext(csvFilesNames[i])
+    if (tableName %in% currentTables) {
+      cdmTable <- readr::read_csv(csvFiles[i], show_col_types = FALSE)
+      if (nrow(cdmTable) != 0) {
+        names(cdmTable) <- tolower(names(cdmTable))
+        currentCoulumns <- names(cdmTable)
+        expectedColumns <- spec_cdm_field[[cdmVersion]] %>%
+          dplyr::filter(cdmTableName == tableName) %>%
+          dplyr::pull(cdmFieldName)
+        expectedColumns <- gsub("\"", "", expectedColumns)
+        if (all(currentCoulumns %in% expectedColumns)) {
+          patientTables[[tableName]] <- cdmTable
+          message(glue::glue("'{tableName}' added to the test json"))
+        } else {
+          stop(glue::glue("'{tableName}' table columns do not match"))
+        }
+      } else {
+        message(glue::glue("'{tableName}' table is an empty table"))
+      }
+    }
+  }
+  names(patientTables) <- tolower(names(patientTables))
+  return(patientTables)
+}
+
+convertIds <- function(cdmTables) {
+
+  for (tables in names(cdmTables)) {
+    # tables <- "vocabulary"
+    for (columns in names(cdmTables[[tables]])) {
+      # columns <- "vocabulary_concept_id"
+      if (columns %in% c("person_id",
+                         "care_site_id",
+                         "condition_era_id",
+                         "condition_occurrence_id",
+                         "device_exposure_id",
+                         "visit_occurrence_id",
+                         "dose_era_id",
+                         "drug_era_id",
+                         "drug_exposure_id",
+                         "fact_id_1",
+                         "fact_id_2",
+                         "measurement_id",
+                         "observation_id",
+                         "observation_period_id",
+                         "procedure_occurrence_id",
+                         "specimen_id",
+                         "visit_detail_id",
+                         "preceding_visit_detail_id",
+                         "preceding_visit_occurrence_id",
+                         "vocabulary_concept_id")) {
+
+        uniqueIdValues <- unique(cdmTables[[tables]][[columns]])
+        idValues <- abs(cdmTables[[tables]][[columns]]) %>%
+          abs() %>%
+          format(scientific = FALSE, trim = TRUE) %>%
+          substr(1, 9) %>%
+          as.numeric()
+
+        if (length(unique(idValues)) != length(unique(uniqueIdValues))) {
+          if(!tables %in% c("person_id", "visit_occurrence_id", "condition_occurrence_id")) {
+            cdmTables[[tables]][[columns]] <- seq(1, length(uniqueIdValues))
+            message(glue::glue("'{tables}' table with '{columns}' ids are not unique"))
+            message(glue::glue("'{tables}' table filled out with sequence of numbers"))
+          } else {
+            stop(glue::glue("'{tables}' table with '{columns}' ids are not unique and couldn't fill with num sequence"))
+          }
+        } else {
+          cdmTables[[tables]][[columns]] <- idValues
+          message(glue::glue("'{tables}' table and '{columns}' ids reduced succesfully"))
+        }
+      }
+    }
+  }
+  return(cdmTables)
+}
+
 
 #' Pushes test population into a blank CDM.
 #'
@@ -194,48 +276,26 @@ patientsCDM <- function(pathJson = NULL,
 
   # Check/Download vocabulary
 
-  if ("empty_cdm" %in% CDMConnector::example_datasets()) {
+  vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
+                         glue::glue("empty_cdm_{cdmVersion}.zip"))
 
-    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                           glue::glue("empty_cdm_{cdmVersion}.zip"))
-
-    if (!file.exists(vocabPath)) {
-      CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
-                                        cdmVersion = cdmVersion,
-                                        pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                                        overwrite = TRUE)
-    }
-
-    conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
-    cdm <- CDMConnector::cdmFromCon(con = conn,
-                                    cdmSchema = "main",
-                                    writeSchema = "main")
-
-  } else {
-
-    # Get allergies 10K dataset
-    vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                           glue::glue("synthea-allergies-10k_{cdmVersion}.zip"))
-
-    if (!file.exists(vocabPath)) {
-      CDMConnector::downloadEunomiaData(datasetName = "synthea-allergies-10k")
-    }
-
-    # Empty CDM
-    conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("synthea-allergies-10k")))
-    cdm <- CDMConnector::cdmFromCon(con = conn,
-                                    cdmSchema = "main",
-                                    writeSchema = "main")
-    cdm <- emptyCDM(conn = conn,
-                    cdm = cdm)
-
+  if (!file.exists(vocabPath)) {
+    CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
+                                      cdmVersion = cdmVersion,
+                                      pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
+                                      overwrite = TRUE)
   }
+
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
+  cdm <- CDMConnector::cdmFromCon(con = conn,
+                                  cdmSchema = "main",
+                                  writeSchema = "main")
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
   # Check for the expected columns in the CDM
   for (tableName in names(jsonData)) {
-    # tableName <- "visit_detail"
+    # tableName <- "vocabulary"
     currentCoulumns <- names(jsonData[[tableName]])
     expectedColumns <- spec_cdm_field[[cdmVersion]] %>%
       dplyr::filter(cdmTableName == tableName) %>%
@@ -246,10 +306,11 @@ patientsCDM <- function(pathJson = NULL,
 
   # Convert the JSON data into a data frame and append it to the blank CDM
   for (tableName in names(jsonData)) {
-    # tableName <- "visit_occurrence"
+    # tableName <- "vocabulary"
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
+
   message(glue::glue("Patients pushed to blank CDM successfully"))
   return(cdm)
 }
