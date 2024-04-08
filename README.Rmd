@@ -60,7 +60,7 @@ cdm <- TestGenerator::patientsCDM(
 
 ```
 
-Now the user has a CDM reference with a complete vocabulary and just 10 patients to unit test functions of a particular study. 
+Now the user has a CDM reference with a complete vocabulary and just 10 patients. 
 
 ```{r, echo=FALSE}
 filePath <- system.file("extdata/testPatientsRSV.xlsx", package = "TestGenerator")
@@ -72,7 +72,15 @@ print(cdm)
 unlink(outputPath, recursive = TRUE)
 ```
 
+The user can test a study using the cdm object and the related schemas like this: 
+```{r, eval=FALSE}
+runStudy(conn = attr(cdm, "dbcon"),
+         cdmDatabaseSchema = "main",
+         resultsDatabaseSchema = "main",
+         dbName = "myTestDB",
+         minCellCount = 5)
+```
+
 ```{r, echo=FALSE}
-print(cdm$person)
 duckdb::duckdb_shutdown(duckdb::duckdb())
 ```
