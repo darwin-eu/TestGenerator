@@ -43,13 +43,21 @@ dir.create(outputPath)
 TestGenerator::readPatients(filePath = filePath, outputPath = outputPath)
 cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
 print(cdm)
+print(cdm$person)
 unlink(outputPath, recursive = TRUE)
 ```
 
-That returns a CDM reference object that now can be used to perform unit tests.
+That returns a CDM reference object that now can be used to test a study, for example like this:
+
+```{r, eval=FALSE}
+runStudy(conn = attr(cdm, "dbcon"),
+         cdmDatabaseSchema = "main",
+         resultsDatabaseSchema = "main",
+         dbName = "myTestDB",
+         minCellCount = 5)
+```
 
 ```{r, echo=FALSE}
-print(cdm$person)
 duckdb::duckdb_shutdown(duckdb::duckdb())
 ```
 

@@ -2,6 +2,7 @@
 
 export(downloadTestData)
 export(patientsCDM)
+export(readPatients)
 export(readPatients.csv)
 export(readPatients.xl)
 import(dplyr)

@@ -26,7 +26,10 @@ Imports:
     dplyr,
     checkmate,
     glue,
-    duckdb
+    duckdb,
+    cli,
+    rlang,
+    withr
 Suggests: 
     knitr,
     rmarkdown,
