@@ -40,7 +40,7 @@ patientTables
 filePath <- system.file("extdata/testPatientsRSV.xlsx", package = "TestGenerator")
 outputPath <- file.path(tempdir(), "test")
 dir.create(outputPath)
-TestGenerator::readPatients(filePath = filePath, outputPath = outputPath)
+TestGenerator::readPatients.xl(filePath = filePath, outputPath = outputPath)
 cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
 print(cdm)
 unlink(outputPath, recursive = TRUE)

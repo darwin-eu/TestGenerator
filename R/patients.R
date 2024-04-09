@@ -1,3 +1,40 @@
+#' Converts a sample of patients into Unit Testing Definition JSON file.
+#'
+#' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
+#' @param testName A name of the test population in character.
+#' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
+#' @param cdmVersion cdm version, default "5.3".
+#'
+#' @return A JSON file with sample patients inside the project directory.
+#'
+#' @importFrom readxl read_excel excel_sheets
+#' @importFrom jsonlite toJSON
+#' @importFrom usethis use_directory
+#' @importFrom fs path
+#' @importFrom usethis proj_path
+#' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
+#' @importFrom glue glue
+#'
+#' @examples
+#' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
+#' readPatients(filePath = filePath, outputPath = tempdir())
+#'
+#' @export
+readPatients <- function(filePath = NULL,
+                         testName = "test",
+                         outputPath = NULL,
+                         cdmVersion = "5.3") {
+  checkmate::assertFileExists(filePath)
+  fileExtension <- tools::file_ext(filePath)
+  checkmate::assertTRUE(fileExtension %in% c("csv", "xlsx"))
+
+  if (fileExtension == "csv") {
+    readPatients.csv(filePath, testName, outputPath, cdmVersion)
+  } else {
+    readPatients.xl(filePath, testName, outputPath, cdmVersion)
+  }
+}
+
 #' Converts a sample of patients in XLSX format into Unit Testing Definition JSON file.
 #'
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
@@ -17,13 +54,13 @@
 #'
 #' @examples
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
-#' readPatients_xl(filePath = filePath, outputPath = tempdir())
+#' readPatients.xl(filePath = filePath, outputPath = tempdir())
 #'
 #' @export
 readPatients.xl <- function(filePath = NULL,
-                              testName = "test",
-                              outputPath = NULL,
-                              cdmVersion = "5.3") {
+                            testName = "test",
+                            outputPath = NULL,
+                            cdmVersion = "5.3") {
 
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
