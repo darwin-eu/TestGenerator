@@ -91,7 +91,7 @@ test_that("Mimic data Patients to CDM function", {
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
-test_that("conver ids function", {
+test_that("convert ids function", {
   pathToData <- tempdir()
   cdmVersion <- "5.3"
   pathToZipFile <- downloadTestData(datasetName = "mimicIV",
@@ -110,5 +110,3 @@ test_that("conver ids function", {
   unlink(filePath, recursive = TRUE)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
-
-
