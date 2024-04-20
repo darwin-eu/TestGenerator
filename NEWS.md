@@ -1,4 +1,4 @@
-# TestGenerator 0.3.0
+# TestGenerator 0.3.1
 
 * `readPatients()` now has a parameter to select either Excel or CSV files as an input. 
 
