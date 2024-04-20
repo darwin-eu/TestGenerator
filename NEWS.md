@@ -8,6 +8,8 @@
 
 * Fixed bug related to empty tables pushed to the duckdb CDM. 
 
+* Tested with MIMIC database. 
+
 # TestGenerator 0.2.5
 
 * Using omopgenerics for checking Excel data.
