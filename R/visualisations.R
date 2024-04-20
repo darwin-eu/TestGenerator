@@ -4,7 +4,9 @@
 #' @param cohorts List of cohorts
 #'
 #' @return A ggplot graph
-#' @import dplyr ggplot2
+#' @import dplyr
+#' @import ggplot2
+#' @importFrom tibble tibble
 #'
 #' @examples
 #' hosptalised <- tibble::tibble(cohort_definition_id = 2,

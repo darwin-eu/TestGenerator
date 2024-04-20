@@ -29,7 +29,9 @@ Imports:
     duckdb,
     cli,
     rlang,
-    withr
+    withr,
+    ggplot2,
+    tibble
 Suggests: 
     knitr,
     rmarkdown,
