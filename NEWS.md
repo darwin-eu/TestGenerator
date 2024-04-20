@@ -2,7 +2,11 @@
 
 * readPatients() works with Excel or CSV files. 
 
-* graphCohort() allows visualisation of cohort timelines. 
+* readPatients.xl and readPatients.csv are exported functions.
+
+* graphCohort() allows visualisation of cohort timelines.
+
+* Fixed bug related to empty tables pushed to the duckdb CDM. 
 
 # TestGenerator 0.2.5
 
