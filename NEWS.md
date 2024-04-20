@@ -1,3 +1,9 @@
+# TestGenerator 0.3.0
+
+* readPatients() works with Excel or CSV files. 
+
+* graphCohort() allows visualisation of cohort timelines. 
+
 # TestGenerator 0.2.5
 
 * Using omopgenerics for checking Excel data.
