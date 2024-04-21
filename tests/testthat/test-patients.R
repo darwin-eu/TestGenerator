@@ -13,33 +13,32 @@ test_that("checkColumns function works", {
 
 test_that("Reading patients XLSX and JSON creation", {
   filePath <- testthat::test_path("testPatientsRSV.xlsx")
-  outputPath <- file.path(tempdir(), "test1")
-  dir.create(outputPath)
-  readPatients.xl(filePath = filePath, outputPath = outputPath)
-  expect_true(file.exists(file.path(outputPath, "test.json")))
-  unlink(outputPath, recursive = TRUE)
+  # outputPath <- file.path(tempdir(), "test1")
+  # dir.create(outputPath)
+
+  # outputPath explicitly NULL to create the testCases in the testthat folder
+  readPatients.xl(filePath = filePath, outputPath = NULL)
+  expect_true(file.exists(file.path(testthat::test_path("testCases"), "test.json")))
 })
 
 test_that("Patients to CDM xlsx function", {
   filePath <- test_path("testPatientsRSV.xlsx")
-  outputPath <- file.path(tempdir(), "test2")
-  dir.create(outputPath)
-  TestGenerator::readPatients.xl(filePath = filePath, outputPath = outputPath)
-  cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+  TestGenerator::readPatients.xl(filePath = filePath, outputPath = NULL)
+  cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "test")
   expect_equal(class(cdm), "cdm_reference")
   number_persons <- cdm[["person"]] %>% dplyr::pull(person_id)
   expect_equal(length(number_persons), 20)
-  unlink(outputPath, recursive = TRUE)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
 test_that("Reading sample MIMIC patients CSV files and JSON creation", {
   filePath <- testthat::test_path("mimic_sample")
-  outputPath <- file.path(tempdir(), "test1")
-  dir.create(outputPath)
-  readPatients.csv(filePath = filePath, outputPath = outputPath)
-  expect_true(file.exists(file.path(outputPath, "test.json")))
-  unlink(outputPath, recursive = TRUE)
+  outputPath <- testthat::test_path("testCases")
+  # outputPath <- file.path(tempdir(), "test1")
+  # dir.create(outputPath)
+  readPatients.csv(filePath = filePath, testName = "mimic_sample", outputPath = NULL)
+  expect_true(file.exists(file.path(outputPath, "mimic_sample.json")))
+  # unlink(outputPath, recursive = TRUE)
 })
 
 test_that("Reading MIMIC patients CSV files and JSON creation", {

@@ -40,10 +40,10 @@ readPatients <- function(filePath = NULL,
 #'
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
-#' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
+#' @param outputPath Path to write the test JSON files. If NULL, the files will be written at the project's testthat folder, i.e. tests/testthat/testCases.
 #' @param cdmVersion cdm version, default "5.3".
 #'
-#' @return A JSON file with sample patients inside the project directory.
+#' @return A directory with the test JSON files with sample patients inside the project directory.
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
@@ -51,6 +51,7 @@ readPatients <- function(filePath = NULL,
 #' @importFrom fs path
 #' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
+#' @importFrom testthat test_path
 #' @importFrom glue glue
 #' @import cli
 #'
@@ -67,6 +68,7 @@ readPatients.xl <- function(filePath = NULL,
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
 
+  # Check columns
   expectedTables <- spec_cdm_field[[cdmVersion]] %>%
     dplyr::pull(cdmTableName)
 
@@ -79,19 +81,15 @@ readPatients.xl <- function(filePath = NULL,
 
   names(cdmTables) <- tolower(patientTables)
 
+  # Convert to JSON
   testCaseFile <- jsonlite::toJSON(cdmTables,
                                    dataframe = "rows",
                                    pretty = TRUE)
 
-  if (is.null(outputPath)) {
-    usethis::use_directory(fs::path("inst", "testCases"))
-    outputPath <- fs::path("inst", "testCases")
-    testPath <- paste0(outputPath, "/", testName, ".json")
-  } else {
-    checkmate::assertCharacter(outputPath)
-    checkmate::assertDirectoryExists(outputPath)
-    testPath <- paste0(outputPath, "/", testName, ".json")
-  }
+  # Create testPath folder
+  testPath <- createOutputFolder(outputPath, testName)
+
+  # Write file
   write(testCaseFile, file = testPath)
   if (checkmate::checkFileExists(testPath)) {
     cli::cli_alert_success(glue::glue("Unit Test Definition Created Successfully: '{testName}'"))
@@ -148,16 +146,8 @@ readPatients.csv <- function(filePath = NULL,
                                    dataframe = "rows",
                                    pretty = TRUE)
 
-  # Check folders
-  if (is.null(outputPath)) {
-    usethis::use_directory(fs::path("inst", "testCases"))
-    outputPath <- fs::path("inst", "testCases")
-    testPath <- paste0(outputPath, "/", testName, ".json")
-  } else {
-    checkmate::assertCharacter(outputPath)
-    checkmate::assertDirectoryExists(outputPath)
-    testPath <- paste0(outputPath, "/", testName, ".json")
-  }
+  # Create testPath folder
+  testPath <- createOutputFolder(outputPath, testName)
 
   # Write file
   write(testCaseFile, file = testPath)
@@ -276,6 +266,23 @@ convertIds <- function(cdmTables) {
   return(cdmTables)
 }
 
+createOutputFolder <- function(outputPath, testName) {
+  if (is.null(outputPath)) {
+    testFolder <- testthat::test_path("testCases")
+    if (!dir.exists(testFolder)) {
+      dir.create(testFolder)
+      testPath <- paste0(testFolder, "/", testName, ".json")
+    } else {
+      testPath <- paste0(testFolder, "/", testName, ".json")
+    }
+  } else {
+    checkmate::assertCharacter(outputPath)
+    checkmate::assertDirectoryExists(outputPath)
+    testPath <- paste0(outputPath, "/", testName, ".json")
+  }
+  return(testPath)
+}
+
 #' Pushes test population into a blank CDM.
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
@@ -303,14 +310,21 @@ patientsCDM <- function(pathJson = NULL,
                         cdmVersion = "5.3") {
 
   if (is.null(pathJson)) {
-    pathJson <- proj_path("inst", "testCases")
+    outputFolder <- testthat::test_path("testCases")
+    if (dir.exists(outputFolder)) {
+      pathJson <- proj_path("inst", "testCases")
+    } else {
+      cli::cli_alert_danger("testCases not found")
+      stop()
+    }
   }
 
   checkmate::assertClass(pathJson, "character")
   checkmate::assertDirectoryExists(pathJson)
 
   if (identical(list.files(pathJson), character(0))) {
-    stop("Directory empty. Provide Unit Test Definitions")
+    cli::cli_alert_danger("Directory empty. Provide Unit Test Definitions")
+    stop()
   }
 
   testFiles <- list.files(pathJson, pattern = ".json")
