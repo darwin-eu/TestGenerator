@@ -6,6 +6,8 @@
 
 * `graphCohort()` provides a visualisation of cohort timelines.
 
+* JSONS are saved in the testthat/testCases folder as default for better test self-containment.
+
 * Fixed bug related to empty tables pushed to the duckdb CDM. 
 
 * Tested with MIMIC database. 

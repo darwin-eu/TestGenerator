@@ -16,12 +16,12 @@ readPatients.xl(
 
 \item{testName}{A name of the test population in character.}
 
-\item{outputPath}{Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.}
+\item{outputPath}{Path to write the test JSON files. If NULL, the files will be written at the project's testthat folder, i.e. tests/testthat/testCases.}
 
 \item{cdmVersion}{cdm version, default "5.3".}
 }
 \value{
-A JSON file with sample patients inside the project directory.
+A directory with the test JSON files with sample patients inside the project directory.
 }
 \description{
 Converts a sample of patients in XLSX format into Unit Testing Definition JSON file.

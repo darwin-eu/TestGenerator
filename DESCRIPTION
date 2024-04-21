@@ -31,11 +31,11 @@ Imports:
     rlang,
     withr,
     ggplot2,
-    tibble
+    tibble,
+    testthat
 Suggests: 
     knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+    rmarkdown
 Config/testthat/edition: 3
 URL: https://github.com/darwin-eu-dev/TestGenerator, https://darwin-eu-dev.github.io/TestGenerator/
 BugReports: https://github.com/darwin-eu-dev/TestGenerator/issues
