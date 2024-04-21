@@ -60,7 +60,7 @@ cdm <- TestGenerator::patientsCDM(
 
 ```
 
-Now the user has a CDM reference with a complete vocabulary and just 10 patients. 
+Now the user has a CDM reference with a complete vocabulary and just 10 patients.
 
 ```{r, echo=FALSE}
 filePath <- system.file("extdata/testPatientsRSV.xlsx", package = "TestGenerator")

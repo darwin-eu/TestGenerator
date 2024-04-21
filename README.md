@@ -66,9 +66,9 @@ cdm <- TestGenerator::patientsCDM(
 Now the user has a CDM reference with a complete vocabulary and just 10
 patients.
 
-    #> Unit Test Definition created successfully: test
+    #> ✔ Unit Test Definition Created Successfully: 'test'
     #> ! cdm name not specified and could not be inferred from the cdm source table
-    #> Patients pushed to blank CDM successfully
+    #> ✔ Patients pushed to blank CDM successfully
     #> 
     #> ── # OMOP CDM reference (duckdb) of An OMOP CDM database ───────────────────────
     #> • omop tables: person, observation_period, visit_occurrence, visit_detail,

@@ -9,9 +9,6 @@
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
-#' @importFrom usethis use_directory
-#' @importFrom fs path
-#' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
 #' @import cli
@@ -47,9 +44,6 @@ readPatients <- function(filePath = NULL,
 #'
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom jsonlite toJSON
-#' @importFrom usethis use_directory
-#' @importFrom fs path
-#' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom testthat test_path
 #' @importFrom glue glue
@@ -111,9 +105,6 @@ readPatients.xl <- function(filePath = NULL,
 #'
 #' @importFrom readr read_csv
 #' @importFrom jsonlite toJSON
-#' @importFrom usethis use_directory
-#' @importFrom fs path
-#' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
 #' @importFrom tools file_path_sans_ext
@@ -291,7 +282,6 @@ createOutputFolder <- function(outputPath, testName) {
 #'
 #' @return A CDM reference object with a sample population.
 #' @import dplyr cli
-#' @importFrom usethis proj_path
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
