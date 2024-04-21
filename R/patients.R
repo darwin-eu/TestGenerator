@@ -312,7 +312,7 @@ patientsCDM <- function(pathJson = NULL,
   if (is.null(pathJson)) {
     outputFolder <- testthat::test_path("testCases")
     if (dir.exists(outputFolder)) {
-      pathJson <- proj_path("inst", "testCases")
+      pathJson <- outputFolder
     } else {
       cli::cli_alert_danger("testCases not found")
       stop()
