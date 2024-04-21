@@ -14,6 +14,7 @@
 #' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
+#' @import cli
 #'
 #' @examples
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
@@ -51,6 +52,7 @@ readPatients <- function(filePath = NULL,
 #' @importFrom usethis proj_path
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
+#' @import cli
 #'
 #' @examples
 #' filePath <- system.file("extdata", "testPatientsRSV.xlsx", package = "TestGenerator")
@@ -92,9 +94,10 @@ readPatients.xl <- function(filePath = NULL,
   }
   write(testCaseFile, file = testPath)
   if (checkmate::checkFileExists(testPath)) {
-    message(glue::glue("Unit Test Definition created successfully: {testName}"))
+    cli::cli_alert_success(glue::glue("Unit Test Definition Created Successfully: '{testName}'"))
   } else {
-    stop("Unit Test Definition creation failed")
+    cli::cli_alert_danger("Unit Test Definition Creation Failed")
+    stop()
   }
 }
 
@@ -116,6 +119,7 @@ readPatients.xl <- function(filePath = NULL,
 #' @importFrom checkmate assertDirectoryExists assertCharacter assertFileExists assert
 #' @importFrom glue glue
 #' @importFrom tools file_path_sans_ext
+#' @import cli
 #'
 #' @examples
 #' filePath <- system.file("extdata", "mimic_sample", package = "TestGenerator")
@@ -158,9 +162,10 @@ readPatients.csv <- function(filePath = NULL,
   # Write file
   write(testCaseFile, file = testPath)
   if (checkmate::checkFileExists(testPath)) {
-    message(glue::glue("Unit Test Definition created successfully: {testName}"))
+    cli::cli_alert_success(glue::glue("Unit Test Definition Created Successfully: '{testName}'"))
   } else {
-    stop("Unit Test Definition creation failed")
+    cli::cli_alert_danger("Unit Test Definition Creation Failed")
+    stop()
   }
 }
 
@@ -176,6 +181,7 @@ fileColumnCheck <- function(filePath, cdmVersion) {
     dplyr::pull(cdmTableName) %>%
     unique()
   patientTables <- list()
+  report <- list()
   for (i in 1:length(csvFiles)) {
     tableName <- tools::file_path_sans_ext(csvFilesNames[i])
     if (tableName %in% currentTables) {
@@ -189,21 +195,26 @@ fileColumnCheck <- function(filePath, cdmVersion) {
         expectedColumns <- gsub("\"", "", expectedColumns)
         if (all(currentCoulumns %in% expectedColumns)) {
           patientTables[[tableName]] <- cdmTable
-          message(glue::glue("'{tableName}' added to the test json"))
         } else {
-          stop(glue::glue("'{tableName}' table columns do not match"))
+          cli::cli_alert_danger(glue::glue("'{tableName}' table columns do not match"))
+          stop()
         }
       } else {
-        message(glue::glue("'{tableName}' table is an empty table"))
+        report[["empty"]] <- append(report[["empty"]], glue::glue("{tableName}"))
       }
     }
+  }
+  if (!is.null(report[['empty']])) {
+    empty <- paste(report[['empty']], collapse = ", ")
+    cli::cli_alert_warning("Empty Tables Found:")
+    cli::cli_text(empty)
   }
   names(patientTables) <- tolower(names(patientTables))
   return(patientTables)
 }
 
 convertIds <- function(cdmTables) {
-
+  report <- list()
   for (tables in names(cdmTables)) {
     # tables <- "vocabulary"
     for (columns in names(cdmTables[[tables]])) {
@@ -239,18 +250,29 @@ convertIds <- function(cdmTables) {
         if (length(unique(idValues)) != length(unique(uniqueIdValues))) {
           if(!tables %in% c("person_id", "visit_occurrence_id", "condition_occurrence_id")) {
             cdmTables[[tables]][[columns]] <- seq(1, length(uniqueIdValues))
-            message(glue::glue("'{tables}' table with '{columns}' ids are not unique"))
-            message(glue::glue("'{tables}' table filled out with sequence of numbers"))
+            report[["notUnique"]] <- append(report[["notUnique"]], glue::glue("{tables}"))
+            # message(glue::glue("'{tables}' table with '{columns}' ids are not unique"))
+            # message(glue::glue("'{tables}' table filled out with sequence of numbers"))
           } else {
-            stop(glue::glue("'{tables}' table with '{columns}' ids are not unique and couldn't fill with num sequence"))
+            cli::cli_alert_danger(glue::glue("'{tables}' table with '{columns}' ids are not unique and couldn't fill with num sequence"))
+            stop()
           }
         } else {
           cdmTables[[tables]][[columns]] <- idValues
-          message(glue::glue("'{tables}' table and '{columns}' ids reduced succesfully"))
+          # report[["reduced"]] <- append(report[["reduced"]], glue::glue("{tables}"))
+          # message(glue::glue("'{tables}' table and '{columns}' ids reduced succesfully"))
         }
       }
     }
   }
+  if (!is.null(report[['notUnique']])) {
+    notUnique <- paste(report[['notUnique']], collapse = ", ")
+    cli::cli_alert_warning("Table with non unique ids and filled with num seq:")
+    cli::cli_text(notUnique)
+  }
+  cli::cli_alert_success("IDs successfully reduced")
+  # reduced <- paste(report[['reduced']], collapse = ", ")
+  # cli::cli_text(reduced)
   return(cdmTables)
 }
 
@@ -261,7 +283,7 @@ convertIds <- function(cdmTables) {
 #' @param cdmVersion cdm version, default "5.3".
 #'
 #' @return A CDM reference object with a sample population.
-#' @import dplyr
+#' @import dplyr cli
 #' @importFrom usethis proj_path
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
@@ -340,12 +362,12 @@ patientsCDM <- function(pathJson = NULL,
   }
 
   # Convert the JSON data into a data frame and append it to the blank CDM
+
   for (tableName in names(jsonData)) {
     # tableName <- "vocabulary"
     patientData <- as.data.frame(jsonData[[tableName]])
     DBI::dbAppendTable(conn, tableName, patientData)
   }
-
-  message(glue::glue("Patients pushed to blank CDM successfully"))
+  cli::cli_alert_success("Patients pushed to blank CDM successfully")
   return(cdm)
 }
