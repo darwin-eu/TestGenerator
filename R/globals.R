@@ -16,4 +16,8 @@
 utils::globalVariables(c("cdmTableName",
                          "cdmFieldName",
                          "createCdmDeath",
-                         "db"))
+                         "db",
+                         "subject_id",
+                         "cohort_start_date",
+                         "cohort",
+                         "cohort_end_date"))

@@ -1,3 +1,17 @@
+# TestGenerator 0.3.1
+
+* `readPatients()` now has a parameter to select either Excel or CSV files as an input. 
+
+* `readPatients.xl()` and `readPatients.csv` are also exported functions for convenience.
+
+* `graphCohort()` provides a visualisation of cohort timelines.
+
+* JSONS are saved in the testthat/testCases folder as default for better test self-containment.
+
+* Fixed bug related to empty tables pushed to the duckdb CDM. 
+
+* Tested with MIMIC database. 
+
 # TestGenerator 0.2.5
 
 * Using omopgenerics for checking Excel data.

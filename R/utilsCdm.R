@@ -31,4 +31,3 @@ emptyCDM <- function(conn, cdm) {
   }
   return(cdm)
 }
-

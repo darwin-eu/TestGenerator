@@ -1,7 +1,7 @@
 Package: TestGenerator
 Type: Package
 Title: Integration Unit Tests for Pharmacoepidemiological Studies
-Version: 0.2.5
+Version: 0.3.1
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ger", "Inberg", , "g.inberg@darwin-eu.org", role = "aut", comment = c(ORCID = "0000-0001-8993-8748")),
@@ -16,20 +16,24 @@ RoxygenNote: 7.2.3
 Depends:
     R (>= 4.1.0)
 Imports: 
-    fs,
     jsonlite,
     readxl,
-    usethis,
+    readr,
     CDMConnector,
     DBI,
     dplyr,
     checkmate,
     glue,
-    duckdb
+    duckdb,
+    cli,
+    rlang,
+    withr,
+    ggplot2,
+    tibble,
+    testthat
 Suggests: 
     knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+    rmarkdown
 Config/testthat/edition: 3
 URL: https://github.com/darwin-eu-dev/TestGenerator, https://darwin-eu-dev.github.io/TestGenerator/
 BugReports: https://github.com/darwin-eu-dev/TestGenerator/issues

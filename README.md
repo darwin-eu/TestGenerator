@@ -64,32 +64,32 @@ cdm <- TestGenerator::patientsCDM(
 ```
 
 Now the user has a CDM reference with a complete vocabulary and just 10
-patients to unit test functions of a particular study.
+patients.
 
-    #> Unit Test Definition created successfully: test
-    #> Patients pushed to blank CDM successfully
-    #> # OMOP CDM reference (tbl_duckdb_connection)
+    #> ✔ Unit Test Definition Created Successfully: 'test'
+    #> ! cdm name not specified and could not be inferred from the cdm source table
+    #> ✔ Patients pushed to blank CDM successfully
     #> 
-    #> Tables: person, observation_period, visit_occurrence, visit_detail, condition_occurrence, drug_exposure, procedure_occurrence, device_exposure, measurement, observation, death, note, note_nlp, specimen, fact_relationship, location, care_site, provider, payer_plan_period, cost, drug_era, dose_era, condition_era, metadata, cdm_source, concept, vocabulary, domain, concept_class, concept_relationship, relationship, concept_synonym, concept_ancestor, source_to_concept_map, drug_strength, cohort_definition, attribute_definition
+    #> ── # OMOP CDM reference (duckdb) of An OMOP CDM database ───────────────────────
+    #> • omop tables: person, observation_period, visit_occurrence, visit_detail,
+    #> condition_occurrence, drug_exposure, procedure_occurrence, device_exposure,
+    #> measurement, observation, death, note, note_nlp, specimen, fact_relationship,
+    #> location, care_site, provider, payer_plan_period, cost, drug_era, dose_era,
+    #> condition_era, metadata, cdm_source, concept, vocabulary, domain,
+    #> concept_class, concept_relationship, relationship, concept_synonym,
+    #> concept_ancestor, source_to_concept_map, drug_strength, cohort_definition,
+    #> attribute_definition
+    #> • cohort tables: -
+    #> • achilles tables: -
+    #> • other tables: -
 
-    #> # Source:   table<person> [?? x 18]
-    #> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpUBR77a\file697c4ada43e2.duckdb]
-    #>    person_id gender_concept_id year_of_birth month_of_birth day_of_birth
-    #>        <int>             <int>         <int>          <int>        <int>
-    #>  1         1              8532          1980             NA           NA
-    #>  2         2              8507          1980             NA           NA
-    #>  3         3              8532          1965             NA           NA
-    #>  4         4              8532          2010             NA           NA
-    #>  5         5              8532          1936             NA           NA
-    #>  6         6              8532          1970             NA           NA
-    #>  7         7              8532          1988             NA           NA
-    #>  8         8              8507          1998             NA           NA
-    #>  9         9              8507          1990             NA           NA
-    #> 10        10              8532          1945             NA           NA
-    #> # ℹ more rows
-    #> # ℹ 13 more variables: birth_datetime <dttm>, race_concept_id <int>,
-    #> #   ethnicity_concept_id <int>, location_id <int>, provider_id <int>,
-    #> #   care_site_id <int>, person_source_value <chr>, gender_source_value <chr>,
-    #> #   gender_source_concept_id <int>, race_source_value <chr>,
-    #> #   race_source_concept_id <int>, ethnicity_source_value <chr>,
-    #> #   ethnicity_source_concept_id <int>
+The user can test a study using the cdm object and the related schemas
+like this:
+
+``` r
+runStudy(conn = attr(cdm, "dbcon"),
+         cdmDatabaseSchema = "main",
+         resultsDatabaseSchema = "main",
+         dbName = "myTestDB",
+         minCellCount = 5)
+```

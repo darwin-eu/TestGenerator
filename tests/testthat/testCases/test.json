@@ -1,0 +1,1072 @@
+{
+  "person": [
+    {
+      "person_id": 1,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1980,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 2,
+      "gender_concept_id": 8507,
+      "year_of_birth": 1980,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 3,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1965,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 4,
+      "gender_concept_id": 8532,
+      "year_of_birth": 2010,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 5,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1936,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 6,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1970,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 7,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1988,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 8,
+      "gender_concept_id": 8507,
+      "year_of_birth": 1998,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 9,
+      "gender_concept_id": 8507,
+      "year_of_birth": 1990,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 10,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1945,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 11,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1982,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 12,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1980,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 13,
+      "gender_concept_id": 8507,
+      "year_of_birth": 1980,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 14,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1965,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 15,
+      "gender_concept_id": 8532,
+      "year_of_birth": 2010,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 16,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1936,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 17,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1970,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 18,
+      "gender_concept_id": 8532,
+      "year_of_birth": 1988,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 19,
+      "gender_concept_id": 8507,
+      "year_of_birth": 1998,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    },
+    {
+      "person_id": 20,
+      "gender_concept_id": 8507,
+      "year_of_birth": 1990,
+      "race_concept_id": 0,
+      "ethnicity_concept_id": 0
+    }
+  ],
+  "observation_period": [
+    {
+      "observation_period_id": 1,
+      "person_id": 1,
+      "observation_period_start_date": "2012-01-01",
+      "observation_period_end_date": "2014-03-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 2,
+      "person_id": 2,
+      "observation_period_start_date": "2016-01-01",
+      "observation_period_end_date": "2018-08-02",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 3,
+      "person_id": 3,
+      "observation_period_start_date": "2016-01-01",
+      "observation_period_end_date": "2018-09-02",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 4,
+      "person_id": 4,
+      "observation_period_start_date": "2010-05-01",
+      "observation_period_end_date": "2012-11-06",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 5,
+      "person_id": 5,
+      "observation_period_start_date": "2012-06-01",
+      "observation_period_end_date": "2014-02-14",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 6,
+      "person_id": 6,
+      "observation_period_start_date": "2005-03-05",
+      "observation_period_end_date": "2007-09-04",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 7,
+      "person_id": 7,
+      "observation_period_start_date": "2013-01-01",
+      "observation_period_end_date": "2015-01-15",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 8,
+      "person_id": 8,
+      "observation_period_start_date": "2013-09-10",
+      "observation_period_end_date": "2015-11-19",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 9,
+      "person_id": 9,
+      "observation_period_start_date": "2011-07-01",
+      "observation_period_end_date": "2013-01-26",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 10,
+      "person_id": 10,
+      "observation_period_start_date": "2000-01-01",
+      "observation_period_end_date": "2002-02-19",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 11,
+      "person_id": 11,
+      "observation_period_start_date": "2012-07-01",
+      "observation_period_end_date": "2017-07-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 12,
+      "person_id": 12,
+      "observation_period_start_date": "2012-01-01",
+      "observation_period_end_date": "2017-01-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 13,
+      "person_id": 13,
+      "observation_period_start_date": "2016-01-01",
+      "observation_period_end_date": "2021-01-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 14,
+      "person_id": 14,
+      "observation_period_start_date": "2016-01-01",
+      "observation_period_end_date": "2021-01-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 15,
+      "person_id": 15,
+      "observation_period_start_date": "2010-05-01",
+      "observation_period_end_date": "2015-05-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 16,
+      "person_id": 16,
+      "observation_period_start_date": "2012-06-01",
+      "observation_period_end_date": "2017-06-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 17,
+      "person_id": 17,
+      "observation_period_start_date": "2005-03-05",
+      "observation_period_end_date": "2010-03-05",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 18,
+      "person_id": 18,
+      "observation_period_start_date": "2013-01-01",
+      "observation_period_end_date": "2018-01-01",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 19,
+      "person_id": 19,
+      "observation_period_start_date": "2013-09-10",
+      "observation_period_end_date": "2018-09-10",
+      "period_type_concept_id": "32880"
+    },
+    {
+      "observation_period_id": 20,
+      "person_id": 20,
+      "observation_period_start_date": "2011-07-01",
+      "observation_period_end_date": "2016-07-01",
+      "period_type_concept_id": "32880"
+    }
+  ],
+  "condition_occurrence": [
+    {
+      "condition_occurrence_id": 1,
+      "person_id": 1,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2014-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 2,
+      "person_id": 2,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2018-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 3,
+      "person_id": 3,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2018-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 4,
+      "person_id": 4,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2012-05-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 5,
+      "person_id": 5,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2014-06-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 6,
+      "person_id": 6,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2007-03-05",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 7,
+      "person_id": 7,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2015-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 8,
+      "person_id": 8,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2015-09-10",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 9,
+      "person_id": 9,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2013-07-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 10,
+      "person_id": 10,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2002-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 11,
+      "person_id": 11,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2014-07-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 12,
+      "person_id": 12,
+      "condition_concept_id": 437222,
+      "condition_start_date": "2014-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 13,
+      "person_id": 13,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2018-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 14,
+      "person_id": 14,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2018-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 15,
+      "person_id": 15,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2012-05-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 16,
+      "person_id": 16,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2014-06-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 17,
+      "person_id": 17,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2007-03-05",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 18,
+      "person_id": 18,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2015-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 19,
+      "person_id": 19,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2015-09-10",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 20,
+      "person_id": 20,
+      "condition_concept_id": 73211009,
+      "condition_start_date": "2013-07-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 21,
+      "person_id": 1,
+      "condition_concept_id": 37020635,
+      "condition_start_date": "2014-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 22,
+      "person_id": 2,
+      "condition_concept_id": 3003551,
+      "condition_start_date": "2018-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 23,
+      "person_id": 3,
+      "condition_concept_id": 3023210,
+      "condition_start_date": "2018-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 24,
+      "person_id": 4,
+      "condition_concept_id": 3042756,
+      "condition_start_date": "2012-05-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 25,
+      "person_id": 5,
+      "condition_concept_id": 3047713,
+      "condition_start_date": "2014-06-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 26,
+      "person_id": 6,
+      "condition_concept_id": 40763584,
+      "condition_start_date": "2007-03-05",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 27,
+      "person_id": 7,
+      "condition_concept_id": 37020635,
+      "condition_start_date": "2015-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 28,
+      "person_id": 8,
+      "condition_concept_id": 3003551,
+      "condition_start_date": "2015-09-10",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 29,
+      "person_id": 9,
+      "condition_concept_id": 3023210,
+      "condition_start_date": "2013-07-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 30,
+      "person_id": 10,
+      "condition_concept_id": 3042756,
+      "condition_start_date": "2002-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 31,
+      "person_id": 11,
+      "condition_concept_id": 3047713,
+      "condition_start_date": "2014-07-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    },
+    {
+      "condition_occurrence_id": 32,
+      "person_id": 12,
+      "condition_concept_id": 40763584,
+      "condition_start_date": "2014-01-01",
+      "condition_type_concept_id": 32817,
+      "condition_status_concept_id": 0,
+      "condition_source_concept_id": 0
+    }
+  ],
+  "visit_occurrence": [
+    {
+      "visit_occurrence_id": 1,
+      "person_id": 1,
+      "visit_concept_id": 32037,
+      "visit_start_date": "2014-01-01",
+      "visit_end_date": "2014-01-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 2,
+      "person_id": 2,
+      "visit_concept_id": 32037,
+      "visit_start_date": "2018-01-01",
+      "visit_end_date": "2018-01-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 3,
+      "person_id": 3,
+      "visit_concept_id": 32037,
+      "visit_start_date": "2018-01-01",
+      "visit_end_date": "2018-01-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 4,
+      "person_id": 4,
+      "visit_concept_id": 262,
+      "visit_start_date": "2012-05-01",
+      "visit_end_date": "2012-05-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 5,
+      "person_id": 5,
+      "visit_concept_id": 262,
+      "visit_start_date": "2014-06-01",
+      "visit_end_date": "2014-06-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 6,
+      "person_id": 6,
+      "visit_concept_id": 262,
+      "visit_start_date": "2007-03-05",
+      "visit_end_date": "2007-08-05",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 7,
+      "person_id": 7,
+      "visit_concept_id": 262,
+      "visit_start_date": "2015-01-01",
+      "visit_end_date": "2015-06-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 8,
+      "person_id": 8,
+      "visit_concept_id": 32037,
+      "visit_start_date": "2015-09-10",
+      "visit_end_date": "2015-10-14",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 9,
+      "person_id": 9,
+      "visit_concept_id": 32037,
+      "visit_start_date": "2013-07-01",
+      "visit_end_date": "2013-12-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 10,
+      "person_id": 10,
+      "visit_concept_id": 32037,
+      "visit_start_date": "2002-01-01",
+      "visit_end_date": "2002-06-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 11,
+      "person_id": 11,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2014-07-01",
+      "visit_end_date": "2014-12-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 12,
+      "person_id": 12,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2014-01-01",
+      "visit_end_date": "2014-06-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 13,
+      "person_id": 13,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2018-01-01",
+      "visit_end_date": "2018-06-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 14,
+      "person_id": 14,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2018-01-01",
+      "visit_end_date": "2018-06-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 15,
+      "person_id": 15,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2012-05-01",
+      "visit_end_date": "2012-05-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 16,
+      "person_id": 16,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2014-06-01",
+      "visit_end_date": "2014-06-06",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 17,
+      "person_id": 17,
+      "visit_concept_id": 9201,
+      "visit_start_date": "2007-03-05",
+      "visit_end_date": "2007-08-05",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 18,
+      "person_id": 18,
+      "visit_concept_id": 32693,
+      "visit_start_date": "2015-01-01",
+      "visit_end_date": "2015-06-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 19,
+      "person_id": 19,
+      "visit_concept_id": 32693,
+      "visit_start_date": "2015-09-10",
+      "visit_end_date": "2015-10-14",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    },
+    {
+      "visit_occurrence_id": 20,
+      "person_id": 20,
+      "visit_concept_id": 32693,
+      "visit_start_date": "2013-07-01",
+      "visit_end_date": "2013-12-01",
+      "visit_type_concept_id": 32817,
+      "visit_status_concept_id": 0,
+      "visit_source_concept_id": 0
+    }
+  ],
+  "visit_detail": [
+    {
+      "visit_detail_id": 1,
+      "person_id": 1,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2014-01-01",
+      "visit_detail_end_date": "2014-01-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 2,
+      "person_id": 2,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2018-01-01",
+      "visit_detail_end_date": "2018-01-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 3,
+      "person_id": 3,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2018-01-01",
+      "visit_detail_end_date": "2018-01-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 4,
+      "person_id": 4,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2012-05-01",
+      "visit_detail_end_date": "2012-05-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 5,
+      "person_id": 5,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2014-06-01",
+      "visit_detail_end_date": "2014-06-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 6,
+      "person_id": 6,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2007-03-05",
+      "visit_detail_end_date": "2007-08-05",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 7,
+      "person_id": 7,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2015-01-01",
+      "visit_detail_end_date": "2015-06-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 8,
+      "person_id": 8,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2015-09-10",
+      "visit_detail_end_date": "2015-10-14",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 9,
+      "person_id": 9,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2013-07-01",
+      "visit_detail_end_date": "2013-12-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 10,
+      "person_id": 10,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2002-01-01",
+      "visit_detail_end_date": "2002-06-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 11,
+      "person_id": 11,
+      "visit_detail_concept_id": 9201,
+      "visit_detail_start_date": "2014-07-01",
+      "visit_detail_end_date": "2014-12-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 12,
+      "person_id": 12,
+      "visit_detail_concept_id": 9201,
+      "visit_detail_start_date": "2014-01-01",
+      "visit_detail_end_date": "2014-06-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 13,
+      "person_id": 13,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2018-01-01",
+      "visit_detail_end_date": "2018-06-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 14,
+      "person_id": 14,
+      "visit_detail_concept_id": 9201,
+      "visit_detail_start_date": "2018-01-01",
+      "visit_detail_end_date": "2018-06-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 15,
+      "person_id": 15,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2012-05-01",
+      "visit_detail_end_date": "2012-05-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 16,
+      "person_id": 16,
+      "visit_detail_concept_id": 9201,
+      "visit_detail_start_date": "2014-06-01",
+      "visit_detail_end_date": "2014-06-06",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 17,
+      "person_id": 17,
+      "visit_detail_concept_id": 32037,
+      "visit_detail_start_date": "2007-03-05",
+      "visit_detail_end_date": "2007-08-05",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 18,
+      "person_id": 18,
+      "visit_detail_concept_id": 32693,
+      "visit_detail_start_date": "2015-01-01",
+      "visit_detail_end_date": "2015-06-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 19,
+      "person_id": 19,
+      "visit_detail_concept_id": 32693,
+      "visit_detail_start_date": "2015-09-10",
+      "visit_detail_end_date": "2015-10-14",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    },
+    {
+      "visit_detail_id": 20,
+      "person_id": 20,
+      "visit_detail_concept_id": 32693,
+      "visit_detail_start_date": "2013-07-01",
+      "visit_detail_end_date": "2013-12-01",
+      "visit_detail_type_concept_id": 32817,
+      "visit_detail_status_concept_id": 0,
+      "visit_detail_source_concept_id": 0
+    }
+  ],
+  "death": [
+    {
+      "death_occurrence_id": 1,
+      "person_id": 1,
+      "cause_concept_id": 4317150,
+      "death_date": "2014-03-01",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 2,
+      "person_id": 2,
+      "cause_concept_id": 4317150,
+      "death_date": "2018-08-02",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 3,
+      "person_id": 3,
+      "cause_concept_id": 4317150,
+      "death_date": "2018-09-02",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 4,
+      "person_id": 4,
+      "cause_concept_id": 4317150,
+      "death_date": "2012-11-06",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 5,
+      "person_id": 5,
+      "cause_concept_id": 4317150,
+      "death_date": "2014-02-14",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 6,
+      "person_id": 6,
+      "cause_concept_id": 4317150,
+      "death_date": "2007-09-04",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 7,
+      "person_id": 7,
+      "cause_concept_id": 4317150,
+      "death_date": "2015-01-15",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 8,
+      "person_id": 8,
+      "cause_concept_id": 4317150,
+      "death_date": "2015-11-19",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 9,
+      "person_id": 9,
+      "cause_concept_id": 4317150,
+      "death_date": "2013-01-26",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    },
+    {
+      "death_occurrence_id": 10,
+      "person_id": 10,
+      "cause_concept_id": 4317150,
+      "death_date": "2002-02-19",
+      "death_type_concept_id": 32817,
+      "cause_source_value": 0,
+      "cause_source_concept_id": 0
+    }
+  ]
+}
