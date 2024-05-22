@@ -112,7 +112,7 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
 
 cdm$person
 #> # Source:   table<main.person> [8 x 18]
-#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpIjPlii\file411c42e567f.duckdb]
+#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmpu8tZFv\file2fa0ed846f.duckdb]
 #>   person_id gender_concept_id year_of_birth month_of_birth day_of_birth
 #>       <int>             <int>         <int>          <int>        <int>
 #> 1         1              8532          1980             NA           NA
@@ -131,7 +131,7 @@ cdm$person
 #> #   ethnicity_source_concept_id <int>
 ```
 
-The reference can be used to create a cohort.
+The reference can be used to create a cohort and create unit tests.
 
 ``` r
 test_cohorts <- system.file("extdata",
@@ -144,13 +144,12 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 #> ℹ Generating 2 cohorts
-#> ℹ Generating cohort (1/2) - hospitalisation_non_icu_visit✔ Generating cohort (1/2) - hospitalisation_non_icu_visit [461ms]
-#> ℹ Generating cohort (2/2) - icu_visit✔ Generating cohort (2/2) - icu_visit [187ms]
+#> ℹ Generating cohort (1/2) - hospitalisation_non_icu_visit✔ Generating cohort (1/2) - hospitalisation_non_icu_visit [469ms]
+#> ℹ Generating cohort (2/2) - icu_visit✔ Generating cohort (2/2) - icu_visit [193ms]
 ```
 
-And finally some unit tests.
-
 ``` r
+
 cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
   
 excluded_records <- cohortAttrition %>% 

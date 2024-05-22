@@ -98,7 +98,7 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
 cdm$person
 ```
 
-The reference can be used to create a cohort.
+The reference can be used to create a cohort and create unit tests. 
 
 ```{r}
 test_cohorts <- system.file("extdata",
@@ -110,11 +110,7 @@ cohort_set <- CDMConnector::readCohortSet(test_cohorts)
 cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
-```
 
-And finally some unit tests.
-
-```{r}
 cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
   
 excluded_records <- cohortAttrition %>% 
