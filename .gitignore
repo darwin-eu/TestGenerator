@@ -8,3 +8,6 @@ errorReportSql.txt
 inst/doc
 docs
 revdep/
+renv/
+renv.lock
+.Rprofile
