@@ -99,6 +99,7 @@ cdm$person
 ```
 
 The reference can be used to create a cohort.
+
 ```{r}
 test_cohorts <- system.file("extdata",
                             "test_cohorts",
@@ -110,7 +111,8 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 ```
-And some unit testing. 
+
+And finally some unit tests.
 
 ```{r}
 cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
