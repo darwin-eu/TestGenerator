@@ -12,7 +12,7 @@ Description: Push a sample population for unit testing on data mapped to the Obs
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends:
     R (>= 4.1.0)
 Imports: 
@@ -35,6 +35,6 @@ Suggests:
     knitr,
     rmarkdown
 Config/testthat/edition: 3
-URL: https://github.com/darwin-eu-dev/TestGenerator, https://darwin-eu-dev.github.io/TestGenerator/
-BugReports: https://github.com/darwin-eu-dev/TestGenerator/issues
+URL: https://github.com/darwin-eu/TestGenerator, https://darwin-eu.github.io/TestGenerator/
+BugReports: https://github.com/darwin-eu/TestGenerator/issues
 VignetteBuilder: knitr

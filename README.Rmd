@@ -11,76 +11,119 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+library(dplyr)
+library(testthat)
 ```
 
 # TestGenerator
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/github/darwin-eu-dev/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/TestGenerator?branch=main)
+[![R-CMD-check](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/darwin-eu/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu-dev/TestGenerator?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
 <!-- badges: end -->
 
 Does my cohort picked the correct number patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It just takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and it is very challenging to test calculations on huge and complex databases. 
 
-That is why TestGenerator is useful to push a micro sample of around 10 patients to unit test a study on the OMOP-CDM. It includes tools to create a blank CDM with a complete vocabulary and check if the code is doing what we expect. 
+That is why TestGenerator is useful to push a small sample of patients to unit test a study on the OMOP-CDM. It includes tools to create a blank CDM with a complete vocabulary and check if the code is doing what we expect in very specific cases.  
 
 This package is based on the unit testing written for the [Eramus MC Ranitidine Study](https://github.com/mi-erasmusmc/RanitidineStudy/blob/master/unitTesting_README.md).
 
 ## Installation
 
-To install the development version of TestGenerator:
+To install TestGenerator:
 
 ```{r, eval=FALSE}
-# Development version
-remotes::install_github("darwin-eu-dev/TestGenerator")
+# CRAN version
+
+install.packages("TestGenerator")
 ```
 
 ## Example
 
-The user should provide an Excel file [(link to sample)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/testPatientsRSV.xlsx) with a micro population of around 10 patients for testing purposes. That can include any table from the OMOP-CDM. 
+The user can provide an Excel file [(link to sample)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/icu_sample_population.xlsx) or a set of CSV files that represent tables of the OMOP-CDM, with a micro population of just 8 patients for testing purposes. 
 
-`readPatients()` will read the Excel file, and saves the data in a JSON file. This is useful if the user wants to create more than one Unit Test Definitions. 
+`readPatients()` will read either Excel or CSVs, and then saves the data in a JSON file. This is useful if the user wants to create more than one Unit Test Definitions. If the parameter `outputPath` is `NULL` The files are saved in the `testthat/testCases` folder of the package. Alterna
 
 ```{r, eval=FALSE}
-TestGenerator::readPatients(
-  filePath = "~/pathto/testPatients.xlsx",
-  testName = "test",
-  outputPath = "inst/testCases"
-)
+TestGenerator::readPatients(filePath = "~/pathto/testPatients.xlsx",
+                            testName = "test",
+                            outputPath = NULL,
+                            cdmVersion = "5.3")
+```
+
+Alternatively, the user can use the functions `readPatients.xl` or `readPatients.csv` directly. 
+
+```{r, eval=FALSE}
+TestGenerator::readPatients.xl(filePath = "~/pathto/testPatients.xlsx",
+                               testName = "test",
+                               outputPath = NULL,
+                               cdmVersion = "5.3")
+
+TestGenerator::readPatients.csv(filePath = "~/pathto/csv/files",
+                                testName = "test",
+                                outputPath = NULL,
+                                cdmVersion = "5.3",
+                                reduceLargeIds = FALSE)
+```
+
+`patientCDM()` pushes one of those Unit Test Definitions into a blank CDM reference with a complete version of the vocabulary. If the `pathJSON` parameter is `NULL`, `TestGenerator` will look for the JSON test files in the `testthat/testCases` folder. 
+
+```{r, eval=FALSE}
+cdm <- TestGenerator::patientsCDM(pathJson = NULL, 
+                                  testName = "test",
+                                  cdmVersion = "5.3")
 
 ```
 
-`patientCDM()` pushes one of those Unit Test Definitions into a blank CDM reference with a complete version of the vocabulary.
+Now the user has a CDM reference with a complete vocabulary and just 8 patients.
 
-```{r, eval=FALSE}
-cdm <- TestGenerator::patientsCDM(
-  pathJson = "inst/testCases", 
-  testName = "test")
+```{r}
+filePath <- system.file("extdata/icu_sample_population.xlsx", 
+                        package = "TestGenerator")
 
-```
-
-Now the user has a CDM reference with a complete vocabulary and just 10 patients.
-
-```{r, echo=FALSE}
-filePath <- system.file("extdata/testPatientsRSV.xlsx", package = "TestGenerator")
 outputPath <- file.path(tempdir(), "test")
+
 dir.create(outputPath)
-TestGenerator::readPatients(filePath = filePath, outputPath = outputPath)
-cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
-print(cdm)
-unlink(outputPath, recursive = TRUE)
+
+TestGenerator::readPatients(filePath = filePath, 
+                            testName = "test", 
+                            outputPath = outputPath, 
+                            cdmVersion = "5.3")
+cdm <- TestGenerator::patientsCDM(pathJson = outputPath, 
+                                  testName = "test",
+                                  cdmVersion = "5.3")
+
+cdm$person
 ```
 
-The user can test a study using the cdm object and the related schemas like this: 
-```{r, eval=FALSE}
-runStudy(conn = attr(cdm, "dbcon"),
-         cdmDatabaseSchema = "main",
-         resultsDatabaseSchema = "main",
-         dbName = "myTestDB",
-         minCellCount = 5)
+The reference can be used to create a cohort.
+```{r}
+test_cohorts <- system.file("extdata",
+                            "test_cohorts",
+                            package = "TestGenerator")
+
+cohort_set <- CDMConnector::readCohortSet(test_cohorts)
+  
+cdm <- CDMConnector::generate_cohort_set(cdm,
+                                         cohort_set,
+                                         name = "test_cohorts")
 ```
+And some unit testing. 
+
+```{r}
+cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
+  
+excluded_records <- cohortAttrition %>% 
+    pull(excluded_records) %>% 
+    sum()
+  
+expect_equal(excluded_records, 7)
+```
+
 
 ```{r, echo=FALSE}
+unlink(outputPath, recursive = TRUE)
 duckdb::duckdb_shutdown(duckdb::duckdb())
 ```
