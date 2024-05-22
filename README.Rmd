@@ -128,11 +128,16 @@ diazepam <- cdm[["test_cohorts"]] %>%
   filter(cohort_definition_id == 1) %>% 
   collect()
 
-icu_visit <- cdm[["test_cohorts"]] %>% 
+hospitalisation <- cdm[["test_cohorts"]] %>% 
   filter(cohort_definition_id == 2) %>% 
   collect()
 
+icu_visit <- cdm[["test_cohorts"]] %>% 
+  filter(cohort_definition_id == 3) %>% 
+  collect()
+
 TestGenerator::graphCohort(subject_id = 4, list("diazepam" = diazepam,
+                                                "hospitalisation" = hospitalisation,
                                                 "icu_visit" = icu_visit))
 
 ```
