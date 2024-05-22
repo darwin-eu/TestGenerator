@@ -112,7 +112,7 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
 
 cdm$person
 #> # Source:   table<main.person> [8 x 18]
-#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmpu8tZFv\file2fa0ed846f.duckdb]
+#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpUpGUna\file5a7046291f5a.duckdb]
 #>   person_id gender_concept_id year_of_birth month_of_birth day_of_birth
 #>       <int>             <int>         <int>          <int>        <int>
 #> 1         1              8532          1980             NA           NA
@@ -144,8 +144,8 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 #> ℹ Generating 2 cohorts
-#> ℹ Generating cohort (1/2) - hospitalisation_non_icu_visit✔ Generating cohort (1/2) - hospitalisation_non_icu_visit [469ms]
-#> ℹ Generating cohort (2/2) - icu_visit✔ Generating cohort (2/2) - icu_visit [193ms]
+#> ℹ Generating cohort (1/2) - diazepam✔ Generating cohort (1/2) - diazepam [384ms]
+#> ℹ Generating cohort (2/2) - icu_visit✔ Generating cohort (2/2) - icu_visit [194ms]
 ```
 
 ``` r
@@ -156,5 +156,26 @@ excluded_records <- cohortAttrition %>%
     pull(excluded_records) %>% 
     sum()
   
-expect_equal(excluded_records, 7)
+expect_equal(excluded_records, 0)
 ```
+
+With `graphCohort()` it is possible to visualise the timeline for
+particular patient.
+
+``` r
+
+diazepam <- cdm[["test_cohorts"]] %>% 
+  filter(cohort_definition_id == 1) %>% 
+  collect()
+
+icu_visit <- cdm[["test_cohorts"]] %>% 
+  filter(cohort_definition_id == 2) %>% 
+  collect()
+
+TestGenerator::graphCohort(subject_id = 4, list("diazepam" = diazepam,
+                                                "icu_visit" = icu_visit))
+#> Warning in geom_segment(aes(x = cohort_start_date, y = cohort, xend =
+#> cohort_end_date, : Ignoring unknown aesthetics: fill
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />

@@ -117,9 +117,25 @@ excluded_records <- cohortAttrition %>%
     pull(excluded_records) %>% 
     sum()
   
-expect_equal(excluded_records, 7)
+expect_equal(excluded_records, 0)
 ```
 
+With `graphCohort()` it is possible to visualise the timeline for particular patient. 
+
+```{r}
+
+diazepam <- cdm[["test_cohorts"]] %>% 
+  filter(cohort_definition_id == 1) %>% 
+  collect()
+
+icu_visit <- cdm[["test_cohorts"]] %>% 
+  filter(cohort_definition_id == 2) %>% 
+  collect()
+
+TestGenerator::graphCohort(subject_id = 4, list("diazepam" = diazepam,
+                                                "icu_visit" = icu_visit))
+
+```
 
 ```{r, echo=FALSE}
 unlink(outputPath, recursive = TRUE)
