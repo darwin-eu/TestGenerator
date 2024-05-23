@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/github/darwin-eu/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu/TestGenerator?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
@@ -112,7 +112,7 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
 
 cdm$person
 #> # Source:   table<main.person> [8 x 18]
-#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmp2vG0BW\file4b1c6988384f.duckdb]
+#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpqIMyjZ\file54544d8e6f1.duckdb]
 #>   person_id gender_concept_id year_of_birth month_of_birth day_of_birth
 #>       <int>             <int>         <int>          <int>        <int>
 #> 1         1              8532          1980             NA           NA
@@ -144,9 +144,9 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 #> ℹ Generating 3 cohorts
-#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [517ms]
-#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [550ms]
-#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [203ms]
+#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [412ms]
+#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [558ms]
+#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [217ms]
 ```
 
 ``` r
