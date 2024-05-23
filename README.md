@@ -110,25 +110,28 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
 
 ``` r
 
-cdm$person
-#> # Source:   table<main.person> [8 x 18]
-#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmpw5D71N\file687037ca5b99.duckdb]
-#>   person_id gender_concept_id year_of_birth month_of_birth day_of_birth
-#>       <int>             <int>         <int>          <int>        <int>
-#> 1         1              8532          1980             NA           NA
-#> 2         2              8507          1990             NA           NA
-#> 3         3              8532          2000             NA           NA
-#> 4         4              8507          1980             NA           NA
-#> 5         5              8532          1990             NA           NA
-#> 6         6              8507          2000             NA           NA
-#> 7         7              8532          1980             NA           NA
-#> 8         8              8507          1990             NA           NA
-#> # ℹ 13 more variables: birth_datetime <dttm>, race_concept_id <int>,
-#> #   ethnicity_concept_id <int>, location_id <int>, provider_id <int>,
-#> #   care_site_id <int>, person_source_value <chr>, gender_source_value <chr>,
-#> #   gender_source_concept_id <int>, race_source_value <chr>,
-#> #   race_source_concept_id <int>, ethnicity_source_value <chr>,
-#> #   ethnicity_source_concept_id <int>
+cdm[["person"]] %>% glimpse()
+#> Rows: ??
+#> Columns: 18
+#> Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmp44K6CT\file6a812027396.duckdb]
+#> $ person_id                   <int> 1, 2, 3, 4, 5, 6, 7, 8
+#> $ gender_concept_id           <int> 8532, 8507, 8532, 8507, 8532, 8507, 8532, …
+#> $ year_of_birth               <int> 1980, 1990, 2000, 1980, 1990, 2000, 1980, …
+#> $ month_of_birth              <int> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ day_of_birth                <int> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ birth_datetime              <dttm> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ race_concept_id             <int> 0, 0, 0, 0, 0, 0, 0, 0
+#> $ ethnicity_concept_id        <int> 0, 0, 0, 0, 0, 0, 0, 0
+#> $ location_id                 <int> 0, 0, 0, 0, 0, 0, 0, 0
+#> $ provider_id                 <int> 0, 0, 0, 0, 0, 0, 0, 0
+#> $ care_site_id                <int> 0, 0, 0, 0, 0, 0, 0, 0
+#> $ person_source_value         <chr> "0", "0", "0", "0", "0", "0", "0", "0"
+#> $ gender_source_value         <chr> "M", "F", "M", "F", "M", "F", "M", "F"
+#> $ gender_source_concept_id    <int> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ race_source_value           <chr> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ race_source_concept_id      <int> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ ethnicity_source_value      <chr> NA, NA, NA, NA, NA, NA, NA, NA
+#> $ ethnicity_source_concept_id <int> NA, NA, NA, NA, NA, NA, NA, NA
 ```
 
 The reference can be used to create a cohort and create unit tests.
@@ -144,9 +147,9 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 #> ℹ Generating 3 cohorts
-#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [568ms]
-#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [577ms]
-#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [239ms]
+#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [345ms]
+#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [309ms]
+#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [191ms]
 ```
 
 ``` r

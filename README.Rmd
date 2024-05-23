@@ -95,7 +95,7 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
                                   testName = "test",
                                   cdmVersion = "5.3")
 
-cdm$person
+cdm[["person"]] %>% glimpse()
 ```
 
 The reference can be used to create a cohort and create unit tests. 
