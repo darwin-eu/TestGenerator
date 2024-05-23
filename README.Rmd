@@ -42,7 +42,7 @@ install.packages("TestGenerator")
 
 ## Example
 
-The user can provide an Excel file [(link to sample)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/icu_sample_population.xlsx) or a set of CSV files that represent tables of the OMOP-CDM, with a micro population of just 8 patients for testing purposes. 
+The user can provide an Excel file [(link to sample)](https://github.com/darwin-eu/TestGenerator/raw/main/inst/extdata/icu_sample_population.xlsx) or a set of CSV files that represent tables of the OMOP-CDM, with a micro population of just 8 patients for testing purposes. 
 
 `readPatients()` will read either Excel or CSVs, and then saves the data in a JSON file. This is useful if the user wants to create more than one Unit Test Definitions. If the parameter `outputPath` is `NULL` The files are saved in the `testthat/testCases` folder of the package. Alterna
 

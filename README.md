@@ -39,7 +39,7 @@ install.packages("TestGenerator")
 ## Example
 
 The user can provide an Excel file [(link to
-sample)](https://github.com/darwin-eu-dev/TestGenerator/raw/main/inst/extdata/icu_sample_population.xlsx)
+sample)](https://github.com/darwin-eu/TestGenerator/raw/main/inst/extdata/icu_sample_population.xlsx)
 or a set of CSV files that represent tables of the OMOP-CDM, with a
 micro population of just 8 patients for testing purposes.
 
@@ -112,7 +112,7 @@ cdm <- TestGenerator::patientsCDM(pathJson = outputPath,
 
 cdm$person
 #> # Source:   table<main.person> [8 x 18]
-#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\RtmpqIMyjZ\file54544d8e6f1.duckdb]
+#> # Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmpw5D71N\file687037ca5b99.duckdb]
 #>   person_id gender_concept_id year_of_birth month_of_birth day_of_birth
 #>       <int>             <int>         <int>          <int>        <int>
 #> 1         1              8532          1980             NA           NA
@@ -144,9 +144,9 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 #> ℹ Generating 3 cohorts
-#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [412ms]
-#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [558ms]
-#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [217ms]
+#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [568ms]
+#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [577ms]
+#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [239ms]
 ```
 
 ``` r
