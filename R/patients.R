@@ -356,13 +356,16 @@ patientsCDM <- function(pathJson = NULL,
   jsonData <- jsonlite::fromJSON(fileName)
   # Check for the expected columns in the CDM
   for (tableName in names(jsonData)) {
-    # tableName <- "vocabulary"
-    currentCoulumns <- names(jsonData[[tableName]])
-    expectedColumns <- spec_cdm_field[[cdmVersion]] %>%
-      dplyr::filter(cdmTableName == tableName) %>%
-      dplyr::pull(cdmFieldName)
-    jsonData[[tableName]] <- jsonData[[tableName]] %>%
-      select(currentCoulumns[currentCoulumns %in% expectedColumns])
+    # tableName <- "person"
+    classTable <- class(jsonData[[tableName]])
+    if (classTable == "data.frame") {
+      currentCoulumns <- names(jsonData[[tableName]])
+      expectedColumns <- spec_cdm_field[[cdmVersion]] %>%
+        dplyr::filter(cdmTableName == tableName) %>%
+        dplyr::pull(cdmFieldName)
+      jsonData[[tableName]] <- jsonData[[tableName]] %>%
+        select(currentCoulumns[currentCoulumns %in% expectedColumns])
+    }
   }
 
   # Convert the JSON data into a data frame and append it to the blank CDM

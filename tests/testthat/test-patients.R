@@ -31,6 +31,26 @@ test_that("Patients to CDM xlsx function", {
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
+test_that("Read patients empty tables xl", {
+  filePath <- test_path("test_cdm_data.xlsx")
+  TestGenerator::readPatients.xl(filePath = filePath, outputPath = NULL)
+  cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "test")
+  expect_equal(class(cdm), "cdm_reference")
+  number_persons <- cdm[["person"]] %>% dplyr::pull(person_id)
+  expect_equal(length(number_persons), 18)
+  duckdb::duckdb_shutdown(duckdb::duckdb())
+})
+
+test_that("Read patients empty xl", {
+  filePath <- test_path("test_cdm_data.xlsx")
+  TestGenerator::readPatients.xl(filePath = filePath, outputPath = NULL)
+  cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "test")
+  expect_equal(class(cdm), "cdm_reference")
+  number_persons <- cdm[["person"]] %>% dplyr::pull(person_id)
+  expect_equal(length(number_persons), 18)
+  duckdb::duckdb_shutdown(duckdb::duckdb())
+})
+
 test_that("Reading sample MIMIC patients CSV files and JSON creation", {
   filePath <- testthat::test_path("mimic_sample")
   outputPath <- testthat::test_path("testCases")
