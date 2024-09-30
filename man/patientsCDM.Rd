@@ -4,7 +4,12 @@
 \alias{patientsCDM}
 \title{Pushes test population into a blank CDM.}
 \usage{
-patientsCDM(pathJson = NULL, testName = NULL, cdmVersion = "5.3")
+patientsCDM(
+  pathJson = NULL,
+  testName = NULL,
+  cdmVersion = "5.3",
+  cdmName = NULL
+)
 }
 \arguments{
 \item{pathJson}{Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.}
@@ -12,6 +17,8 @@ patientsCDM(pathJson = NULL, testName = NULL, cdmVersion = "5.3")
 \item{testName}{Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.}
 
 \item{cdmVersion}{cdm version, default "5.3".}
+
+\item{cdmName}{Name of the cdm, default NULL.}
 }
 \value{
 A CDM reference object with a sample population.
