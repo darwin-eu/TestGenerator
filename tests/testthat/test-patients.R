@@ -102,10 +102,12 @@ test_that("Mimic data Patients to CDM function", {
                    outputPath = outputPath,
                    cdmVersion = cdmVersion,
                    reduceLargeIds = TRUE)
-  cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test")
+  cdmName <- "myCDM"
+  cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test", cdmName = cdmName)
   expect_equal(class(cdm), "cdm_reference")
   number_persons <- cdm[["person"]] %>% dplyr::pull(person_id) %>% length()
   expect_equal(number_persons, 100)
+  expect_equal(CDMConnector::cdmName(cdm), cdmName)
   unlink(outputPath, recursive = TRUE)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
