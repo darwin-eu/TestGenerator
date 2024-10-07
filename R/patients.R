@@ -279,6 +279,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
 #' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.
 #' @param cdmVersion cdm version, default "5.3".
+#' @param cdmName Name of the cdm, default NULL.
 #'
 #' @return A CDM reference object with a sample population.
 #' @import dplyr cli
@@ -297,7 +298,8 @@ createOutputFolder <- function(outputPath, testName) {
 #' @export
 patientsCDM <- function(pathJson = NULL,
                         testName = NULL,
-                        cdmVersion = "5.3") {
+                        cdmVersion = "5.3",
+                        cdmName = NULL) {
 
   if (is.null(pathJson)) {
     outputFolder <- testthat::test_path("testCases")
@@ -350,7 +352,8 @@ patientsCDM <- function(pathJson = NULL,
   conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
-                                  writeSchema = "main")
+                                  writeSchema = "main",
+                                  cdmName = cdmName)
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
