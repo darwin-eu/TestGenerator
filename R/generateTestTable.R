@@ -6,19 +6,25 @@
 #' @examples
 generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
 
-  cdmSpecificationPath <- file.path("inst", "cdmTableSpecifications", paste0("emptycdm_", cdmVersion))
+  if(!(cdmVersion %in% c("5.3", "5.4"))){
+    stop("Invalid cdm version should be 5.3 or 5.4")
+  }
+
+  tableNames <- tolower(tableNames)
+
+  cdmSpecificationPath <- system.file("cdmTableSpecifications", paste0("emptycdm_", cdmVersion), package = "TestGenerator")
   # check table names
   fileNames <- tolower(tools::file_path_sans_ext(basename(list.files(path = cdmSpecificationPath, full.names = TRUE))))
+
 
   toExclude <- c("concept", "concept_ancestor", "concept_class", "concept_cpt4", "concept_relationship", "concept_synonym", "domain", "drug_strength", "relationship", "vocabulary")
 
   fileNames <- setdiff(fileNames, toExclude)
 
-  invalidTableNames <- tableNames[!tolower(tableNames) %in% fileNames]
+  invalidTableNames <-setdiff(tableNames, fileNames)
 
-  # print the invalid filenames, if any
   if (length(invalidTableNames) > 0) {
-    stop(paste("The following filenames are invalid:", invalidTableNames))
+    stop(paste("The following filenames are invalid:", paste0(invalidTableNames, collapse = ", ")))
   }
 
   if (!dir.exists(outputFolder)) {
