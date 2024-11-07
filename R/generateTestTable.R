@@ -1,9 +1,11 @@
 #' Generates an Excel file with sheets that correspond to an OMOP-CDM tables.
 #'
-#' @return An Excel file
-#' @export
+#'@param tableNames A list specifying the table names to include in the Excel file.
+#'@param cdmversion The CDM version to use for creating the requested tables (either 5.3 or 5.4).
+#'@param outputFolder The folder where the Excel file will be saved.
 #'
-#' @examples
+#' @return An Excel file with the tables requested.
+#' @export
 generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
 
   if(!(cdmVersion %in% c("5.3", "5.4"))){
