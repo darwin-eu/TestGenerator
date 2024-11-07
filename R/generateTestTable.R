@@ -4,8 +4,45 @@
 #' @export
 #'
 #' @examples
-generateTestTable <- function(outputPath) {
+generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
 
+  cdmSpecificationPath <- file.path("inst", "cdmTableSpecifications", paste0("emptycdm_", cdmVersion))
+  # check table names
+  fileNames <- tolower(tools::file_path_sans_ext(basename(list.files(path = cdmSpecificationPath, full.names = TRUE))))
+
+  toExclude <- c("concept", "concept_ancestor", "concept_class", "concept_cpt4", "concept_relationship", "concept_synonym", "domain", "drug_strength", "relationship", "vocabulary")
+
+  fileNames <- setdiff(fileNames, toExclude)
+
+  invalidTableNames <- tableNames[!tolower(tableNames) %in% fileNames]
+
+  # print the invalid filenames, if any
+  if (length(invalidTableNames) > 0) {
+    stop(paste("The following filenames are invalid:", invalidTableNames))
+  }
+
+  if (!dir.exists(outputFolder)) {
+    dir.create(outputFolder, recursive = TRUE)
+  }
+
+  # output path for excel file
+  excelFileOutPath <- file.path(outputFolder, paste0("test_cdm_", cdmVersion, ".xlsx"))
+
+  wb <- openxlsx::createWorkbook()
+
+  for(tableName in tableNames){
+
+    # path to parquet file
+    file <- file.path(cdmSpecificationPath, paste0(tableName, ".parquet"))
+
+    parquetFile <- arrow::read_parquet(file)
+
+    openxlsx::addWorksheet(wb,  tableName)
+    openxlsx::writeData(wb, sheet = tableName, parquetFile)
+  }
+
+  # save the workbook
+  openxlsx::saveWorkbook(wb, excelFileOutPath, overwrite = TRUE)
 }
 
 
