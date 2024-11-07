@@ -30,7 +30,9 @@ Imports:
     withr,
     ggplot2,
     tibble,
-    testthat
+    testthat,
+    arrow,
+    openxlsx
 Suggests: 
     knitr,
     rmarkdown

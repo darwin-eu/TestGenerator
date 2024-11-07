@@ -1,11 +1,16 @@
 #' Generates an Excel file with sheets that correspond to an OMOP-CDM tables.
 #'
-#'@param tableNames A list specifying the table names to include in the Excel file.
-#'@param cdmversion The CDM version to use for creating the requested tables (either 5.3 or 5.4).
-#'@param outputFolder The folder where the Excel file will be saved.
+#' @param tableNames A list specifying the table names to include in the Excel file.
+#' @param cdmversion The CDM version to use for creating the requested tables (either 5.3 or 5.4).
+#' @param outputFolder The folder where the Excel file will be saved.
 #'
 #' @return An Excel file with the tables requested.
 #' @export
+#' @importFrom arrow read_parquet
+#' @importFrom openxlsx createWorkbook
+#' @importFrom openxlsx addWorksheet
+#' @importFrom openxlsx writeData
+#' @importFrom openxlsx saveWorkbook
 generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
 
   if(!(cdmVersion %in% c("5.3", "5.4"))){
