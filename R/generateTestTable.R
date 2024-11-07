@@ -7,10 +7,7 @@
 #' @return An Excel file with the tables requested.
 #' @export
 #' @importFrom arrow read_parquet
-#' @importFrom openxlsx createWorkbook
-#' @importFrom openxlsx addWorksheet
-#' @importFrom openxlsx writeData
-#' @importFrom openxlsx saveWorkbook
+#' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
 
   if(!(cdmVersion %in% c("5.3", "5.4"))){
@@ -59,7 +56,7 @@ generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
 }
 
 
-getEmptyCDM <- function() {
+getEmptyCDM <- function(cdmName, cdmVersion) {
 
   vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
                          glue::glue("empty_cdm_{cdmVersion}.zip"))
