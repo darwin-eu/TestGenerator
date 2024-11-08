@@ -58,26 +58,3 @@ generateTestTables <- function(tableNames,
   # save the workbook
   openxlsx::saveWorkbook(wb, excelFileOutPath, overwrite = TRUE)
 }
-
-
-getEmptyCDM <- function(cdmName, cdmVersion) {
-
-  vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                         glue::glue("empty_cdm_{cdmVersion}.zip"))
-
-  if (!file.exists(vocabPath)) {
-    CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
-                                      cdmVersion = cdmVersion,
-                                      pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                                      overwrite = TRUE)
-  }
-
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
-  cdm <- CDMConnector::cdmFromCon(con = conn,
-                                  cdmSchema = "main",
-                                  writeSchema = "main",
-                                  cdmName = cdmName)
-
-  return(cdm)
-
-}
