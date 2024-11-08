@@ -3,12 +3,16 @@ test_that("invalid table names", {
   tableNames <- c("table_that_does_not_exist", "vocabulary", "visit_occurrence")
   invalidTableNames <- c("table_that_does_not_exist", "vocabulary")
   cdmVersion <- "5.3"
-  outputFolder <- "testOutputGenerateTestTable"
+  outputFolder <- file.path(tempdir(), "testOutputExcel")
+  dir.create(outputFolder)
 
- expect_error(generateTestTables(tableNames = tableNames,
+  expect_error(generateTestTables(tableNames = tableNames,
                      cdmVersion = cdmVersion,
                      outputFolder = outputFolder
                      ), paste("The following filenames are invalid:", paste0(invalidTableNames, collapse = ", ")))
+
+  unlink(outputFolder, recursive = TRUE)
+
 })
 
 
@@ -16,12 +20,15 @@ test_that("invalid cdm version", {
 
   tableNames <- c("visit_occurrence")
   cdmVersion <- "10.1"
-  outputFolder <- "testOutputGenerateTestTable"
+  outputFolder <- file.path(tempdir(), "testOutputExcel")
+  dir.create(outputFolder)
 
   expect_error(generateTestTables(tableNames = tableNames,
                                                cdmVersion = cdmVersion,
                                                outputFolder = outputFolder
   ), "Invalid cdm version should be 5.3 or 5.4")
+
+  unlink(outputFolder, recursive = TRUE)
 
 })
 
@@ -30,7 +37,8 @@ test_that("output is generated with correct specifications, lower or uppercase n
 
   tableNames <- c("visit_occurrence", "COST")
   cdmVersion <- "5.3"
-  outputFolder <- "testOutputGenerateTestTable"
+  outputFolder <- file.path(tempdir(), "testOutputExcel")
+  dir.create(outputFolder)
 
   generateTestTables(tableNames = tableNames,
                      cdmVersion = cdmVersion,
@@ -55,6 +63,7 @@ test_that("output is generated with correct specifications, lower or uppercase n
 
   expect_identical(colnames(parquetCost), colnames(sheetData$cost))
   expect_identical(colnames(parquetVisitOccurrence), colnames(sheetData$visit_occurrence))
+  unlink(outputFolder, recursive = TRUE)
 })
 
 
