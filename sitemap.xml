@@ -1,39 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/downloadTestData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/graphCohort.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/patientsCDM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readPatients.csv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readPatients.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readPatients.xl.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/downloadTestData.html</loc></url>
+<url><loc>/reference/generateTestTables.html</loc></url>
+<url><loc>/reference/graphCohort.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/patientsCDM.html</loc></url>
+<url><loc>/reference/readPatients.csv.html</loc></url>
+<url><loc>/reference/readPatients.html</loc></url>
+<url><loc>/reference/readPatients.xl.html</loc></url>
 </urlset>
+
