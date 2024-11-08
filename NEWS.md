@@ -1,3 +1,11 @@
+# TestGenerator 0.3.3
+
+* `generateTestTable()` creates an Excel file with sheets that correspond to OMOP-CDM tables.
+
+* `patientsCDM()` now accepts `cdmName` as argument to allow for custom cdm name.
+
+* `getEmptyCDM()` returns an empty cdm object.
+
 # TestGenerator 0.3.2
 
 * Fixed bug related to empty tables pushed to the duckdb CDM.
