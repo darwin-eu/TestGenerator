@@ -1,6 +1,10 @@
 # TestGenerator 0.3.3
 
-* generateTestTable creates Excel file to fill test data.
+* `generateTestTable()` creates an Excel file with sheets that correspond to OMOP-CDM tables.
+
+* `patientsCDM()` now accepts `cdmName` as argument to allow for custom cdm name.
+
+* `getEmptyCDM()` returns an empty cdm object.
 
 # TestGenerator 0.3.2
 
