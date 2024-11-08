@@ -1,14 +1,18 @@
 #' Generates an Excel file with sheets that correspond to an OMOP-CDM tables.
 #'
 #' @param tableNames A list specifying the table names to include in the Excel file.
-#' @param cdmversion The CDM version to use for creating the requested tables (either 5.3 or 5.4).
+#' @param cdmVersion The CDM version to use for creating the requested tables (either 5.3 or 5.4).
 #' @param outputFolder The folder where the Excel file will be saved.
+#' @param filename The name of the Excel file. It does not include the extension .xlsx.
 #'
 #' @return An Excel file with the tables requested.
 #' @export
 #' @importFrom arrow read_parquet
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
-generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
+generateTestTables <- function(tableNames,
+                               cdmVersion,
+                               outputFolder,
+                               filename = paste0("test_cdm_", cdmVersion)) {
 
   if(!(cdmVersion %in% c("5.3", "5.4"))){
     stop("Invalid cdm version should be 5.3 or 5.4")
@@ -36,7 +40,7 @@ generateTestTables <- function(tableNames, cdmVersion, outputFolder) {
   }
 
   # output path for excel file
-  excelFileOutPath <- file.path(outputFolder, paste0("test_cdm_", cdmVersion, ".xlsx"))
+  excelFileOutPath <- file.path(outputFolder, paste0(filename, ".xlsx"))
 
   wb <- openxlsx::createWorkbook()
 
