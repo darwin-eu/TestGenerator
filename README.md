@@ -98,22 +98,19 @@ TestGenerator::readPatients(filePath = filePath,
                             outputPath = outputPath, 
                             cdmVersion = "5.3")
 #> ✔ Unit Test Definition Created Successfully: 'test'
-```
-
-``` r
 cdm <- TestGenerator::patientsCDM(pathJson = outputPath, 
                                   testName = "test",
                                   cdmVersion = "5.3")
+#> Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',
+#>  target signature 'duckdb_connection#Id'.
+#>  "duckdb_connection#ANY" would also be valid
 #> ! cdm name not specified and could not be inferred from the cdm source table
 #> ✔ Patients pushed to blank CDM successfully
-```
-
-``` r
 
 cdm[["person"]] %>% glimpse()
 #> Rows: ??
 #> Columns: 18
-#> Database: DuckDB v0.9.1 [cbarboza@Windows 10 x64:R 4.3.1/C:\Users\cbarboza\AppData\Local\Temp\Rtmp44K6CT\file6a812027396.duckdb]
+#> Database: DuckDB v1.1.0 [root@Darwin 24.0.0:R 4.4.1//private/var/folders/ny/8mfpdl611hz7by4z_3kfl3t00000gn/T/RtmpJcD0I4/file1161b10365d9c.duckdb]
 #> $ person_id                   <int> 1, 2, 3, 4, 5, 6, 7, 8
 #> $ gender_concept_id           <int> 8532, 8507, 8532, 8507, 8532, 8507, 8532, …
 #> $ year_of_birth               <int> 1980, 1990, 2000, 1980, 1990, 2000, 1980, …
@@ -147,12 +144,24 @@ cdm <- CDMConnector::generate_cohort_set(cdm,
                                          cohort_set,
                                          name = "test_cohorts")
 #> ℹ Generating 3 cohorts
-#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [345ms]
-#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [309ms]
-#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [191ms]
-```
-
-``` r
+#> ℹ Generating cohort (1/3) - diazepam
+#> ✔ Generating cohort (1/3) - diazepam [192ms]
+#> 
+#> ℹ Generating cohort (2/3) - hospitalisation
+#> ✔ Generating cohort (2/3) - hospitalisation [195ms]
+#> 
+#> ℹ Generating cohort (3/3) - icu_visit
+#> ✔ Generating cohort (3/3) - icu_visit [54ms]
+#> 
+#> Warning: ! 5 casted column in test_cohorts (cohort_attrition) as do not match expected
+#>   column type:
+#> • `number_records` from numeric to integer
+#> • `number_subjects` from numeric to integer
+#> • `reason_id` from numeric to integer
+#> • `excluded_records` from numeric to integer
+#> • `excluded_subjects` from numeric to integer
+#> Warning: ! 1 column in test_cohorts do not match expected column type:
+#> • `subject_id` is numeric but expected integer
 
 cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
   
