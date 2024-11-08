@@ -4,14 +4,21 @@
 \alias{generateTestTables}
 \title{Generates an Excel file with sheets that correspond to an OMOP-CDM tables.}
 \usage{
-generateTestTables(tableNames, cdmVersion, outputFolder)
+generateTestTables(
+  tableNames,
+  cdmVersion,
+  outputFolder,
+  filename = paste0("test_cdm_", cdmVersion)
+)
 }
 \arguments{
 \item{tableNames}{A list specifying the table names to include in the Excel file.}
 
+\item{cdmVersion}{The CDM version to use for creating the requested tables (either 5.3 or 5.4).}
+
 \item{outputFolder}{The folder where the Excel file will be saved.}
 
-\item{cdmversion}{The CDM version to use for creating the requested tables (either 5.3 or 5.4).}
+\item{filename}{The name of the Excel file.}
 }
 \value{
 An Excel file with the tables requested.
