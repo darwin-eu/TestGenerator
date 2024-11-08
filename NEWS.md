@@ -1,6 +1,6 @@
 # TestGenerator 0.3.3
 
-* generateTestTable creates Excel file to fill test data
+* generateTestTable creates Excel file to fill test data.
 
 # TestGenerator 0.3.2
 
