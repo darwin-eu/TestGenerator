@@ -22,6 +22,8 @@ readPatients.csv(
 \item{cdmVersion}{cdm version, default "5.3".}
 
 \item{reduceLargeIds}{Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.}
+
+\item{extraTable}{TRUE or FALSE. If TRUE, non-standard tables will be included in the test CDM.}
 }
 \value{
 A JSON file with sample patients inside the project directory.
