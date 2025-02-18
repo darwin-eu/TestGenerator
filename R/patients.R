@@ -104,7 +104,6 @@ readPatients.xl <- function(filePath = NULL,
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
 #' @param cdmVersion cdm version, default "5.3".
 #' @param reduceLargeIds Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.
-#' @param extraTable TRUE or FALSE. If TRUE, non-standard tables will be included in the test CDM.
 #'
 #' @return A JSON file with sample patients inside the project directory.
 #'
@@ -322,6 +321,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
 #' @importFrom CDMConnector downloadEunomiaData example_datasets eunomia_dir cdmFromCon
+#' @importFrom omopgenerics insertTable
 #'
 #' @examples
 #' \donttest{
