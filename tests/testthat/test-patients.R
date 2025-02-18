@@ -80,7 +80,7 @@ test_that("Patients to CDM xlsx function", {
   cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy")
   expect_equal(class(cdm), "cdm_reference")
   number_persons <- cdm[["person"]] %>% dplyr::pull(person_id)
-  expect_equal(length(number_persons), 20)
+  expect_equal(length(number_persons), 18)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
@@ -89,8 +89,9 @@ test_that("Patients to CDM xlsx function pregnancy extra table", {
   TestGenerator::readPatients.xl(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
   cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy")
   expect_equal(class(cdm), "cdm_reference")
+  expect_equal(cdm$pregnancy %>% colnames(), c("pregnancy_occurrence_id", "person_id", "pregnancy_concept_id", "pregnancy_start_date"))
   number_persons <- cdm[["person"]] %>% dplyr::pull(person_id)
-  expect_equal(length(number_persons), 20)
+  expect_equal(length(number_persons), 18)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
