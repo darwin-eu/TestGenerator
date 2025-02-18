@@ -1,3 +1,7 @@
+# TestGenerator 0.4.0
+
+* Extra tables can be added through `readPatients.xl()`, that table then is pushed to "other tables" in the CDM reference using `patientsCDM()`.
+
 # TestGenerator 0.3.3
 
 * `generateTestTable()` creates an Excel file with sheets that correspond to OMOP-CDM tables.

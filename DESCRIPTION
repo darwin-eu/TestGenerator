@@ -1,7 +1,7 @@
 Package: TestGenerator
 Type: Package
 Title: Integration Unit Tests for Pharmacoepidemiological Studies
-Version: 0.3.3
+Version: 0.4.0
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("cre", "aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ioanna", "Nika", , "i.nika@darwin-eu.org", role = "aut"),
