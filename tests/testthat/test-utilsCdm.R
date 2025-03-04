@@ -1,6 +1,6 @@
 test_that("CDM emptied", {
   skip("manual test")
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("synthea-allergies-10k")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("synthea-allergies-10k")))
   cdm <- CDMConnector::cdmFromCon(conn, cdmSchema = "main", writeSchema = "main")
   cdm <- emptyCDM(cdm = cdm, con = conn)
   expect_equal(class(cdm), "cdm_reference")

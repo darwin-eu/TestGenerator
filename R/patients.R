@@ -320,7 +320,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
-#' @importFrom CDMConnector downloadEunomiaData example_datasets eunomia_dir cdmFromCon
+#' @importFrom CDMConnector downloadEunomiaData example_datasets eunomiaDir cdmFromCon
 #' @importFrom omopgenerics insertTable
 #'
 #' @examples
@@ -384,7 +384,7 @@ patientsCDM <- function(pathJson = NULL,
                                       overwrite = TRUE)
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
@@ -451,7 +451,7 @@ getEmptyCDM <- function(cdmName, cdmVersion) {
                                       overwrite = TRUE)
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
