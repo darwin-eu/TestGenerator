@@ -320,7 +320,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
-#' @importFrom CDMConnector downloadEunomiaData example_datasets eunomiaDir cdmFromCon
+#' @importFrom CDMConnector downloadEunomiaData eunomiaDir cdmFromCon
 #' @importFrom omopgenerics insertTable
 #'
 #' @examples
