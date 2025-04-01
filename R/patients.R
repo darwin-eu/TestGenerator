@@ -4,6 +4,7 @@
 #' @param testName A name of the test population in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
 #' @param cdmVersion cdm version, default "5.3".
+#' @param extraTable Name of non-standard tables to be included in the test CDM.
 #'
 #' @return A JSON file with sample patients inside the project directory.
 #'
@@ -21,15 +22,24 @@
 readPatients <- function(filePath = NULL,
                          testName = "test",
                          outputPath = NULL,
-                         cdmVersion = "5.3") {
+                         cdmVersion = "5.3",
+                         extraTable = FALSE) {
+
   checkmate::assertFileExists(filePath)
   fileExtension <- tools::file_ext(filePath)
   checkmate::assertTRUE(fileExtension %in% c("csv", "xlsx"))
 
   if (fileExtension == "csv") {
-    readPatients.csv(filePath, testName, outputPath, cdmVersion)
+    readPatients.csv(filePath = filePath,
+                     testName = testName,
+                     outputPath = outputPath,
+                     cdmVersion = cdmVersion)
   } else {
-    readPatients.xl(filePath, testName, outputPath, cdmVersion)
+    readPatients.xl(filePath = filePath,
+                    testName = testName,
+                    outputPath = outputPath,
+                    cdmVersion = cdmVersion,
+                    extraTable = extraTable)
   }
 }
 
@@ -39,6 +49,7 @@ readPatients <- function(filePath = NULL,
 #' @param testName A name of the test population in character.
 #' @param outputPath Path to write the test JSON files. If NULL, the files will be written at the project's testthat folder, i.e. tests/testthat/testCases.
 #' @param cdmVersion cdm version, default "5.3".
+#' @param extraTable TRUE or FALSE. If TRUE, non-standard tables will be included in the test CDM.
 #'
 #' @return A directory with the test JSON files with sample patients inside the project directory.
 #'
@@ -57,23 +68,16 @@ readPatients <- function(filePath = NULL,
 readPatients.xl <- function(filePath = NULL,
                             testName = "test",
                             outputPath = NULL,
-                            cdmVersion = "5.3") {
+                            cdmVersion = "5.3",
+                            extraTable = FALSE) {
 
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
 
   # Check columns
-  expectedTables <- spec_cdm_field[[cdmVersion]] %>%
-    dplyr::pull(cdmTableName)
 
-  patientTables <- readxl::excel_sheets(filePath)
-  checkmate::assert(all(patientTables %in% unique(expectedTables)))
+  cdmTables <- checkTablesColumns(cdmVersion, filePath, extraTable)
 
-  cdmTables <- lapply(patientTables,
-                              readxl::read_excel,
-                              path = filePath)
-
-  names(cdmTables) <- tolower(patientTables)
 
   # Convert to JSON
   testCaseFile <- jsonlite::toJSON(cdmTables,
@@ -148,6 +152,36 @@ readPatients.csv <- function(filePath = NULL,
     cli::cli_alert_danger("Unit Test Definition Creation Failed")
     stop()
   }
+}
+
+checkTablesColumns <- function(cdmVersion, filePath, extraTable) {
+
+  patientTables <- readxl::excel_sheets(filePath)
+
+  expectedTables <- spec_cdm_field[[cdmVersion]] %>%
+    dplyr::pull(cdmTableName) %>%
+    unique()
+
+  if (extraTable) {
+    if (!all(patientTables %in% unique(expectedTables))) {
+      nonStandardTables <- setdiff(patientTables, expectedTables)
+      cli::cli_alert_success(glue::glue("All tables are valid. Non-standard table(s) in test data: {glue::glue_collapse(nonStandardTables, sep = ', ', last = ' and ')}"))
+      }
+  } else {
+    invalidTables <- setdiff(patientTables, expectedTables)
+    if (invalidTables %>% length() > 0) {
+      cli::cli_alert_danger(glue::glue("The following tables are invalid: {glue::glue_collapse(invalidTables, sep = ', ', last = ' and ')}"))
+      stop()
+    } else {
+      cli::cli_alert_success(glue::glue("All tables are valid"))
+    }
+  }
+  cdmTables <- lapply(c(patientTables),
+                        readxl::read_excel,
+                        path = filePath)
+  names(cdmTables) <- tolower(patientTables)
+
+  return(cdmTables)
 }
 
 fileColumnCheck <- function(filePath, cdmVersion) {
@@ -286,7 +320,8 @@ createOutputFolder <- function(outputPath, testName) {
 #' @importFrom DBI dbConnect dbAppendTable dbDisconnect
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
-#' @importFrom CDMConnector downloadEunomiaData example_datasets eunomia_dir cdmFromCon
+#' @importFrom CDMConnector downloadEunomiaData eunomiaDir cdmFromCon
+#' @importFrom omopgenerics insertTable
 #'
 #' @examples
 #' \donttest{
@@ -349,7 +384,7 @@ patientsCDM <- function(pathJson = NULL,
                                       overwrite = TRUE)
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
@@ -357,9 +392,26 @@ patientsCDM <- function(pathJson = NULL,
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
+
+  # Check for the expected tables in the CDM
+  expectedTables <- spec_cdm_field[[cdmVersion]] %>%
+    dplyr::pull(cdmTableName) %>%
+    unique()
+
+  currentTables <- names(jsonData)
+
+  nonStandardTables <- setdiff(currentTables, expectedTables)
+
+  if (length(nonStandardTables) > 0) {
+    cli::cli_alert_danger(glue::glue("Non-standard table(s) in test data: {glue::glue_collapse(nonStandardTables, sep = ', ', last = ' and ')}"))
+    }
+  standardTables <- setdiff(currentTables, nonStandardTables)
+  cli::cli_alert_danger(glue::glue("Standard table(s) in test data: {glue::glue_collapse(standardTables, sep = ', ', last = ' and ')}"))
+
+
   # Check for the expected columns in the CDM
-  for (tableName in names(jsonData)) {
-    # tableName <- "person"
+  for (tableName in standardTables) {
+    # tableName <- "pregnancy"
     classTable <- class(jsonData[[tableName]])
     if (classTable == "data.frame") {
       currentCoulumns <- names(jsonData[[tableName]])
@@ -368,16 +420,21 @@ patientsCDM <- function(pathJson = NULL,
         dplyr::pull(cdmFieldName)
       jsonData[[tableName]] <- jsonData[[tableName]] %>%
         select(currentCoulumns[currentCoulumns %in% expectedColumns])
+      patientData <- as.data.frame(jsonData[[tableName]])
+      DBI::dbAppendTable(conn, tableName, patientData)
     }
   }
 
-  # Convert the JSON data into a data frame and append it to the blank CDM
-
-  for (tableName in names(jsonData)) {
-    # tableName <- "vocabulary"
+  for (tableName in nonStandardTables) {
+    # tableName <- "pregnancy"
     patientData <- as.data.frame(jsonData[[tableName]])
-    DBI::dbAppendTable(conn, tableName, patientData)
+    cdm <- omopgenerics::insertTable(cdm,
+                                     tableName,
+                                     patientData,
+                                     overwrite = TRUE,
+                                     temporary = FALSE)
   }
+
   cli::cli_alert_success("Patients pushed to blank CDM successfully")
   return(cdm)
 }
@@ -394,7 +451,7 @@ getEmptyCDM <- function(cdmName, cdmVersion) {
                                       overwrite = TRUE)
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomia_dir("empty_cdm")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",

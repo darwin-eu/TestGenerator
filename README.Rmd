@@ -107,9 +107,9 @@ test_cohorts <- system.file("extdata",
 
 cohort_set <- CDMConnector::readCohortSet(test_cohorts)
   
-cdm <- CDMConnector::generate_cohort_set(cdm,
-                                         cohort_set,
-                                         name = "test_cohorts")
+cdm <- CDMConnector::generateCohortSet(cdm,
+                                       cohort_set,
+                                       name = "test_cohorts")
 
 cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
   
