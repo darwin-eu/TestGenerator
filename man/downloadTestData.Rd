@@ -30,7 +30,7 @@ Invisibly returns the destination if the download was successful.
 Download Test Data Files
 }
 \examples{
-\dontrun{
-downloadTestData()
+\donttest{
+downloadTestData(pathToData = tempdir())
 }
 }
