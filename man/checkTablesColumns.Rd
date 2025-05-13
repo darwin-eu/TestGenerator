@@ -4,14 +4,14 @@
 \alias{checkTablesColumns}
 \title{Check if the given tables and columns are valid and return the loaded data.}
 \usage{
-checkTablesColumns(cdmVersion, filePath, extraTable)
+checkTablesColumns(cdmVersion, filePath, extraTable = FALSE)
 }
 \arguments{
 \item{cdmVersion}{cdm version}
 
-\item{filePath}{Path to the test patient data in CSV format. Multiple CSV files representing tables tables from the OMOP-CDM must be provided, e.g. person.csv, drug_exposure.csv, condition_ocurrence.csv, etc.}
+\item{filePath}{Path to the test patient data in xlsx format}
 
-\item{extraTable}{extra table}
+\item{extraTable}{if extra tables are provided or not, default FALSE}
 }
 \value{
 a named list containing the loaded data
