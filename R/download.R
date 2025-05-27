@@ -67,7 +67,7 @@ studyDatasets <- function() {
 checkRemoteFileAvailable <- function(remoteFile) {
   try_GET <- function(x, ...) {
     tryCatch(
-      httr::GET(url = x, httr::timeout(1), ...),
+      httr::GET(url = x, httr::timeout(100), ...),
       error = function(e) conditionMessage(e),
       warning = function(w) conditionMessage(w)
     )
