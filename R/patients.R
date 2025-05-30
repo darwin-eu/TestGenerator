@@ -154,7 +154,15 @@ readPatients.csv <- function(filePath = NULL,
   }
 }
 
-checkTablesColumns <- function(cdmVersion, filePath, extraTable) {
+#' Check if the given tables and columns are valid and return the loaded data.
+#'
+#' @param cdmVersion cdm version
+#' @param filePath Path to the test patient data in xlsx format
+#' @param extraTable if extra tables are provided or not, default FALSE
+#'
+#' @return a named list containing the loaded data
+checkTablesColumns <- function(cdmVersion, filePath, extraTable = FALSE) {
+  checkmate::assertFileExists(filePath)
 
   patientTables <- readxl::excel_sheets(filePath)
 
@@ -164,11 +172,11 @@ checkTablesColumns <- function(cdmVersion, filePath, extraTable) {
 
   if (extraTable) {
     if (!all(patientTables %in% unique(expectedTables))) {
-      nonStandardTables <- setdiff(patientTables, expectedTables)
+      nonStandardTables <- setdiff(tolower(patientTables), expectedTables)
       cli::cli_alert_success(glue::glue("All tables are valid. Non-standard table(s) in test data: {glue::glue_collapse(nonStandardTables, sep = ', ', last = ' and ')}"))
       }
   } else {
-    invalidTables <- setdiff(patientTables, expectedTables)
+    invalidTables <- setdiff(tolower(patientTables), expectedTables)
     if (invalidTables %>% length() > 0) {
       cli::cli_alert_danger(glue::glue("The following tables are invalid: {glue::glue_collapse(invalidTables, sep = ', ', last = ' and ')}"))
       stop()
@@ -176,9 +184,10 @@ checkTablesColumns <- function(cdmVersion, filePath, extraTable) {
       cli::cli_alert_success(glue::glue("All tables are valid"))
     }
   }
-  cdmTables <- lapply(c(patientTables),
-                        readxl::read_excel,
-                        path = filePath)
+  cdmTables <- lapply(patientTables,
+                      readxl::read_excel,
+                      path = filePath,
+                      .name_repair = tolower) # cast column names to lowercase
   names(cdmTables) <- tolower(patientTables)
 
   return(cdmTables)
