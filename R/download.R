@@ -13,8 +13,8 @@
 #' @importFrom utils download.file
 #'
 #' @examples
-#' \dontrun{
-#' downloadTestData()
+#' \donttest{
+#' downloadTestData(pathToData = tempdir())
 #' }
 #' @export
 downloadTestData <- function(datasetName = "mimicIV",
@@ -36,22 +36,61 @@ downloadTestData <- function(datasetName = "mimicIV",
     rlang::inform(glue::glue("Dataset already exists ({file.path(pathToData, zipName)})\n      Specify `overwrite = TRUE` to overwrite existing zip archive"))
     return(invisible(pathToData))
   }
-  pb <- cli::cli_progress_bar(format = "[:bar] :percent :elapsed",
-                              type = "download")
-  withr::with_options(list(timeout = 5000), {
-    utils::download.file(url = "https://physionet.org/static/published-projects/mimic-iv-demo-omop/mimic-iv-demo-data-in-the-omop-common-data-model-0.9.zip",
-                         destfile = file.path(pathToData, zipName), mode = "wb",
-                         method = "auto", quiet = FALSE, extra = list(progressfunction = function(downloaded, total) {
-                           progress <- min(1, downloaded/total)
-                           cli::cli_progress_update(id = pb, set = progress)
-                         }))
-  })
-  cli::cli_progress_done(id = pb)
-  cat("\nDownload completed!\n")
-  pathToFile <- file.path(pathToData, zipName)
+
+  pathToFile <- NULL
+  remoteResource <- "https://physionet.org/static/published-projects/mimic-iv-demo-omop/mimic-iv-demo-data-in-the-omop-common-data-model-0.9.zip"
+  if (!is.null(checkRemoteFileAvailable(remoteResource))) {
+    pb <- cli::cli_progress_bar(format = "[:bar] :percent :elapsed",
+                                type = "download")
+    withr::with_options(list(timeout = 5000), {
+      utils::download.file(url = remoteResource,
+                           destfile = file.path(pathToData, zipName), mode = "wb",
+                           method = "auto", quiet = FALSE, extra = list(progressfunction = function(downloaded, total) {
+                             progress <- min(1, downloaded/total)
+                             cli::cli_progress_update(id = pb, set = progress)
+                           }))
+    })
+    cli::cli_progress_done(id = pb)
+    pathToFile <- file.path(pathToData, zipName)
+  }
   return(pathToFile)
 }
 
 studyDatasets <- function() {
   c("mimicIV")
+}
+
+#' Check if a given remote file is available for download
+#'
+#' @param remoteFile a remote resource
+#' @return NULL if the remote resource is not available, other "success"
+checkRemoteFileAvailable <- function(remoteFile) {
+  try_GET <- function(x, ...) {
+    tryCatch(
+      httr::GET(url = x, httr::timeout(100), ...),
+      error = function(e) conditionMessage(e),
+      warning = function(w) conditionMessage(w)
+    )
+  }
+  is_response <- function(x) {
+    class(x) == "response"
+  }
+
+  # First check internet connection
+  if (!curl::has_internet()) {
+    message("No internet connection.")
+    return(NULL)
+  }
+  # Then try for timeout problems
+  resp <- try_GET(remoteFile)
+  if (!is_response(resp)) {
+    message(resp)
+    return(NULL)
+  }
+  # Then stop if status > 400
+  if (httr::http_error(resp)) {
+    httr::message_for_status(resp)
+    return(NULL)
+  }
+  return("success")
 }

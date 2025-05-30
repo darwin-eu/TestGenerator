@@ -11,6 +11,20 @@ test_that("checkTablesColumns function works csv with test data", {
                                         "death", "note_nlp", "specimen", "fact_relationship"))
 })
 
+test_that("checkTablesColumns function works csv with test data - some tables and columns in uppercase", {
+  filePath <- testthat::test_path("test_cdm_data_uppercase.xlsx")
+  checkmate::assertCharacter(filePath)
+  checkmate::assertFileExists(filePath)
+  cdmVersion <- "5.3"
+  listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = FALSE)
+
+  expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "drug_exposure"))
+
+  lapply(names(listPatientTables), FUN = function(tableName) {
+    expect_true(identical(colnames(listPatientTables[[tableName]]), tolower(colnames(listPatientTables[[tableName]]))))
+  })
+})
+
 test_that("checkTablesColumns function works csv with table 'pregnancy'", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
@@ -131,20 +145,22 @@ test_that("Reading MIMIC patients CSV files and JSON creation", {
                                     cdmVersion = "5.3",
                                     pathToData = pathToData,
                                     overwrite = TRUE)
-  unzip(pathToZipFile, exdir = pathToData)
-  filePath <- file.path(pathToData,
-                        "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
-                        "1_omop_data_csv")
-  outputPath <- file.path(tempdir(), "test1")
-  dir.create(outputPath)
-  testName <- "test"
-  cdmVersion <- "5.3"
-  readPatients.csv(filePath = filePath,
-                   testName = testName,
-                   outputPath = outputPath,
-                   cdmVersion = cdmVersion)
-  expect_true(file.exists(file.path(outputPath, "test.json")))
-  unlink(outputPath, recursive = TRUE)
+  if (!is.null(pathToZipFile)) {
+    unzip(pathToZipFile, exdir = pathToData)
+    filePath <- file.path(pathToData,
+                          "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
+                          "1_omop_data_csv")
+    outputPath <- file.path(tempdir(), "test1")
+    dir.create(outputPath)
+    testName <- "test"
+    cdmVersion <- "5.3"
+    readPatients.csv(filePath = filePath,
+                     testName = testName,
+                     outputPath = outputPath,
+                     cdmVersion = cdmVersion)
+    expect_true(file.exists(file.path(outputPath, "test.json")))
+    unlink(outputPath, recursive = TRUE)
+  }
 })
 
 test_that("Mimic data Patients to CDM function", {
@@ -154,26 +170,28 @@ test_that("Mimic data Patients to CDM function", {
                                     cdmVersion = cdmVersion,
                                     pathToData = pathToData,
                                     overwrite = TRUE)
-  unzip(pathToZipFile, exdir = pathToData)
-  filePath <- file.path(pathToData,
-                        "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
-                        "1_omop_data_csv")
-  outputPath <- file.path(tempdir(), "test1")
-  dir.create(outputPath)
-  testName <- "test"
-  readPatients.csv(filePath = filePath,
-                   testName = testName,
-                   outputPath = outputPath,
-                   cdmVersion = cdmVersion,
-                   reduceLargeIds = TRUE)
-  cdmName <- "myCDM"
-  cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test", cdmName = cdmName)
-  expect_equal(class(cdm), "cdm_reference")
-  number_persons <- cdm[["person"]] %>% dplyr::pull(person_id) %>% length()
-  expect_equal(number_persons, 100)
-  expect_equal(CDMConnector::cdmName(cdm), cdmName)
-  unlink(outputPath, recursive = TRUE)
-  duckdb::duckdb_shutdown(duckdb::duckdb())
+  if (!is.null(pathToZipFile)) {
+    unzip(pathToZipFile, exdir = pathToData)
+    filePath <- file.path(pathToData,
+                          "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
+                          "1_omop_data_csv")
+    outputPath <- file.path(tempdir(), "test1")
+    dir.create(outputPath)
+    testName <- "test"
+    readPatients.csv(filePath = filePath,
+                     testName = testName,
+                     outputPath = outputPath,
+                     cdmVersion = cdmVersion,
+                     reduceLargeIds = TRUE)
+    cdmName <- "myCDM"
+    cdm <- TestGenerator::patientsCDM(pathJson = outputPath, testName = "test", cdmName = cdmName)
+    expect_equal(class(cdm), "cdm_reference")
+    number_persons <- cdm[["person"]] %>% dplyr::pull(person_id) %>% length()
+    expect_equal(number_persons, 100)
+    expect_equal(CDMConnector::cdmName(cdm), cdmName)
+    unlink(outputPath, recursive = TRUE)
+    duckdb::duckdb_shutdown(duckdb::duckdb())
+  }
 })
 
 test_that("convert ids function", {
@@ -183,15 +201,17 @@ test_that("convert ids function", {
                                     cdmVersion = cdmVersion,
                                     pathToData = pathToData,
                                     overwrite = TRUE)
-  unzip(pathToZipFile, exdir = pathToData)
-  filePath <- file.path(pathToData,
-                        "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
-                        "1_omop_data_csv")
-  cdmTables <- fileColumnCheck(filePath, cdmVersion)
-  cdmTables <- convertIds(cdmTables)
-  measurement_ids <- cdmTables$measurement %>% pull(measurement_id)
-  expect_equal(measurement_ids, seq(1, length(measurement_ids)))
-  unlink(pathToData, recursive = TRUE)
-  unlink(filePath, recursive = TRUE)
-  duckdb::duckdb_shutdown(duckdb::duckdb())
+  if (!is.null(pathToZipFile)) {
+    unzip(pathToZipFile, exdir = pathToData)
+    filePath <- file.path(pathToData,
+                          "mimic-iv-demo-data-in-the-omop-common-data-model-0.9",
+                          "1_omop_data_csv")
+    cdmTables <- fileColumnCheck(filePath, cdmVersion)
+    cdmTables <- convertIds(cdmTables)
+    measurement_ids <- cdmTables$measurement %>% pull(measurement_id)
+    expect_equal(measurement_ids, seq(1, length(measurement_ids)))
+    unlink(pathToData, recursive = TRUE)
+    unlink(filePath, recursive = TRUE)
+    duckdb::duckdb_shutdown(duckdb::duckdb())
+  }
 })
