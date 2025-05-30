@@ -4,6 +4,8 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/news/index.html</loc></url>
+<url><loc>/reference/checkRemoteFileAvailable.html</loc></url>
+<url><loc>/reference/checkTablesColumns.html</loc></url>
 <url><loc>/reference/downloadTestData.html</loc></url>
 <url><loc>/reference/generateTestTables.html</loc></url>
 <url><loc>/reference/graphCohort.html</loc></url>
