@@ -397,7 +397,8 @@ patientsCDM <- function(pathJson = NULL,
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
-                                  cdmName = cdmName)
+                                  cdmName = cdmName,
+                                  cdmVersion = cdmVersion)
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
@@ -464,7 +465,8 @@ getEmptyCDM <- function(cdmName, cdmVersion) {
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
-                                  cdmName = cdmName)
+                                  cdmName = cdmName,
+                                  cdmVersion = cdmVersion)
 
   return(cdm)
 
