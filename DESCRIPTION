@@ -20,7 +20,7 @@ Imports:
     jsonlite,
     readxl,
     readr,
-    CDMConnector,
+    CDMConnector (>= 2.3.0),
     DBI,
     dplyr,
     checkmate,

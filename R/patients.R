@@ -393,7 +393,8 @@ patientsCDM <- function(pathJson = NULL,
                                       overwrite = TRUE)
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir(datasetName = "empty_cdm",
+                                                                 cdmVersion = cdmVersion)))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
