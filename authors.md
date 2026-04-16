@@ -14,7 +14,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/darwin-eu/TestGenerator/blob/v0.6.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/darwin-eu/TestGenerator/blob/main/DESCRIPTION)
 
 Barboza C, Nika I, Inberg G, Black A (2026). *TestGenerator: Integration
 Unit Tests for Pharmacoepidemiological Studies*. R package version
