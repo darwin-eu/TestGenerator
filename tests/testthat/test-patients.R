@@ -89,6 +89,7 @@ test_that("Reading patients XLSX and JSON creation", {
 })
 
 test_that("Patients to CDM xlsx function", {
+  skip_on_cran()
   filePath <- testthat::test_path("testPatientsRSV.xlsx")
   TestGenerator::readPatients.xl(filePath = filePath, outputPath = NULL)
   cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy")
@@ -99,6 +100,7 @@ test_that("Patients to CDM xlsx function", {
 })
 
 test_that("Patients to CDM xlsx function pregnancy extra table", {
+  skip_on_cran()
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   TestGenerator::readPatients.xl(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
   cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy")
@@ -110,6 +112,7 @@ test_that("Patients to CDM xlsx function pregnancy extra table", {
 })
 
 test_that("Read patients empty tables xl", {
+  skip_on_cran()
   filePath <- testthat::test_path("test_cdm_data.xlsx")
   TestGenerator::readPatients.xl(filePath = filePath, outputPath = NULL)
   cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "test")
@@ -120,6 +123,7 @@ test_that("Read patients empty tables xl", {
 })
 
 test_that("Read patients empty xl", {
+  skip_on_cran()
   filePath <- testthat::test_path("test_cdm_data.xlsx")
   TestGenerator::readPatients.xl(filePath = filePath, outputPath = NULL)
   cdm <- TestGenerator::patientsCDM(pathJson = NULL, testName = "test")
@@ -145,6 +149,7 @@ test_that("Reading sample MIMIC patients CSV files and JSON creation", {
 })
 
 test_that("Reading MIMIC patients CSV files and JSON creation", {
+  skip_on_cran()
   pathToData <- tempdir()
   pathToZipFile <- downloadTestData(datasetName = "mimicIV",
                                     cdmVersion = "5.3",
@@ -169,6 +174,7 @@ test_that("Reading MIMIC patients CSV files and JSON creation", {
 })
 
 test_that("Mimic data Patients to CDM function", {
+  skip_on_cran()
   pathToData <- tempdir()
   cdmVersion <- "5.3"
   pathToZipFile <- downloadTestData(datasetName = "mimicIV",
@@ -222,6 +228,7 @@ test_that("convert ids function", {
 })
 
 test_that("Patients to CDM version 5.4", {
+  skip_on_cran()
   cdmVersion <- "5.4"
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   TestGenerator::readPatients(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
@@ -232,6 +239,7 @@ test_that("Patients to CDM version 5.4", {
 })
 
 test_that("Patients to CDM other DB", {
+  skip_on_cran()
   cdmVersion <- "5.4"
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   TestGenerator::readPatients(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
