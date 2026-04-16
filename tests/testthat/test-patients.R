@@ -225,3 +225,12 @@ test_that("Patients to CDM version 5.4", {
   expect_equal(CDMConnector::snapshot(cdm) %>% dplyr::pull("cdm_version"), cdmVersion)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
+
+test_that("Patients to CDM other DB", {
+  cdmVersion <- "5.4"
+  filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
+  TestGenerator::readPatients(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
+  # errors if environment variables are not defined
+  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "sqlserver"))
+  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "spark"))
+})
