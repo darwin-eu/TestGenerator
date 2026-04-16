@@ -153,7 +153,7 @@ test_that("Reading MIMIC patients CSV files and JSON creation", {
     outputPath <- file.path(tempdir(), "test1")
     dir.create(outputPath)
     testName <- "test"
-    cdmVersion <- "5.4"
+    cdmVersion <- "5.3"
     readPatients.csv(filePath = filePath,
                      testName = testName,
                      outputPath = outputPath,
