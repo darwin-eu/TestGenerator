@@ -22,7 +22,7 @@
 readPatients <- function(filePath = NULL,
                          testName = "test",
                          outputPath = NULL,
-                         cdmVersion = "5.3",
+                         cdmVersion = "5.4",
                          extraTable = FALSE) {
 
   checkmate::assertFileExists(filePath)
@@ -122,7 +122,7 @@ readPatients.xl <- function(filePath = NULL,
 readPatients.csv <- function(filePath = NULL,
                              testName = "test",
                              outputPath = NULL,
-                             cdmVersion = "5.3",
+                             cdmVersion = "5.4",
                              reduceLargeIds = FALSE) {
 
   checkmate::assertDirectoryExists(filePath)
@@ -352,7 +352,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @export
 patientsCDM <- function(pathJson = NULL,
                         testName = NULL,
-                        cdmVersion = "5.3",
+                        cdmVersion = "5.4",
                         cdmName = NULL,
                         dbms = "duckdb",
                         writeSchema = NULL) {
