@@ -8,7 +8,7 @@ readPatients(
   filePath = NULL,
   testName = "test",
   outputPath = NULL,
-  cdmVersion = "5.3",
+  cdmVersion = "5.4",
   extraTable = FALSE
 )
 }
@@ -19,7 +19,7 @@ readPatients(
 
 \item{outputPath}{Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.}
 
-\item{cdmVersion}{cdm version, default "5.3".}
+\item{cdmVersion}{cdm version, default "5.4".}
 
 \item{extraTable}{Name of non-standard tables to be included in the test CDM.}
 }

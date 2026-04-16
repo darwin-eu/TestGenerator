@@ -3,7 +3,7 @@
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param extraTable Name of non-standard tables to be included in the test CDM.
 #'
 #' @return A JSON file with sample patients inside the project directory.
@@ -22,7 +22,7 @@
 readPatients <- function(filePath = NULL,
                          testName = "test",
                          outputPath = NULL,
-                         cdmVersion = "5.3",
+                         cdmVersion = "5.4",
                          extraTable = FALSE) {
 
   checkmate::assertFileExists(filePath)
@@ -48,7 +48,7 @@ readPatients <- function(filePath = NULL,
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
 #' @param outputPath Path to write the test JSON files. If NULL, the files will be written at the project's testthat folder, i.e. tests/testthat/testCases.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param extraTable TRUE or FALSE. If TRUE, non-standard tables will be included in the test CDM.
 #'
 #' @return A directory with the test JSON files with sample patients inside the project directory.
@@ -68,7 +68,7 @@ readPatients <- function(filePath = NULL,
 readPatients.xl <- function(filePath = NULL,
                             testName = "test",
                             outputPath = NULL,
-                            cdmVersion = "5.3",
+                            cdmVersion = "5.4",
                             extraTable = FALSE) {
 
   checkmate::assertCharacter(filePath)
@@ -102,7 +102,7 @@ readPatients.xl <- function(filePath = NULL,
 #' @param filePath Path to the test patient data in CSV format. Multiple CSV files representing tables tables from the OMOP-CDM must be provided, e.g. person.csv, drug_exposure.csv, condition_ocurrence.csv, etc.
 #' @param testName Name for the test population file in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param reduceLargeIds Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.
 #'
 #' @return A JSON file with sample patients inside the project directory.
@@ -116,13 +116,17 @@ readPatients.xl <- function(filePath = NULL,
 #'
 #' @examples
 #' filePath <- system.file("extdata", "mimic_sample", package = "TestGenerator")
-#' readPatients.csv(filePath = filePath, outputPath = tempdir())
+#' readPatients.csv(
+#'   filePath = filePath,
+#'   outputPath = tempdir(),
+#'   cdmVersion = "5.3"
+#'   )
 #'
 #' @export
 readPatients.csv <- function(filePath = NULL,
                              testName = "test",
                              outputPath = NULL,
-                             cdmVersion = "5.3",
+                             cdmVersion = "5.4",
                              reduceLargeIds = FALSE) {
 
   checkmate::assertDirectoryExists(filePath)
@@ -321,7 +325,7 @@ createOutputFolder <- function(outputPath, testName) {
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
 #' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param cdmName Name of the cdm, default NULL.
 #' @param dbms Database management system to use. One of "duckdb", "spark",
 #'   or "sqlserver". Default is "duckdb" which creates a local
@@ -352,7 +356,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @export
 patientsCDM <- function(pathJson = NULL,
                         testName = NULL,
-                        cdmVersion = "5.3",
+                        cdmVersion = "5.4",
                         cdmName = NULL,
                         dbms = "duckdb",
                         writeSchema = NULL) {
