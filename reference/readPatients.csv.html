@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">TestGenerator</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +29,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Converts a sample of patients in CSV format into a Unit Testing Definition JSON file.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/TestGenerator/blob/v0.4.0/R/patients.R" class="external-link"><code>R/patients.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/TestGenerator/blob/main/R/patients.R" class="external-link"><code>R/patients.R</code></a></small>
       <div class="d-none name"><code>readPatients.csv.Rd</code></div>
     </div>
 
@@ -43,7 +43,7 @@
 <span>  filePath <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  testName <span class="op">=</span> <span class="st">"test"</span>,</span>
 <span>  outputPath <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cdmVersion <span class="op">=</span> <span class="st">"5.3"</span>,</span>
+<span>  cdmVersion <span class="op">=</span> <span class="st">"5.4"</span>,</span>
 <span>  reduceLargeIds <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -65,7 +65,7 @@
 
 
 <dt id="arg-cdmversion">cdmVersion<a class="anchor" aria-label="anchor" href="#arg-cdmversion"></a></dt>
-<dd><p>cdm version, default "5.3".</p></dd>
+<dd><p>cdm version, default "5.4".</p></dd>
 
 
 <dt id="arg-reducelargeids">reduceLargeIds<a class="anchor" aria-label="anchor" href="#arg-reducelargeids"></a></dt>
@@ -80,7 +80,11 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">filePath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mimic_sample"</span>, package <span class="op">=</span> <span class="st">"TestGenerator"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">readPatients.csv</span><span class="op">(</span>filePath <span class="op">=</span> <span class="va">filePath</span>, outputPath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">readPatients.csv</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  filePath <span class="op">=</span> <span class="va">filePath</span>,</span></span>
+<span class="r-in"><span>  outputPath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  cdmVersion <span class="op">=</span> <span class="st">"5.3"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Unit Test Definition Created Successfully: 'test'</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -94,7 +98,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

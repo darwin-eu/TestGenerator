@@ -1,0 +1,51 @@
+# Download Test Data Files
+
+Download Test Data Files
+
+## Usage
+
+``` r
+downloadTestData(
+  datasetName = "mimicIV",
+  cdmVersion = "5.3",
+  pathToData = Sys.getenv("STUDY_DATASETS"),
+  overwrite = FALSE
+)
+```
+
+## Arguments
+
+- datasetName:
+
+  The data set name as found on
+  https://github.com/darwin-eu/EunomiaDatasets. The data set name
+  corresponds to the folder with the data set ZIP files
+
+- cdmVersion:
+
+  The OMOP CDM version. This version will appear in the suffix of the
+  data file, for example: synpuf_5.3.zip. Default: '5.3'
+
+- pathToData:
+
+  The path where the Eunomia data is stored on the file system., By
+  default the value of the environment variable "EUNOMIA_DATA_FOLDER" is
+  used.
+
+- overwrite:
+
+  Control whether the existing archive file will be overwritten should
+  it already exist.
+
+## Value
+
+Invisibly returns the destination if the download was successful.
+
+## Examples
+
+``` r
+# \donttest{
+downloadTestData(pathToData = tempdir())
+#> [1] "/tmp/Rtmp69k7JM/mimicIV.zip"
+# }
+```

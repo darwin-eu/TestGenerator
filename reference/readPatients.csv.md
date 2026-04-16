@@ -1,0 +1,58 @@
+# Converts a sample of patients in CSV format into a Unit Testing Definition JSON file.
+
+Converts a sample of patients in CSV format into a Unit Testing
+Definition JSON file.
+
+## Usage
+
+``` r
+readPatients.csv(
+  filePath = NULL,
+  testName = "test",
+  outputPath = NULL,
+  cdmVersion = "5.4",
+  reduceLargeIds = FALSE
+)
+```
+
+## Arguments
+
+- filePath:
+
+  Path to the test patient data in CSV format. Multiple CSV files
+  representing tables tables from the OMOP-CDM must be provided, e.g.
+  person.csv, drug_exposure.csv, condition_ocurrence.csv, etc.
+
+- testName:
+
+  Name for the test population file in character.
+
+- outputPath:
+
+  Path of the output file, if NULL, a folder will be created in the
+  project folder inst/testCases.
+
+- cdmVersion:
+
+  cdm version, default "5.4".
+
+- reduceLargeIds:
+
+  Reduces the length of very long ids generally in int64 format, such as
+  those found in the MIMIC-IV database.
+
+## Value
+
+A JSON file with sample patients inside the project directory.
+
+## Examples
+
+``` r
+filePath <- system.file("extdata", "mimic_sample", package = "TestGenerator")
+readPatients.csv(
+  filePath = filePath,
+  outputPath = tempdir(),
+  cdmVersion = "5.3"
+  )
+#> ✔ Unit Test Definition Created Successfully: 'test'
+```
