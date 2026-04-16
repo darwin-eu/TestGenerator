@@ -8,7 +8,7 @@ readPatients.csv(
   filePath = NULL,
   testName = "test",
   outputPath = NULL,
-  cdmVersion = "5.3",
+  cdmVersion = "5.4",
   reduceLargeIds = FALSE
 )
 }
@@ -19,7 +19,7 @@ readPatients.csv(
 
 \item{outputPath}{Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.}
 
-\item{cdmVersion}{cdm version, default "5.3".}
+\item{cdmVersion}{cdm version, default "5.4".}
 
 \item{reduceLargeIds}{Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.}
 }
@@ -31,6 +31,10 @@ Converts a sample of patients in CSV format into a Unit Testing Definition JSON 
 }
 \examples{
 filePath <- system.file("extdata", "mimic_sample", package = "TestGenerator")
-readPatients.csv(filePath = filePath, outputPath = tempdir())
+readPatients.csv(
+  filePath = filePath,
+  outputPath = tempdir(),
+  cdmVersion = "5.3"
+  )
 
 }

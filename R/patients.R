@@ -3,7 +3,7 @@
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param extraTable Name of non-standard tables to be included in the test CDM.
 #'
 #' @return A JSON file with sample patients inside the project directory.
@@ -22,7 +22,7 @@
 readPatients <- function(filePath = NULL,
                          testName = "test",
                          outputPath = NULL,
-                         cdmVersion = "5.3",
+                         cdmVersion = "5.4",
                          extraTable = FALSE) {
 
   checkmate::assertFileExists(filePath)
@@ -48,7 +48,7 @@ readPatients <- function(filePath = NULL,
 #' @param filePath Path to the test patient data in Excel format. The Excel has sheets that represent tables from the OMOP-CDM, e.g. person, drug_exposure, condition_ocurrence, etc.
 #' @param testName A name of the test population in character.
 #' @param outputPath Path to write the test JSON files. If NULL, the files will be written at the project's testthat folder, i.e. tests/testthat/testCases.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param extraTable TRUE or FALSE. If TRUE, non-standard tables will be included in the test CDM.
 #'
 #' @return A directory with the test JSON files with sample patients inside the project directory.
@@ -68,7 +68,7 @@ readPatients <- function(filePath = NULL,
 readPatients.xl <- function(filePath = NULL,
                             testName = "test",
                             outputPath = NULL,
-                            cdmVersion = "5.3",
+                            cdmVersion = "5.4",
                             extraTable = FALSE) {
 
   checkmate::assertCharacter(filePath)
@@ -102,7 +102,7 @@ readPatients.xl <- function(filePath = NULL,
 #' @param filePath Path to the test patient data in CSV format. Multiple CSV files representing tables tables from the OMOP-CDM must be provided, e.g. person.csv, drug_exposure.csv, condition_ocurrence.csv, etc.
 #' @param testName Name for the test population file in character.
 #' @param outputPath Path of the output file, if NULL, a folder will be created in the project folder inst/testCases.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param reduceLargeIds Reduces the length of very long ids generally in int64 format, such as those found in the MIMIC-IV database.
 #'
 #' @return A JSON file with sample patients inside the project directory.
@@ -116,13 +116,17 @@ readPatients.xl <- function(filePath = NULL,
 #'
 #' @examples
 #' filePath <- system.file("extdata", "mimic_sample", package = "TestGenerator")
-#' readPatients.csv(filePath = filePath, outputPath = tempdir())
+#' readPatients.csv(
+#'   filePath = filePath,
+#'   outputPath = tempdir(),
+#'   cdmVersion = "5.3"
+#'   )
 #'
 #' @export
 readPatients.csv <- function(filePath = NULL,
                              testName = "test",
                              outputPath = NULL,
-                             cdmVersion = "5.3",
+                             cdmVersion = "5.4",
                              reduceLargeIds = FALSE) {
 
   checkmate::assertDirectoryExists(filePath)
@@ -174,7 +178,7 @@ checkTablesColumns <- function(cdmVersion, filePath, extraTable = FALSE) {
     if (!all(patientTables %in% unique(expectedTables))) {
       nonStandardTables <- setdiff(tolower(patientTables), expectedTables)
       cli::cli_alert_success(glue::glue("All tables are valid. Non-standard table(s) in test data: {glue::glue_collapse(nonStandardTables, sep = ', ', last = ' and ')}"))
-      }
+    }
   } else {
     invalidTables <- setdiff(tolower(patientTables), expectedTables)
     if (invalidTables %>% length() > 0) {
@@ -321,12 +325,22 @@ createOutputFolder <- function(outputPath, testName) {
 #'
 #' @param pathJson Directory where the sample populations in json are located. If NULL, gets the default inst/testCases directory.
 #' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.
-#' @param cdmVersion cdm version, default "5.3".
+#' @param cdmVersion cdm version, default "5.4".
 #' @param cdmName Name of the cdm, default NULL.
+#' @param dbms Database management system to use. One of "duckdb", "spark",
+#'   or "sqlserver". Default is "duckdb" which creates a local
+#'   DuckDB CDM. For remote databases the function creates the CDM locally,
+#'   trims the vocabulary, uploads to a new schema on the remote database,
+#'   and returns the remote CDM reference. Remote databases require
+#'   environment variables to be set. Call \code{usethis::edit_r_environ()}
+#'   to set them.
+#' @param writeSchema Optional schema name to use on the remote database.
+#'   If NULL (default), a unique schema is created automatically. Only used
+#'   when \code{dbms} is not "duckdb".
 #'
 #' @return A CDM reference object with a sample population.
 #' @import dplyr cli
-#' @importFrom DBI dbConnect dbAppendTable dbDisconnect
+#' @importFrom DBI dbConnect dbAppendTable dbDisconnect dbExecute
 #' @importFrom duckdb duckdb
 #' @importFrom jsonlite fromJSON
 #' @importFrom CDMConnector downloadEunomiaData eunomiaDir cdmFromCon
@@ -342,8 +356,24 @@ createOutputFolder <- function(outputPath, testName) {
 #' @export
 patientsCDM <- function(pathJson = NULL,
                         testName = NULL,
-                        cdmVersion = "5.3",
-                        cdmName = NULL) {
+                        cdmVersion = "5.4",
+                        cdmName = NULL,
+                        dbms = "duckdb",
+                        writeSchema = NULL) {
+
+  dbms <- match.arg(dbms, c("duckdb", "spark", "sqlserver"))
+
+  if (dbms != "duckdb") {
+    .check_remote_env_vars(dbms)
+    return(.patientsCDM_remote(
+      pathJson = pathJson,
+      testName = testName,
+      cdmVersion = cdmVersion,
+      cdmName = cdmName,
+      dbms = dbms,
+      writeSchema = writeSchema
+    ))
+  }
 
   if (is.null(pathJson)) {
     outputFolder <- testthat::test_path("testCases")
@@ -393,11 +423,13 @@ patientsCDM <- function(pathJson = NULL,
                                       overwrite = TRUE)
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
+  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir(datasetName = "empty_cdm",
+                                                                 cdmVersion = cdmVersion)))
   cdm <- CDMConnector::cdmFromCon(con = conn,
                                   cdmSchema = "main",
                                   writeSchema = "main",
-                                  cdmName = cdmName)
+                                  cdmName = cdmName,
+                                  cdmVersion = cdmVersion)
 
   # Read the JSON file into R
   jsonData <- jsonlite::fromJSON(fileName)
@@ -413,14 +445,13 @@ patientsCDM <- function(pathJson = NULL,
 
   if (length(nonStandardTables) > 0) {
     cli::cli_alert_danger(glue::glue("Non-standard table(s) in test data: {glue::glue_collapse(nonStandardTables, sep = ', ', last = ' and ')}"))
-    }
+  }
   standardTables <- setdiff(currentTables, nonStandardTables)
-  cli::cli_alert_danger(glue::glue("Standard table(s) in test data: {glue::glue_collapse(standardTables, sep = ', ', last = ' and ')}"))
+  cli::cli_alert_success(glue::glue("Standard table(s) in test data: {glue::glue_collapse(standardTables, sep = ', ', last = ' and ')}"))
 
 
   # Check for the expected columns in the CDM
   for (tableName in standardTables) {
-    # tableName <- "pregnancy"
     classTable <- class(jsonData[[tableName]])
     if (classTable == "data.frame") {
       currentCoulumns <- names(jsonData[[tableName]])
@@ -435,7 +466,6 @@ patientsCDM <- function(pathJson = NULL,
   }
 
   for (tableName in nonStandardTables) {
-    # tableName <- "pregnancy"
     patientData <- as.data.frame(jsonData[[tableName]])
     cdm <- omopgenerics::insertTable(cdm,
                                      tableName,
@@ -448,24 +478,209 @@ patientsCDM <- function(pathJson = NULL,
   return(cdm)
 }
 
-getEmptyCDM <- function(cdmName, cdmVersion) {
+# Internal: create test CDM on a remote database
+.patientsCDM_remote <- function(pathJson, testName, cdmVersion, cdmName, dbms, writeSchema = NULL) {
 
-  vocabPath <- file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                         glue::glue("empty_cdm_{cdmVersion}.zip"))
+  n_steps <- 5L
 
-  if (!file.exists(vocabPath)) {
-    CDMConnector::downloadEunomiaData(datasetName = "empty_cdm",
-                                      cdmVersion = cdmVersion,
-                                      pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                                      overwrite = TRUE)
+  # ---- Step 1: Create local DuckDB CDM ----
+  cli::cli_progress_step("Step 1/{n_steps}: Creating local DuckDB test CDM")
+  local_cdm <- patientsCDM(
+    pathJson = pathJson,
+    testName = testName,
+    cdmVersion = cdmVersion,
+    cdmName = cdmName,
+    dbms = "duckdb"
+  )
+
+  # Track the duckdb file path so we can clean it up later
+  local_con <- CDMConnector::cdmCon(local_cdm)
+  duckdb_path <- local_con@driver@dbdir
+
+  # ---- Step 2: Trim vocabulary ----
+  cli::cli_progress_step("Step 2/{n_steps}: Trimming vocabulary")
+  local_cdm <- CDMConnector::cdmTrimVocabulary(local_cdm)
+
+  # ---- Step 3: Connect to remote database and create schema ----
+  remote_con <- .connect_remote(dbms)
+  if (!is.null(writeSchema)) {
+    cli::cli_progress_step("Step 3/{n_steps}: Connecting to {dbms} using schema {.val {writeSchema}}")
+    test_schema <- writeSchema
+  } else {
+    cli::cli_progress_step("Step 3/{n_steps}: Connecting to {dbms} and creating test schema")
+    test_schema <- .create_test_schema(remote_con, dbms)
+    cli::cli_alert_info("Created test schema: {.val {paste(test_schema, collapse = '.')}}")
   }
 
-  conn <- DBI::dbConnect(duckdb::duckdb(CDMConnector::eunomiaDir("empty_cdm")))
-  cdm <- CDMConnector::cdmFromCon(con = conn,
-                                  cdmSchema = "main",
-                                  writeSchema = "main",
-                                  cdmName = cdmName)
+  # ---- Step 4: Upload CDM to remote database ----
+  cli::cli_progress_step("Step 4/{n_steps}: Uploading test CDM to {dbms}")
+  cdm_remote <- CDMConnector::copyCdmTo(
+    con = remote_con,
+    cdm = local_cdm,
+    schema = test_schema,
+    overwrite = TRUE
+  )
+  attr(cdm_remote, "dbcon") <- remote_con
 
-  return(cdm)
+  # ---- Step 5: Clean up local DuckDB resources ----
+  cli::cli_progress_step("Step 5/{n_steps}: Cleaning up local DuckDB files")
+  DBI::dbDisconnect(local_con, shutdown = TRUE)
 
+  # Remove duckdb file and any WAL files
+  if (nzchar(duckdb_path) && file.exists(duckdb_path)) {
+    unlink(duckdb_path)
+    unlink(paste0(duckdb_path, ".wal"))
+  }
+
+  cli::cli_alert_success("Remote test CDM ready on {dbms}")
+  return(cdm_remote)
+}
+
+# Internal: early check that required env vars are set before doing any work
+.check_remote_env_vars <- function(dbms) {
+  required_vars <- switch(dbms,
+                          "sqlserver" = c(
+                            "DARWIN_SQLSERVER_SERVER",
+                            "DARWIN_SQLSERVER_DBNAME",
+                            "DARWIN_SQLSERVER_PORT",
+                            "DARWIN_SQLSERVER_USER",
+                            "DARWIN_SQLSERVER_PASSWORD"
+                          ),
+                          "spark" = c(
+                            "DATABRICKS_HOST",
+                            "DATABRICKS_TOKEN",
+                            "DATABRICKS_HTTPPATH"
+                          )
+  )
+  .check_env_vars(required_vars, dbms)
+}
+
+# Internal: connect to a remote database using environment variables
+.connect_remote <- function(dbms) {
+  switch(dbms,
+         "sqlserver" = .connect_sqlserver(),
+         "spark" = .connect_spark(),
+         cli::cli_abort("Unsupported dbms: {.val {dbms}}")
+  )
+}
+
+.connect_sqlserver <- function() {
+  required_vars <- c(
+    "DARWIN_SQLSERVER_SERVER",
+    "DARWIN_SQLSERVER_DBNAME",
+    "DARWIN_SQLSERVER_PORT",
+    "DARWIN_SQLSERVER_USER",
+    "DARWIN_SQLSERVER_PASSWORD"
+  )
+  .check_env_vars(required_vars, "SQL Server")
+
+  DBI::dbConnect(
+    odbc::odbc(),
+    Driver   = Sys.getenv("SQL_SERVER_DRIVER", "ODBC Driver 18 for SQL Server"),
+    Server   = Sys.getenv("DARWIN_SQLSERVER_SERVER"),
+    Database = Sys.getenv("DARWIN_SQLSERVER_DBNAME"),
+    UID      = Sys.getenv("DARWIN_SQLSERVER_USER"),
+    PWD      = Sys.getenv("DARWIN_SQLSERVER_PASSWORD"),
+    TrustServerCertificate = "yes",
+    Port     = Sys.getenv("DARWIN_SQLSERVER_PORT")
+  )
+}
+
+.connect_spark <- function() {
+  required_vars <- c(
+    "DATABRICKS_HOST",
+    "DATABRICKS_TOKEN",
+    "DATABRICKS_HTTPPATH"
+  )
+  .check_env_vars(required_vars, "Databricks/Spark")
+
+  DBI::dbConnect(
+    odbc::databricks(),
+    Host           = Sys.getenv("DATABRICKS_HOST"),
+    AuthMech       = 3,
+    HTTPPath       = Sys.getenv("DATABRICKS_HTTPPATH"),
+    UID            = Sys.getenv("DATABRICKS_USER", "token"),
+    PWD            = Sys.getenv("DATABRICKS_TOKEN"),
+    useNativeQuery = FALSE,
+    bigint         = "numeric"
+  )
+}
+
+# Internal: check that required environment variables are set
+.check_env_vars <- function(vars, label) {
+  missing <- vars[!nzchar(Sys.getenv(vars))]
+  if (length(missing) > 0) {
+    bullets <- stats::setNames(missing, rep("*", length(missing)))
+    cli::cli_abort(c(
+      "Missing required environment variables for {label}:",
+      bullets,
+      "i" = "Set them in your {.file .Renviron} by running {.code usethis::edit_r_environ()}"
+    ))
+  }
+}
+
+# Internal: create a unique test schema on the remote database
+.create_test_schema <- function(con, dbms) {
+  schema_name <- paste0("testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
+
+  switch(dbms,
+         "sqlserver" = {
+           DBI::dbExecute(con, paste("CREATE SCHEMA", schema_name))
+           schema_name
+         },
+         "spark" = {
+           catalog <- Sys.getenv("DATABRICKS_WORKSPACE", "hive_metastore")
+           schema <- c(catalog = catalog, schema = schema_name)
+           DBI::dbExecute(con, paste0(
+             "CREATE SCHEMA IF NOT EXISTS ",
+             paste(schema, collapse = ".")
+           ))
+           schema
+         }
+  )
+}
+
+#' Clean up a test CDM on a remote database
+#'
+#' Drops the schema containing the test CDM and disconnects from the database.
+#'
+#' @param cdm A CDM reference object created by \code{patientsCDM()} with a
+#'   remote database backend.
+#'
+#' @return Invisibly returns NULL.
+#' @export
+cleanupTestCdm <- function(cdm) {
+  con <- CDMConnector::cdmCon(cdm)
+  schema <- CDMConnector::cdmWriteSchema(cdm)
+  writeSchema <- paste(schema, collapse = ".")
+  dbms_class <- class(con)
+
+  if (!grepl("test_generator", writeSchema, ignore.case = TRUE)) {
+    cli::cli_abort("Refusing to drop schema {.val {writeSchema}} because it does not contain {.val test_generator} in the name.")
+  }
+
+  if (any(grepl("OdbcConnection", dbms_class)) || any(grepl("Microsoft SQL Server", dbms_class))) {
+    # SQL Server: drop all tables first, then drop schema
+    tables <- CDMConnector::listTables(con, schema = schema)
+    schema_name <- if (length(schema) == 1) schema else schema[length(schema)]
+    for (tbl in tables) {
+      tryCatch(
+        DBI::dbExecute(con, paste0("DROP TABLE IF EXISTS ", schema_name, ".", tbl)),
+        error = function(e) NULL
+      )
+    }
+    DBI::dbExecute(con, paste("DROP SCHEMA", schema_name))
+    cli::cli_alert_success("Dropped SQL Server schema: {.val {schema_name}}")
+  } else if (any(grepl("Spark|databricks", dbms_class, ignore.case = TRUE))) {
+    # Databricks/Spark
+    schema_full <- paste(schema, collapse = ".")
+    DBI::dbExecute(con, paste0("DROP SCHEMA IF EXISTS ", schema_full, " CASCADE"))
+    cli::cli_alert_success("Dropped Spark schema: {.val {schema_full}}")
+  } else {
+    cli::cli_abort("Could not detect database type for cleanup. Connection class: {.val {paste(dbms_class, collapse = ', ')}}")
+  }
+
+  DBI::dbDisconnect(con)
+  cli::cli_alert_success("Disconnected from remote database")
+  invisible(NULL)
 }

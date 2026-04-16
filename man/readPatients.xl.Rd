@@ -8,7 +8,7 @@ readPatients.xl(
   filePath = NULL,
   testName = "test",
   outputPath = NULL,
-  cdmVersion = "5.3",
+  cdmVersion = "5.4",
   extraTable = FALSE
 )
 }
@@ -19,7 +19,7 @@ readPatients.xl(
 
 \item{outputPath}{Path to write the test JSON files. If NULL, the files will be written at the project's testthat folder, i.e. tests/testthat/testCases.}
 
-\item{cdmVersion}{cdm version, default "5.3".}
+\item{cdmVersion}{cdm version, default "5.4".}
 
 \item{extraTable}{TRUE or FALSE. If TRUE, non-standard tables will be included in the test CDM.}
 }
