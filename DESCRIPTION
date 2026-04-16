@@ -1,7 +1,7 @@
 Package: TestGenerator
 Type: Package
 Title: Integration Unit Tests for Pharmacoepidemiological Studies
-Version: 0.5.0
+Version: 0.6.0
 Authors@R: c(
     person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("aut"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ioanna", "Nika", , "i.nika@darwin-eu.org", role = "aut"),
@@ -20,7 +20,7 @@ Imports:
     jsonlite,
     readxl,
     readr,
-    CDMConnector (>= 2.3.0),
+    CDMConnector (>= 2.5.1),
     DBI,
     dplyr,
     checkmate,
@@ -32,14 +32,15 @@ Imports:
     ggplot2,
     tibble,
     testthat,
-    arrow,
     openxlsx,
     omopgenerics
 Suggests: 
     knitr,
     rmarkdown,
     curl,
-    httr
+    httr,
+    odbc,
+    usethis
 Config/testthat/edition: 3
 URL: https://github.com/darwin-eu/TestGenerator, https://darwin-eu.github.io/TestGenerator/
 BugReports: https://github.com/darwin-eu/TestGenerator/issues

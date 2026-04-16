@@ -57,9 +57,9 @@ test_that("output is generated with correct specifications, lower or uppercase n
   expect_true(all(tolower(tableNames) %in% sheetNames))
 
   parquetCostFilePath <- system.file("cdmTableSpecifications", paste0("emptycdm_", cdmVersion), "cost.parquet", package = "TestGenerator")
-  parquetCost <- arrow::read_parquet(parquetCostFilePath)
+  parquetCost <- TestGenerator:::read_parquet_file(parquetCostFilePath)
   visitOccurrenceFilePath <- system.file("cdmTableSpecifications", paste0("emptycdm_", cdmVersion), "visit_occurrence.parquet", package = "TestGenerator")
-  parquetVisitOccurrence <- arrow::read_parquet(visitOccurrenceFilePath)
+  parquetVisitOccurrence <- TestGenerator:::read_parquet_file(visitOccurrenceFilePath)
 
   expect_identical(colnames(parquetCost), colnames(sheetData$cost))
   expect_identical(colnames(parquetVisitOccurrence), colnames(sheetData$visit_occurrence))

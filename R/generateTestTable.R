@@ -1,3 +1,14 @@
+#' Read a parquet file using DuckDB.
+#' @param file Path to the parquet file.
+#' @return A data frame.
+#' @noRd
+read_parquet_file <- function(file) {
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+  path_sql <- gsub("'", "''", path.expand(file))
+  DBI::dbGetQuery(con, paste0("SELECT * FROM read_parquet('", path_sql, "')"))
+}
+
 #' Generates an Excel file with sheets that correspond to an OMOP-CDM tables.
 #'
 #' @param tableNames A list specifying the table names to include in the Excel file.
@@ -7,7 +18,6 @@
 #'
 #' @return An Excel file with the tables requested.
 #' @export
-#' @importFrom arrow read_parquet
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 generateTestTables <- function(tableNames,
                                cdmVersion,
@@ -25,7 +35,16 @@ generateTestTables <- function(tableNames,
   fileNames <- tolower(tools::file_path_sans_ext(basename(list.files(path = cdmSpecificationPath, full.names = TRUE))))
 
 
-  toExclude <- c("concept", "concept_ancestor", "concept_class", "concept_cpt4", "concept_relationship", "concept_synonym", "domain", "drug_strength", "relationship", "vocabulary")
+  toExclude <- c("concept",
+                 "concept_ancestor",
+                 "concept_class",
+                 "concept_cpt4",
+                 "concept_relationship",
+                 "concept_synonym",
+                 "domain",
+                 "drug_strength",
+                 "relationship",
+                 "vocabulary")
 
   fileNames <- setdiff(fileNames, toExclude)
 
@@ -49,7 +68,7 @@ generateTestTables <- function(tableNames,
     # path to parquet file
     file <- file.path(cdmSpecificationPath, paste0(tableName, ".parquet"))
 
-    parquetFile <- arrow::read_parquet(file)
+    parquetFile <- read_parquet_file(file)
 
     openxlsx::addWorksheet(wb,  tableName)
     openxlsx::writeData(wb, sheet = tableName, parquetFile)
