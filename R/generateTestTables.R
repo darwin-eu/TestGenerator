@@ -19,10 +19,19 @@ read_parquet_file <- function(file) {
 #' @return An Excel file with the tables requested.
 #' @export
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
-generateTestTables <- function(tableNames,
-                               cdmVersion,
-                               outputFolder,
-                               filename = paste0("test_cdm_", cdmVersion)) {
+generateTestTables <- function(
+    tableNames = c("person", "observation_period", "visit_occurrence",
+                   "visit_detail", "condition_occurrence", "drug_exposure",
+                   "procedure_occurrence", "measurement", "observation", "death",
+                   "drug_era", "condition_era", "dose_era", "location", "care_site",
+                   "provider"),
+    cdmVersion,
+    outputFolder,
+    filename = paste0(
+      "test_cdm_",
+      cdmVersion
+      )
+    ) {
 
   if(!(cdmVersion %in% c("5.3", "5.4"))){
     stop("Invalid cdm version should be 5.3 or 5.4")

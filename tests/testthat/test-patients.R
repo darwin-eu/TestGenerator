@@ -2,7 +2,7 @@ test_that("checkTablesColumns function works csv with test data", {
   filePath <- testthat::test_path("test_cdm_data.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = FALSE)
 
   expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "pregnancy",
@@ -15,7 +15,7 @@ test_that("checkTablesColumns function works csv with test data - some tables an
   filePath <- testthat::test_path("test_cdm_data_uppercase.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = FALSE)
 
   expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "drug_exposure"))
@@ -29,7 +29,7 @@ test_that("checkTablesColumns function works csv with table 'pregnancy'", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = TRUE)
 
   expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "pregnancy",
@@ -42,7 +42,7 @@ test_that("checkTablesColumns function works csv with table 'pregnancy'", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
 
   expect_error(checkTablesColumns(cdmVersion, filePath, extraTable = FALSE))
 })
@@ -51,7 +51,7 @@ test_that("checkTablesColumns function works csv", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   expect_error(checkTablesColumns(cdmVersion, filePath, extraTable = "pregnancys"))
 })
 
@@ -153,7 +153,7 @@ test_that("Reading MIMIC patients CSV files and JSON creation", {
     outputPath <- file.path(tempdir(), "test1")
     dir.create(outputPath)
     testName <- "test"
-    cdmVersion <- "5.3"
+    cdmVersion <- "5.4"
     readPatients.csv(filePath = filePath,
                      testName = testName,
                      outputPath = outputPath,
