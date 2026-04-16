@@ -134,7 +134,12 @@ test_that("Reading sample MIMIC patients CSV files and JSON creation", {
   outputPath <- testthat::test_path("testCases")
   # outputPath <- file.path(tempdir(), "test1")
   # dir.create(outputPath)
-  readPatients.csv(filePath = filePath, testName = "mimic_sample", outputPath = NULL)
+  readPatients.csv(
+    filePath = filePath,
+    testName = "mimic_sample",
+    outputPath = NULL,
+    cdmVersion = "5.3"
+    )
   expect_true(file.exists(file.path(outputPath, "mimic_sample.json")))
   # unlink(outputPath, recursive = TRUE)
 })

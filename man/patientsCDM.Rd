@@ -7,7 +7,7 @@
 patientsCDM(
   pathJson = NULL,
   testName = NULL,
-  cdmVersion = "5.3",
+  cdmVersion = "5.4",
   cdmName = NULL,
   dbms = "duckdb",
   writeSchema = NULL
@@ -18,7 +18,7 @@ patientsCDM(
 
 \item{testName}{Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.}
 
-\item{cdmVersion}{cdm version, default "5.3".}
+\item{cdmVersion}{cdm version, default "5.4".}
 
 \item{cdmName}{Name of the cdm, default NULL.}
 
