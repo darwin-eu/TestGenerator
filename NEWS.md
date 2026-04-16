@@ -1,3 +1,11 @@
+# TestGenerator 0.6.0
+
+* Support other database types next to duckdb: sqlserver and databricks
+
+* Remove dependency on arrow
+
+* `generateTestTables()` creates the most common used tables in the Excel sheet by default
+
 # TestGenerator 0.5.0
 
 * Support cdm version 5.4, this requires the latest version of CDMConnector

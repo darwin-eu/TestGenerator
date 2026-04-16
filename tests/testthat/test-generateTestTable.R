@@ -1,8 +1,25 @@
+test_that("Valid basic table names", {
+
+  cdmVersion <- "5.4"
+  outputFolder <- file.path(tempdir(), "testOutputExcel")
+  dir.create(outputFolder)
+
+  expect_no_error(
+    generateTestTables(
+      cdmVersion = cdmVersion,
+      outputFolder = outputFolder
+    )
+    )
+
+  unlink(outputFolder, recursive = TRUE)
+
+})
+
 test_that("invalid table names", {
 
   tableNames <- c("table_that_does_not_exist", "vocabulary", "visit_occurrence")
   invalidTableNames <- c("table_that_does_not_exist", "vocabulary")
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   outputFolder <- file.path(tempdir(), "testOutputExcel")
   dir.create(outputFolder)
 
@@ -35,8 +52,12 @@ test_that("invalid cdm version", {
 
 test_that("output is generated with correct specifications, lower or uppercase naming should not matter", {
 
-  tableNames <- c("visit_occurrence", "COST")
-  cdmVersion <- "5.3"
+  tableNames <-   tableNames <- c("person", "observation_period", "visit_occurrence",
+                                  "visit_detail", "condition_occurrence", "drug_exposure",
+                                  "procedure_occurrence", "measurement", "observation", "death",
+                                  "drug_era", "condition_era", "dose_era", "location", "care_site",
+                                  "provider", "COST")
+  cdmVersion <- "5.4"
   outputFolder <- file.path(tempdir(), "testOutputExcel")
   dir.create(outputFolder)
 
@@ -57,9 +78,9 @@ test_that("output is generated with correct specifications, lower or uppercase n
   expect_true(all(tolower(tableNames) %in% sheetNames))
 
   parquetCostFilePath <- system.file("cdmTableSpecifications", paste0("emptycdm_", cdmVersion), "cost.parquet", package = "TestGenerator")
-  parquetCost <- arrow::read_parquet(parquetCostFilePath)
+  parquetCost <- TestGenerator:::read_parquet_file(parquetCostFilePath)
   visitOccurrenceFilePath <- system.file("cdmTableSpecifications", paste0("emptycdm_", cdmVersion), "visit_occurrence.parquet", package = "TestGenerator")
-  parquetVisitOccurrence <- arrow::read_parquet(visitOccurrenceFilePath)
+  parquetVisitOccurrence <- TestGenerator:::read_parquet_file(visitOccurrenceFilePath)
 
   expect_identical(colnames(parquetCost), colnames(sheetData$cost))
   expect_identical(colnames(parquetVisitOccurrence), colnames(sheetData$visit_occurrence))

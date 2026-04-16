@@ -2,7 +2,7 @@ test_that("checkTablesColumns function works csv with test data", {
   filePath <- testthat::test_path("test_cdm_data.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = FALSE)
 
   expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "pregnancy",
@@ -15,7 +15,7 @@ test_that("checkTablesColumns function works csv with test data - some tables an
   filePath <- testthat::test_path("test_cdm_data_uppercase.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = FALSE)
 
   expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "drug_exposure"))
@@ -29,7 +29,7 @@ test_that("checkTablesColumns function works csv with table 'pregnancy'", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   listPatientTables <- checkTablesColumns(cdmVersion, filePath, extraTable = TRUE)
 
   expect_in(names(listPatientTables), c("person", "observation_period", "condition_occurrence", "pregnancy",
@@ -42,7 +42,7 @@ test_that("checkTablesColumns function works csv with table 'pregnancy'", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
 
   expect_error(checkTablesColumns(cdmVersion, filePath, extraTable = FALSE))
 })
@@ -51,7 +51,7 @@ test_that("checkTablesColumns function works csv", {
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   checkmate::assertCharacter(filePath)
   checkmate::assertFileExists(filePath)
-  cdmVersion <- "5.3"
+  cdmVersion <- "5.4"
   expect_error(checkTablesColumns(cdmVersion, filePath, extraTable = "pregnancys"))
 })
 
@@ -224,4 +224,13 @@ test_that("Patients to CDM version 5.4", {
   expect_equal(class(cdm), "cdm_reference")
   expect_equal(CDMConnector::snapshot(cdm) %>% dplyr::pull("cdm_version"), cdmVersion)
   duckdb::duckdb_shutdown(duckdb::duckdb())
+})
+
+test_that("Patients to CDM other DB", {
+  cdmVersion <- "5.4"
+  filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
+  TestGenerator::readPatients(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
+  # errors if environment variables are not defined
+  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "sqlserver"))
+  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "spark"))
 })
