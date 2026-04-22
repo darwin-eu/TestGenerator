@@ -33,7 +33,8 @@ Imports:
     tibble,
     testthat,
     openxlsx,
-    omopgenerics
+    omopgenerics,
+    RPostgres
 Suggests: 
     knitr,
     rmarkdown,
