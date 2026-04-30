@@ -42,6 +42,7 @@ Suggests:
     httr,
     odbc,
     usethis
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://github.com/darwin-eu/TestGenerator, https://darwin-eu.github.io/TestGenerator/
 BugReports: https://github.com/darwin-eu/TestGenerator/issues

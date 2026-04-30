@@ -52,7 +52,7 @@ are saved in the `testthat/testCases` folder of the package. Alterna
 TestGenerator::readPatients(filePath = "~/pathto/testPatients.xlsx",
                             testName = "test",
                             outputPath = NULL,
-                            cdmVersion = "5.3")
+                            cdmVersion = "5.4")
 ```
 
 Alternatively, the user can use the functions `readPatients.xl` or
@@ -62,12 +62,12 @@ Alternatively, the user can use the functions `readPatients.xl` or
 TestGenerator::readPatients.xl(filePath = "~/pathto/testPatients.xlsx",
                                testName = "test",
                                outputPath = NULL,
-                               cdmVersion = "5.3")
+                               cdmVersion = "5.4")
 
 TestGenerator::readPatients.csv(filePath = "~/pathto/csv/files",
                                 testName = "test",
                                 outputPath = NULL,
-                                cdmVersion = "5.3",
+                                cdmVersion = "5.4",
                                 reduceLargeIds = FALSE)
 ```
 
@@ -79,7 +79,7 @@ test files in the `testthat/testCases` folder.
 ``` r
 cdm <- TestGenerator::patientsCDM(pathJson = NULL, 
                                   testName = "test",
-                                  cdmVersion = "5.3")
+                                  cdmVersion = "5.4")
 ```
 
 Now the user has a CDM reference with a complete vocabulary and just 8
@@ -96,11 +96,11 @@ dir.create(outputPath)
 TestGenerator::readPatients(filePath = filePath, 
                             testName = "test", 
                             outputPath = outputPath, 
-                            cdmVersion = "5.3")
+                            cdmVersion = "5.4")
 #> ✔ Unit Test Definition Created Successfully: 'test'
 cdm <- TestGenerator::patientsCDM(pathJson = outputPath, 
                                   testName = "test",
-                                  cdmVersion = "5.3")
+                                  cdmVersion = "5.4")
 #> Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',
 #>  target signature 'duckdb_connection#Id'.
 #>  "duckdb_connection#ANY" would also be valid
