@@ -328,7 +328,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @param cdmVersion cdm version, default "5.4".
 #' @param cdmName Name of the cdm, default NULL.
 #' @param dbms Database management system to use. One of "duckdb", "spark",
-#'   or "sqlserver". Default is "duckdb" which creates a local
+#'   "sqlserver" or "postgresql". Default is "duckdb" which creates a local
 #'   DuckDB CDM. For remote databases the function creates the CDM locally,
 #'   trims the vocabulary, uploads to a new schema on the remote database,
 #'   and returns the remote CDM reference. Remote databases require
@@ -361,7 +361,7 @@ patientsCDM <- function(pathJson = NULL,
                         dbms = "duckdb",
                         writeSchema = NULL) {
 
-  dbms <- match.arg(dbms, c("duckdb", "spark", "sqlserver"))
+  dbms <- match.arg(dbms, c("duckdb", "spark", "sqlserver", "postgresql"))
 
   if (dbms != "duckdb") {
     .check_remote_env_vars(dbms)
@@ -546,6 +546,13 @@ patientsCDM <- function(pathJson = NULL,
                             "DARWIN_SQLSERVER_USER",
                             "DARWIN_SQLSERVER_PASSWORD"
                           ),
+                          "postgresql" = c(
+                            "DARWIN_POSTGRESQL_SERVER",
+                            "DARWIN_POSTGRESQL_DBNAME",
+                            "DARWIN_POSTGRESQL_PORT",
+                            "DARWIN_POSTGRESQL_USER",
+                            "DARWIN_POSTGRESQL_PASSWORD"
+                          ),
                           "spark" = c(
                             "DATABRICKS_HOST",
                             "DATABRICKS_TOKEN",
@@ -560,6 +567,7 @@ patientsCDM <- function(pathJson = NULL,
   switch(dbms,
          "sqlserver" = .connect_sqlserver(),
          "spark" = .connect_spark(),
+         "postgresql" = .connect_postgresql(),
          cli::cli_abort("Unsupported dbms: {.val {dbms}}")
   )
 }
@@ -583,6 +591,26 @@ patientsCDM <- function(pathJson = NULL,
     PWD      = Sys.getenv("DARWIN_SQLSERVER_PASSWORD"),
     TrustServerCertificate = "yes",
     Port     = Sys.getenv("DARWIN_SQLSERVER_PORT")
+  )
+}
+
+.connect_postgresql <- function() {
+  required_vars <- c(
+    "DARWIN_POSTGRESQL_SERVER",
+    "DARWIN_POSTGRESQL_DBNAME",
+    "DARWIN_POSTGRESQL_PORT",
+    "DARWIN_POSTGRESQL_USER",
+    "DARWIN_POSTGRESQL_PASSWORD"
+  )
+  .check_env_vars(required_vars, "Postgresql")
+
+  DBI::dbConnect(
+    RPostgres::Postgres(),
+    host     = Sys.getenv("DARWIN_POSTGRESQL_SERVER"),
+    dbname   = Sys.getenv("DARWIN_POSTGRESQL_DBNAME"),
+    port     = Sys.getenv("DARWIN_POSTGRESQL_PORT"),
+    user     = Sys.getenv("DARWIN_POSTGRESQL_USER"),
+    password = Sys.getenv("DARWIN_POSTGRESQL_PASSWORD")
   )
 }
 
