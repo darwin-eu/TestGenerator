@@ -1,3 +1,13 @@
+# TestGenerator 0.7.0
+
+* Support for PostgreSQL as a DBMS in `patientsCDM()`
+
+* Added `RPostgres` to `Imports`
+
+* Added `skip_on_cran()` to several tests to avoid network dependencies during `R CMD check`
+
+* Updated `.gitignore` and `.Rbuildignore`
+
 # TestGenerator 0.6.0
 
 * Support other database types next to duckdb: sqlserver and databricks
