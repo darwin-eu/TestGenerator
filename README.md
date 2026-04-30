@@ -32,7 +32,6 @@ To install TestGenerator:
 
 ``` r
 # CRAN version
-
 install.packages("TestGenerator")
 ```
 
@@ -97,20 +96,19 @@ TestGenerator::readPatients(filePath = filePath,
                             testName = "test", 
                             outputPath = outputPath, 
                             cdmVersion = "5.4")
+#> ✔ All tables are valid
 #> ✔ Unit Test Definition Created Successfully: 'test'
 cdm <- TestGenerator::patientsCDM(pathJson = outputPath, 
                                   testName = "test",
                                   cdmVersion = "5.4")
-#> Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',
-#>  target signature 'duckdb_connection#Id'.
-#>  "duckdb_connection#ANY" would also be valid
 #> ! cdm name not specified and could not be inferred from the cdm source table
+#> ✔ Standard table(s) in test data: person, observation_period, visit_occurrence, visit_detail, drug_exposure, condition_occurrence and procedure_occurrence
 #> ✔ Patients pushed to blank CDM successfully
 
 cdm[["person"]] %>% glimpse()
 #> Rows: ??
 #> Columns: 18
-#> Database: DuckDB v1.0.0 [root@Darwin 24.1.0:R 4.4.1//private/var/folders/wm/s6fjrtt53ld72z03p47nkdvr0000gn/T/RtmpXvHHUw/file18235526d6af4.duckdb]
+#> Database: DuckDB 1.5.2 [root@Darwin 24.6.0:R 4.6.0//private/var/folders/wm/s6fjrtt53ld72z03p47nkdvr0000gn/T/RtmpbDvxsa/file41b54c219eb5.duckdb]
 #> $ person_id                   <int> 1, 2, 3, 4, 5, 6, 7, 8
 #> $ gender_concept_id           <int> 8532, 8507, 8532, 8507, 8532, 8507, 8532, …
 #> $ year_of_birth               <int> 1980, 1990, 2000, 1980, 1990, 2000, 1980, …
@@ -144,9 +142,9 @@ cdm <- CDMConnector::generateCohortSet(cdm,
                                        cohort_set,
                                        name = "test_cohorts")
 #> ℹ Generating 3 cohorts
-#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [351ms]
-#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [272ms]
-#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [132ms]
+#> ℹ Generating cohort (1/3) - diazepam✔ Generating cohort (1/3) - diazepam [1.3s]
+#> ℹ Generating cohort (2/3) - hospitalisation✔ Generating cohort (2/3) - hospitalisation [188ms]
+#> ℹ Generating cohort (3/3) - icu_visit✔ Generating cohort (3/3) - icu_visit [77ms]
 
 cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
   
@@ -177,8 +175,16 @@ icu_visit <- cdm[["test_cohorts"]] %>%
 TestGenerator::graphCohort(subject_id = 4, list("diazepam" = diazepam,
                                                 "hospitalisation" = hospitalisation,
                                                 "icu_visit" = icu_visit))
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
+#> ℹ The deprecated feature was likely used in the TestGenerator package.
+#>   Please report the issue at
+#>   <https://github.com/darwin-eu/TestGenerator/issues>.
+#> This warning is displayed once per session.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 #> Warning in geom_segment(aes(x = cohort_start_date, y = cohort, xend =
 #> cohort_end_date, : Ignoring unknown aesthetics: fill
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />

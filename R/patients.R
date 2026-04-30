@@ -604,11 +604,19 @@ patientsCDM <- function(pathJson = NULL,
   )
   .check_env_vars(required_vars, "Postgresql")
 
+  portStr <- trimws(Sys.getenv("DARWIN_POSTGRESQL_PORT"))
+  if (!grepl("^[0-9]+$", portStr)) {
+    cli::cli_abort(
+      "{.envvar DARWIN_POSTGRESQL_PORT} must be a valid integer for PostgreSQL."
+    )
+  }
+  port <- as.integer(portStr)
+
   DBI::dbConnect(
     RPostgres::Postgres(),
     host     = Sys.getenv("DARWIN_POSTGRESQL_SERVER"),
     dbname   = Sys.getenv("DARWIN_POSTGRESQL_DBNAME"),
-    port     = Sys.getenv("DARWIN_POSTGRESQL_PORT"),
+    port     = port,
     user     = Sys.getenv("DARWIN_POSTGRESQL_USER"),
     password = Sys.getenv("DARWIN_POSTGRESQL_PASSWORD")
   )
@@ -653,6 +661,10 @@ patientsCDM <- function(pathJson = NULL,
 
   switch(dbms,
          "sqlserver" = {
+           DBI::dbExecute(con, paste("CREATE SCHEMA", schema_name))
+           schema_name
+         },
+         "postgresql" = {
            DBI::dbExecute(con, paste("CREATE SCHEMA", schema_name))
            schema_name
          },
