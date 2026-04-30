@@ -695,8 +695,8 @@ cleanupTestCdm <- function(cdm) {
   writeSchema <- paste(schema, collapse = ".")
   dbms_class <- class(con)
 
-  if (!grepl("test_generator", writeSchema, ignore.case = TRUE)) {
-    cli::cli_abort("Refusing to drop schema {.val {writeSchema}} because it does not contain {.val test_generator} in the name.")
+  if (!grepl("testgenerator", writeSchema, ignore.case = TRUE)) {
+    cli::cli_abort("Refusing to drop schema {.val {writeSchema}} because it does not contain {.val testgenerator} in the name.")
   }
 
   if (any(grepl("OdbcConnection", dbms_class)) || any(grepl("Microsoft SQL Server", dbms_class))) {
@@ -711,6 +711,18 @@ cleanupTestCdm <- function(cdm) {
     }
     DBI::dbExecute(con, paste("DROP SCHEMA", schema_name))
     cli::cli_alert_success("Dropped SQL Server schema: {.val {schema_name}}")
+  } else if (any(grepl("PqConnection", dbms_class))) {
+    # Postgresql: drop all tables first, then drop schema
+    tables <- CDMConnector::listTables(con, schema = schema)
+    schema_name <- if (length(schema) == 1) schema else schema[length(schema)]
+    for (tbl in tables) {
+      tryCatch(
+        DBI::dbExecute(con, paste0("DROP TABLE IF EXISTS ", schema_name, ".", tbl)),
+        error = function(e) NULL
+      )
+    }
+    DBI::dbExecute(con, paste("DROP SCHEMA", schema_name))
+    cli::cli_alert_success("Dropped Postgresql schema: {.val {schema_name}}")
   } else if (any(grepl("Spark|databricks", dbms_class, ignore.case = TRUE))) {
     # Databricks/Spark
     schema_full <- paste(schema, collapse = ".")

@@ -204,8 +204,7 @@ cdm <- patientsCDM(
   pathJson = output_path,
   testName = "icu_sample",
   cdmVersion = "5.4",
-  dbms = "postgresql",
-  writeSchema = "my_test_schema"
+  dbms = "postgresql"
 )
 
 # Drop the remote test schema and disconnect when finished.
