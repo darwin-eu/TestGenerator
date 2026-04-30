@@ -12,3 +12,6 @@ renv/
 renv.lock
 .Rprofile
 AGENTS.md
+.positai
+.DS_Store
+..Rcheck
