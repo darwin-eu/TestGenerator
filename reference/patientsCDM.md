@@ -37,12 +37,12 @@ patientsCDM(
 
 - dbms:
 
-  Database management system to use. One of "duckdb", "spark", or
-  "sqlserver". Default is "duckdb" which creates a local DuckDB CDM. For
-  remote databases the function creates the CDM locally, trims the
-  vocabulary, uploads to a new schema on the remote database, and
-  returns the remote CDM reference. Remote databases require environment
-  variables to be set. Call
+  Database management system to use. One of "duckdb", "spark",
+  "sqlserver" or "postgresql". Default is "duckdb" which creates a local
+  DuckDB CDM. For remote databases the function creates the CDM locally,
+  trims the vocabulary, uploads to a new schema on the remote database,
+  and returns the remote CDM reference. Remote databases require
+  environment variables to be set. Call
   [`usethis::edit_r_environ()`](https://usethis.r-lib.org/reference/edit.html)
   to set them.
 
@@ -67,7 +67,7 @@ TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
 cdm <- TestGenerator::patientsCDM(pathJson = tempdir(), testName = "test")
 #> 
 #> Download completed!
-#> Creating CDM database /tmp/RtmpXMngaM/empty_cdm_5.4.zip
+#> Creating CDM database /tmp/RtmpvDKitg/empty_cdm_5.4.zip
 #> ■■■■■■■■■■■■■■■■■■■■■             65% | ETA:  2s
 #> ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  3s
 #> ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  3s

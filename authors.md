@@ -18,12 +18,12 @@ Source:
 
 Barboza C, Nika I, Inberg G, Black A (2026). *TestGenerator: Integration
 Unit Tests for Pharmacoepidemiological Studies*. R package version
-0.6.0, <https://github.com/darwin-eu/TestGenerator>.
+0.7.0, <https://github.com/darwin-eu/TestGenerator>.
 
     @Manual{,
       title = {TestGenerator: Integration Unit Tests for Pharmacoepidemiological Studies},
       author = {Cesar Barboza and Ioanna Nika and Ger Inberg and Adam Black},
       year = {2026},
-      note = {R package version 0.6.0},
+      note = {R package version 0.7.0},
       url = {https://github.com/darwin-eu/TestGenerator},
     }

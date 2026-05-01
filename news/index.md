@@ -1,6 +1,23 @@
 # Changelog
 
+## TestGenerator 0.7.0
+
+CRAN release: 2026-04-30
+
+- Support for PostgreSQL as a DBMS in
+  [`patientsCDM()`](../reference/patientsCDM.md)
+
+- Added `RPostgres` to `Imports`
+
+- Added
+  [`skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html) to
+  several tests to avoid network dependencies during `R CMD check`
+
+- Updated `.gitignore` and `.Rbuildignore`
+
 ## TestGenerator 0.6.0
+
+CRAN release: 2026-04-16
 
 - Support other database types next to duckdb: sqlserver and databricks
 

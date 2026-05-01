@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">TestGenerator</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,6 +16,10 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/gettingStarted.html">Getting started with TestGenerator</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -33,7 +37,14 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.0" id="testgenerator-060">TestGenerator 0.6.0<a class="anchor" aria-label="anchor" href="#testgenerator-060"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.0" id="testgenerator-070">TestGenerator 0.7.0<a class="anchor" aria-label="anchor" href="#testgenerator-070"></a></h2><p class="text-muted">CRAN release: 2026-04-30</p>
+<ul><li><p>Support for PostgreSQL as a DBMS in <code><a href="../reference/patientsCDM.html">patientsCDM()</a></code></p></li>
+<li><p>Added <code>RPostgres</code> to <code>Imports</code></p></li>
+<li><p>Added <code><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_on_cran()</a></code> to several tests to avoid network dependencies during <code>R CMD check</code></p></li>
+<li><p>Updated <code>.gitignore</code> and <code>.Rbuildignore</code></p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="testgenerator-060">TestGenerator 0.6.0<a class="anchor" aria-label="anchor" href="#testgenerator-060"></a></h2><p class="text-muted">CRAN release: 2026-04-16</p>
 <ul><li><p>Support other database types next to duckdb: sqlserver and databricks</p></li>
 <li><p>Remove dependency on arrow</p></li>
 <li><p><code><a href="../reference/generateTestTables.html">generateTestTables()</a></code> creates the most common used tables in the Excel sheet by default</p></li>
