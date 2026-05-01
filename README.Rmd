@@ -36,7 +36,6 @@ To install TestGenerator:
 
 ```{r, eval=FALSE}
 # CRAN version
-
 install.packages("TestGenerator")
 ```
 
@@ -50,7 +49,7 @@ The user can provide an Excel file [(link to sample)](https://github.com/darwin-
 TestGenerator::readPatients(filePath = "~/pathto/testPatients.xlsx",
                             testName = "test",
                             outputPath = NULL,
-                            cdmVersion = "5.3")
+                            cdmVersion = "5.4")
 ```
 
 Alternatively, the user can use the functions `readPatients.xl` or `readPatients.csv` directly. 
@@ -59,12 +58,12 @@ Alternatively, the user can use the functions `readPatients.xl` or `readPatients
 TestGenerator::readPatients.xl(filePath = "~/pathto/testPatients.xlsx",
                                testName = "test",
                                outputPath = NULL,
-                               cdmVersion = "5.3")
+                               cdmVersion = "5.4")
 
 TestGenerator::readPatients.csv(filePath = "~/pathto/csv/files",
                                 testName = "test",
                                 outputPath = NULL,
-                                cdmVersion = "5.3",
+                                cdmVersion = "5.4",
                                 reduceLargeIds = FALSE)
 ```
 
@@ -73,7 +72,7 @@ TestGenerator::readPatients.csv(filePath = "~/pathto/csv/files",
 ```{r, eval=FALSE}
 cdm <- TestGenerator::patientsCDM(pathJson = NULL, 
                                   testName = "test",
-                                  cdmVersion = "5.3")
+                                  cdmVersion = "5.4")
 
 ```
 
@@ -90,10 +89,10 @@ dir.create(outputPath)
 TestGenerator::readPatients(filePath = filePath, 
                             testName = "test", 
                             outputPath = outputPath, 
-                            cdmVersion = "5.3")
+                            cdmVersion = "5.4")
 cdm <- TestGenerator::patientsCDM(pathJson = outputPath, 
                                   testName = "test",
-                                  cdmVersion = "5.3")
+                                  cdmVersion = "5.4")
 
 cdm[["person"]] %>% glimpse()
 ```

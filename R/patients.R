@@ -328,7 +328,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @param cdmVersion cdm version, default "5.4".
 #' @param cdmName Name of the cdm, default NULL.
 #' @param dbms Database management system to use. One of "duckdb", "spark",
-#'   or "sqlserver". Default is "duckdb" which creates a local
+#'   "sqlserver" or "postgresql". Default is "duckdb" which creates a local
 #'   DuckDB CDM. For remote databases the function creates the CDM locally,
 #'   trims the vocabulary, uploads to a new schema on the remote database,
 #'   and returns the remote CDM reference. Remote databases require
@@ -361,7 +361,7 @@ patientsCDM <- function(pathJson = NULL,
                         dbms = "duckdb",
                         writeSchema = NULL) {
 
-  dbms <- match.arg(dbms, c("duckdb", "spark", "sqlserver"))
+  dbms <- match.arg(dbms, c("duckdb", "spark", "sqlserver", "postgresql"))
 
   if (dbms != "duckdb") {
     .check_remote_env_vars(dbms)
@@ -546,6 +546,13 @@ patientsCDM <- function(pathJson = NULL,
                             "DARWIN_SQLSERVER_USER",
                             "DARWIN_SQLSERVER_PASSWORD"
                           ),
+                          "postgresql" = c(
+                            "DARWIN_POSTGRESQL_SERVER",
+                            "DARWIN_POSTGRESQL_DBNAME",
+                            "DARWIN_POSTGRESQL_PORT",
+                            "DARWIN_POSTGRESQL_USER",
+                            "DARWIN_POSTGRESQL_PASSWORD"
+                          ),
                           "spark" = c(
                             "DATABRICKS_HOST",
                             "DATABRICKS_TOKEN",
@@ -560,6 +567,7 @@ patientsCDM <- function(pathJson = NULL,
   switch(dbms,
          "sqlserver" = .connect_sqlserver(),
          "spark" = .connect_spark(),
+         "postgresql" = .connect_postgresql(),
          cli::cli_abort("Unsupported dbms: {.val {dbms}}")
   )
 }
@@ -583,6 +591,34 @@ patientsCDM <- function(pathJson = NULL,
     PWD      = Sys.getenv("DARWIN_SQLSERVER_PASSWORD"),
     TrustServerCertificate = "yes",
     Port     = Sys.getenv("DARWIN_SQLSERVER_PORT")
+  )
+}
+
+.connect_postgresql <- function() {
+  required_vars <- c(
+    "DARWIN_POSTGRESQL_SERVER",
+    "DARWIN_POSTGRESQL_DBNAME",
+    "DARWIN_POSTGRESQL_PORT",
+    "DARWIN_POSTGRESQL_USER",
+    "DARWIN_POSTGRESQL_PASSWORD"
+  )
+  .check_env_vars(required_vars, "Postgresql")
+
+  portStr <- trimws(Sys.getenv("DARWIN_POSTGRESQL_PORT"))
+  if (!grepl("^[0-9]+$", portStr)) {
+    cli::cli_abort(
+      "{.envvar DARWIN_POSTGRESQL_PORT} must be a valid integer for PostgreSQL."
+    )
+  }
+  port <- as.integer(portStr)
+
+  DBI::dbConnect(
+    RPostgres::Postgres(),
+    host     = Sys.getenv("DARWIN_POSTGRESQL_SERVER"),
+    dbname   = Sys.getenv("DARWIN_POSTGRESQL_DBNAME"),
+    port     = port,
+    user     = Sys.getenv("DARWIN_POSTGRESQL_USER"),
+    password = Sys.getenv("DARWIN_POSTGRESQL_PASSWORD")
   )
 }
 
@@ -628,6 +664,10 @@ patientsCDM <- function(pathJson = NULL,
            DBI::dbExecute(con, paste("CREATE SCHEMA", schema_name))
            schema_name
          },
+         "postgresql" = {
+           DBI::dbExecute(con, paste("CREATE SCHEMA", schema_name))
+           schema_name
+         },
          "spark" = {
            catalog <- Sys.getenv("DATABRICKS_WORKSPACE", "hive_metastore")
            schema <- c(catalog = catalog, schema = schema_name)
@@ -655,8 +695,8 @@ cleanupTestCdm <- function(cdm) {
   writeSchema <- paste(schema, collapse = ".")
   dbms_class <- class(con)
 
-  if (!grepl("test_generator", writeSchema, ignore.case = TRUE)) {
-    cli::cli_abort("Refusing to drop schema {.val {writeSchema}} because it does not contain {.val test_generator} in the name.")
+  if (!grepl("testgenerator", writeSchema, ignore.case = TRUE)) {
+    cli::cli_abort("Refusing to drop schema {.val {writeSchema}} because it does not contain {.val testgenerator} in the name.")
   }
 
   if (any(grepl("OdbcConnection", dbms_class)) || any(grepl("Microsoft SQL Server", dbms_class))) {
@@ -671,6 +711,18 @@ cleanupTestCdm <- function(cdm) {
     }
     DBI::dbExecute(con, paste("DROP SCHEMA", schema_name))
     cli::cli_alert_success("Dropped SQL Server schema: {.val {schema_name}}")
+  } else if (any(grepl("PqConnection", dbms_class))) {
+    # Postgresql: drop all tables first, then drop schema
+    tables <- CDMConnector::listTables(con, schema = schema)
+    schema_name <- if (length(schema) == 1) schema else schema[length(schema)]
+    for (tbl in tables) {
+      tryCatch(
+        DBI::dbExecute(con, paste0("DROP TABLE IF EXISTS ", schema_name, ".", tbl)),
+        error = function(e) NULL
+      )
+    }
+    DBI::dbExecute(con, paste("DROP SCHEMA", schema_name))
+    cli::cli_alert_success("Dropped Postgresql schema: {.val {schema_name}}")
   } else if (any(grepl("Spark|databricks", dbms_class, ignore.case = TRUE))) {
     # Databricks/Spark
     schema_full <- paste(schema, collapse = ".")

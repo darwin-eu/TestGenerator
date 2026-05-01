@@ -246,4 +246,5 @@ test_that("Patients to CDM other DB", {
   # errors if environment variables are not defined
   expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "sqlserver"))
   expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "spark"))
+  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "postgresql"))
 })

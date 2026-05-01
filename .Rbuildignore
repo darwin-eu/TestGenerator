@@ -16,3 +16,5 @@
 ^revdep$
 ^.*\.Rprofile$
 ^work/
+^\.positai$
+^\.claude$
