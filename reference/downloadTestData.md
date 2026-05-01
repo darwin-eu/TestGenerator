@@ -46,6 +46,6 @@ Invisibly returns the destination if the download was successful.
 ``` r
 # \donttest{
 downloadTestData(pathToData = tempdir())
-#> [1] "/tmp/RtmpvDKitg/mimicIV.zip"
+#> [1] "/tmp/RtmpC5568s/mimicIV.zip"
 # }
 ```
