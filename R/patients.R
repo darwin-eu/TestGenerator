@@ -520,9 +520,19 @@ patientsCDM <- function(pathJson = NULL,
     schema = test_schema,
     overwrite = TRUE
   )
-  attr(cdm_remote, "dbcon") <- remote_con
 
-  # ---- Step 5: Clean up local DuckDB resources ----
+  # ---- Step 5: Create CDM referemce ----
+
+  cdm <- CDMConnector::cdmFromCon(
+    con = remote_con,
+    cdmSchema = "main",
+    cdmSchema = "main",
+    writeSchema = "main",
+    cdmName = cdmName,
+    cdmVersion = cdmVersion
+    )
+
+  # ---- Step 6: Clean up local DuckDB resources ----
   cli::cli_progress_step("Step 5/{n_steps}: Cleaning up local DuckDB files")
   DBI::dbDisconnect(local_con, shutdown = TRUE)
 
