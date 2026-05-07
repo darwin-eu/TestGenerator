@@ -525,9 +525,8 @@ patientsCDM <- function(pathJson = NULL,
 
   cdm <- CDMConnector::cdmFromCon(
     con = remote_con,
-    cdmSchema = "main",
-    cdmSchema = "main",
-    writeSchema = "main",
+    cdmSchema = test_schema,
+    writeSchema = test_schema,
     cdmName = cdmName,
     cdmVersion = cdmVersion
     )
@@ -543,7 +542,7 @@ patientsCDM <- function(pathJson = NULL,
   }
 
   cli::cli_alert_success("Remote test CDM ready on {dbms}")
-  return(cdm_remote)
+  return(cdm)
 }
 
 # Internal: early check that required env vars are set before doing any work
@@ -667,7 +666,7 @@ patientsCDM <- function(pathJson = NULL,
 
 # Internal: create a unique test schema on the remote database
 .create_test_schema <- function(con, dbms) {
-  schema_name <- paste0("testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
+  schema_name <- paste0("cdm_testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
 
   switch(dbms,
          "sqlserver" = {

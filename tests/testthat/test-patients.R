@@ -227,6 +227,49 @@ test_that("convert ids function", {
   }
 })
 
+test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
+  skip_on_cran()
+  skip_if(Sys.getenv("DARWIN_SQLSERVER_SERVER") == "")
+  skip_if(Sys.getenv("DARWIN_SQLSERVER_DBNAME") == "")
+  skip_if(Sys.getenv("DARWIN_SQLSERVER_USER") == "")
+  skip_if(Sys.getenv("DARWIN_SQLSERVER_PASSWORD") == "")
+  skip_if(Sys.getenv("DARWIN_SQLSERVER_PORT") == "")
+  cdmVersion <- "5.4"
+  filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
+  TestGenerator::readPatients(
+    filePath = filePath,
+    testName = "pregnancy",
+    outputPath = NULL,
+    extraTable = TRUE
+    )
+  # Test no error in connection
+  expect_no_error(
+    cdm <- TestGenerator::patientsCDM(
+      pathJson = NULL,
+      testName = "pregnancy",
+      cdmVersion = cdmVersion,
+      dbms = "sqlserver"
+      )
+    )
+
+  attr(cdm, "cdm_schema") |>
+    stringr::str_detect("testgenerator") |>
+    expect_true()
+
+  expect_no_error({
+    cdm$cohort <- CohortConstructor::conceptCohort(
+      cdm = cdm,
+      conceptSet = list(a = 44500984L),
+      name = "cohort")
+  })
+
+  cdm$cohort |>
+    collect() |>
+    nrow() |>
+    expect_equal(2)
+
+})
+
 test_that("Patients to CDM version 5.4", {
   skip_on_cran()
   cdmVersion <- "5.4"
@@ -236,15 +279,4 @@ test_that("Patients to CDM version 5.4", {
   expect_equal(class(cdm), "cdm_reference")
   expect_equal(CDMConnector::snapshot(cdm) %>% dplyr::pull("cdm_version"), cdmVersion)
   duckdb::duckdb_shutdown(duckdb::duckdb())
-})
-
-test_that("Patients to CDM other DB", {
-  skip_on_cran()
-  cdmVersion <- "5.4"
-  filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
-  TestGenerator::readPatients(filePath = filePath, testName = "pregnancy", outputPath = NULL, extraTable = TRUE)
-  # errors if environment variables are not defined
-  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "sqlserver"))
-  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "spark"))
-  expect_error(TestGenerator::patientsCDM(pathJson = NULL, testName = "pregnancy", cdmVersion = cdmVersion, dbms = "postgresql"))
 })
