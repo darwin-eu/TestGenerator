@@ -1,4 +1,12 @@
+# TestGenerator 0.7.1
+
+* Fixed missing `cdm_schema` attribute in `cdm_reference` when using remote databases (e.g., SQL Server).
+* Implemented dynamic, unique schema names (prefixed with `cdm_testgenerator_`) to prevent database collisions.
+* Fixed `patientsCDM()` to ensure the correct remote CDM reference is returned during the injection process.
+* Added regression tests to verify `cdm_schema` attribute presence and `CohortConstructor` compatibility on SQL Server.
+
 # TestGenerator 0.7.0
+
 
 * Support for PostgreSQL as a DBMS in `patientsCDM()`
 
