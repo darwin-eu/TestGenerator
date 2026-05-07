@@ -520,9 +520,18 @@ patientsCDM <- function(pathJson = NULL,
     schema = test_schema,
     overwrite = TRUE
   )
-  attr(cdm_remote, "dbcon") <- remote_con
 
-  # ---- Step 5: Clean up local DuckDB resources ----
+  # ---- Step 5: Create CDM referemce ----
+
+  cdm <- CDMConnector::cdmFromCon(
+    con = remote_con,
+    cdmSchema = test_schema,
+    writeSchema = test_schema,
+    cdmName = cdmName,
+    cdmVersion = cdmVersion
+    )
+
+  # ---- Step 6: Clean up local DuckDB resources ----
   cli::cli_progress_step("Step 5/{n_steps}: Cleaning up local DuckDB files")
   DBI::dbDisconnect(local_con, shutdown = TRUE)
 
@@ -533,7 +542,7 @@ patientsCDM <- function(pathJson = NULL,
   }
 
   cli::cli_alert_success("Remote test CDM ready on {dbms}")
-  return(cdm_remote)
+  return(cdm)
 }
 
 # Internal: early check that required env vars are set before doing any work
@@ -657,7 +666,7 @@ patientsCDM <- function(pathJson = NULL,
 
 # Internal: create a unique test schema on the remote database
 .create_test_schema <- function(con, dbms) {
-  schema_name <- paste0("testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
+  schema_name <- paste0("cdm_testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
 
   switch(dbms,
          "sqlserver" = {
