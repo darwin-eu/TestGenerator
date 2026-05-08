@@ -635,19 +635,25 @@ patientsCDM <- function(pathJson = NULL,
   required_vars <- c(
     "DATABRICKS_HOST",
     "DATABRICKS_TOKEN",
-    "DATABRICKS_HTTPPATH"
+    "DATABRICKS_HTTPPATH",
+    "DATABRICKS_USER"
   )
   .check_env_vars(required_vars, "Databricks/Spark")
 
   DBI::dbConnect(
-    odbc::databricks(),
-    Host           = Sys.getenv("DATABRICKS_HOST"),
-    AuthMech       = 3,
-    HTTPPath       = Sys.getenv("DATABRICKS_HTTPPATH"),
-    UID            = Sys.getenv("DATABRICKS_USER", "token"),
-    PWD            = Sys.getenv("DATABRICKS_TOKEN"),
-    useNativeQuery = FALSE,
-    bigint         = "numeric"
+    drv = odbc::odbc(),
+    Driver = "Databricks ODBC Driver",
+    Host = sub("^https://", "", Sys.getenv("DATABRICKS_HOST")),
+    Port = 443,
+    SSL = 1,
+    ThriftTransport = 2,
+    SparkServerType = 3,
+    AuthMech = 3,
+    HTTPPath = Sys.getenv("DATABRICKS_HTTPPATH"),
+    UID = Sys.getenv("DATABRICKS_USER", "token"),
+    PWD = Sys.getenv("DATABRICKS_TOKEN"),
+    UseNativeQuery = 0,
+    bigint = "numeric"
   )
 }
 
