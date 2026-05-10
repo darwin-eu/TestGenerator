@@ -1,4 +1,4 @@
-# TestGenerator 0.7.1
+# TestGenerator 0.8.0
 
 * Fixed missing `cdm_schema` attribute in `cdm_reference` when using remote databases (e.g., SQL Server).
 * Implemented dynamic, unique schema names (prefixed with `cdm_testgenerator_`) to prevent database collisions.
