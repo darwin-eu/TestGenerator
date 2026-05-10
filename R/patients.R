@@ -549,18 +549,18 @@ patientsCDM <- function(pathJson = NULL,
 .check_remote_env_vars <- function(dbms) {
   required_vars <- switch(dbms,
                           "sqlserver" = c(
-                            "DARWIN_SQLSERVER_SERVER",
-                            "DARWIN_SQLSERVER_DBNAME",
-                            "DARWIN_SQLSERVER_PORT",
-                            "DARWIN_SQLSERVER_USER",
-                            "DARWIN_SQLSERVER_PASSWORD"
+                            "SQLSERVER_SERVER",
+                            "SQLSERVER_DBNAME",
+                            "SQLSERVER_PORT",
+                            "SQLSERVER_USER",
+                            "SQLSERVER_PASSWORD"
                           ),
                           "postgresql" = c(
-                            "DARWIN_POSTGRESQL_SERVER",
-                            "DARWIN_POSTGRESQL_DBNAME",
-                            "DARWIN_POSTGRESQL_PORT",
-                            "DARWIN_POSTGRESQL_USER",
-                            "DARWIN_POSTGRESQL_PASSWORD"
+                            "POSTGRESQL_SERVER",
+                            "POSTGRESQL_DBNAME",
+                            "POSTGRESQL_PORT",
+                            "POSTGRESQL_USER",
+                            "POSTGRESQL_PASSWORD"
                           ),
                           "spark" = c(
                             "DATABRICKS_HOST",
@@ -583,51 +583,51 @@ patientsCDM <- function(pathJson = NULL,
 
 .connect_sqlserver <- function() {
   required_vars <- c(
-    "DARWIN_SQLSERVER_SERVER",
-    "DARWIN_SQLSERVER_DBNAME",
-    "DARWIN_SQLSERVER_PORT",
-    "DARWIN_SQLSERVER_USER",
-    "DARWIN_SQLSERVER_PASSWORD"
+    "SQLSERVER_SERVER",
+    "SQLSERVER_DBNAME",
+    "SQLSERVER_PORT",
+    "SQLSERVER_USER",
+    "SQLSERVER_PASSWORD"
   )
   .check_env_vars(required_vars, "SQL Server")
 
   DBI::dbConnect(
     odbc::odbc(),
     Driver   = Sys.getenv("SQL_SERVER_DRIVER", "ODBC Driver 18 for SQL Server"),
-    Server   = Sys.getenv("DARWIN_SQLSERVER_SERVER"),
-    Database = Sys.getenv("DARWIN_SQLSERVER_DBNAME"),
-    UID      = Sys.getenv("DARWIN_SQLSERVER_USER"),
-    PWD      = Sys.getenv("DARWIN_SQLSERVER_PASSWORD"),
+    Server   = Sys.getenv("SQLSERVER_SERVER"),
+    Database = Sys.getenv("SQLSERVER_DBNAME"),
+    UID      = Sys.getenv("SQLSERVER_USER"),
+    PWD      = Sys.getenv("SQLSERVER_PASSWORD"),
     TrustServerCertificate = "yes",
-    Port     = Sys.getenv("DARWIN_SQLSERVER_PORT")
+    Port     = Sys.getenv("SQLSERVER_PORT")
   )
 }
 
 .connect_postgresql <- function() {
   required_vars <- c(
-    "DARWIN_POSTGRESQL_SERVER",
-    "DARWIN_POSTGRESQL_DBNAME",
-    "DARWIN_POSTGRESQL_PORT",
-    "DARWIN_POSTGRESQL_USER",
-    "DARWIN_POSTGRESQL_PASSWORD"
+    "POSTGRESQL_SERVER",
+    "POSTGRESQL_DBNAME",
+    "POSTGRESQL_PORT",
+    "POSTGRESQL_USER",
+    "POSTGRESQL_PASSWORD"
   )
   .check_env_vars(required_vars, "Postgresql")
 
-  portStr <- trimws(Sys.getenv("DARWIN_POSTGRESQL_PORT"))
+  portStr <- trimws(Sys.getenv("POSTGRESQL_PORT"))
   if (!grepl("^[0-9]+$", portStr)) {
     cli::cli_abort(
-      "{.envvar DARWIN_POSTGRESQL_PORT} must be a valid integer for PostgreSQL."
+      "{.envvar POSTGRESQL_PORT} must be a valid integer for PostgreSQL."
     )
   }
   port <- as.integer(portStr)
 
   DBI::dbConnect(
     RPostgres::Postgres(),
-    host     = Sys.getenv("DARWIN_POSTGRESQL_SERVER"),
-    dbname   = Sys.getenv("DARWIN_POSTGRESQL_DBNAME"),
+    host     = Sys.getenv("POSTGRESQL_SERVER"),
+    dbname   = Sys.getenv("POSTGRESQL_DBNAME"),
     port     = port,
-    user     = Sys.getenv("DARWIN_POSTGRESQL_USER"),
-    password = Sys.getenv("DARWIN_POSTGRESQL_PASSWORD")
+    user     = Sys.getenv("POSTGRESQL_USER"),
+    password = Sys.getenv("POSTGRESQL_PASSWORD")
   )
 }
 
