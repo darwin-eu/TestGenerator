@@ -4,6 +4,7 @@
 * Implemented dynamic, unique schema names (prefixed with `cdm_testgenerator_`) to prevent database collisions.
 * Fixed `patientsCDM()` to ensure the correct remote CDM reference is returned during the injection process.
 * Added regression tests to verify `cdm_schema` attribute presence and `CohortConstructor` compatibility on SQL Server.
+* Removed `DARWIN_` prefix from environment variables to run tests on SQL Server and Postgres.
 
 # TestGenerator 0.7.0
 
