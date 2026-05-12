@@ -248,7 +248,8 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
       pathJson = NULL,
       testName = "pregnancy",
       cdmVersion = cdmVersion,
-      dbms = "sqlserver"
+      dbms = "sqlserver",
+      cdmName = "main"
       )
     )
 
