@@ -1,10 +1,10 @@
 test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
   skip_on_cran()
-  skip_if(Sys.getenv("SQLSERVER_SERVER") == "")
-  skip_if(Sys.getenv("SQLSERVER_DBNAME") == "")
-  skip_if(Sys.getenv("SQLSERVER_USER") == "")
-  skip_if(Sys.getenv("SQLSERVER_PASSWORD") == "")
-  skip_if(Sys.getenv("SQLSERVER_PORT") == "")
+  # skip_if(Sys.getenv("SQLSERVER_SERVER") == "")
+  # skip_if(Sys.getenv("SQLSERVER_DBNAME") == "")
+  # skip_if(Sys.getenv("SQLSERVER_USER") == "")
+  # skip_if(Sys.getenv("SQLSERVER_PASSWORD") == "")
+  # skip_if(Sys.getenv("SQLSERVER_PORT") == "")
   cdmVersion <- "5.4"
   filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
   TestGenerator::readPatients(
@@ -20,7 +20,7 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
       testName = "pregnancy",
       cdmVersion = cdmVersion,
       dbms = "sqlserver",
-      cdmName = "main"
+      cdmName = "cdm"
     )
   )
 
