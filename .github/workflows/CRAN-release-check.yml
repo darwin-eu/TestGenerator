@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'develop')
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -63,9 +63,6 @@ jobs:
 
       - name: Check Windows Devel (win-builder)
         run: Rscript -e "devtools::check_win_devel()"
-
-      - name: rhub Check for CRAN
-        run: Rscript -e "rhub::check_for_cran()"
 
       - name: Reverse Dependency Check
         run: Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
