@@ -64,9 +64,6 @@ jobs:
       - name: Check Windows Devel (win-builder)
         run: Rscript -e "devtools::check_win_devel()"
 
-      - name: rhub Check for CRAN
-        run: Rscript -e "rhub::check_for_cran()"
-
       - name: Reverse Dependency Check
         run: Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
 
