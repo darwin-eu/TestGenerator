@@ -7,7 +7,6 @@ on:
     types:
       - completed
 
-# Explicitly grant write permissions so the bot can push updates to cran-comments.md
 permissions:
   contents: write
 
@@ -16,18 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'develop')
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      # RHUB_EMAIL: ${{ secrets.RHUB_EMAIL }} # Required for rhub v1 in CI
-      # RHUB_TOKEN: ${{ secrets.RHUB_TOKEN }} # Required for rhub v1 in CI
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required for pushing back to the repo
+          fetch-depth: 0
 
       - name: Setup Pandoc
         uses: r-lib/actions/setup-pandoc@v2
