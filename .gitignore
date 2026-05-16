@@ -9,7 +9,6 @@ inst/doc
 docs
 revdep/
 renv/
-renv.lock
 .Rprofile
 AGENTS.md
 .positai

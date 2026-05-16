@@ -1,11 +1,11 @@
 Package: TestGenerator
 Type: Package
 Title: Integration Unit Tests for Pharmacoepidemiological Studies
-Version: 0.7.0
+Version: 0.8.0
 Authors@R: c(
-    person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("aut"), comment = c(ORCID = "0009-0002-4453-3071")),
+    person("Cesar", "Barboza", , "c.barboza@darwin-eu.org", role = c("aut", "cre"), comment = c(ORCID = "0009-0002-4453-3071")),
     person("Ioanna", "Nika", , "i.nika@darwin-eu.org", role = "aut"),
-    person("Ger", "Inberg", , "g.inberg@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-8993-8748")),
+    person("Ger", "Inberg", , "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Adam", "Black", , "black@ohdsi.org", role = "aut", comment = c(ORCID = "0000-0001-5576-8701"))
   )
 Maintainer: Ger Inberg <g.inberg@erasmusmc.nl>
@@ -41,7 +41,9 @@ Suggests:
     curl,
     httr,
     odbc,
-    usethis
+    usethis,
+    CohortConstructor,
+    stringr
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://github.com/darwin-eu/TestGenerator, https://darwin-eu.github.io/TestGenerator/

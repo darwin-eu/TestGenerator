@@ -1,0 +1,113 @@
+name: CRAN-release-check
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["R-CMD-check"]
+    types:
+      - completed
+
+# Explicitly grant write permissions so the bot can push updates to cran-comments.md
+permissions:
+  contents: write
+
+jobs:
+  cran-checks:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # RHUB_EMAIL: ${{ secrets.RHUB_EMAIL }} # Required for rhub v1 in CI
+      # RHUB_TOKEN: ${{ secrets.RHUB_TOKEN }} # Required for rhub v1 in CI
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for pushing back to the repo
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::devtools
+            any::urlchecker
+            any::remotes
+            any::usethis
+            any::spelling
+            any::rhub
+          needs: check
+
+      - name: Install revdepcheck
+        run: Rscript -e "remotes::install_github('r-lib/revdepcheck')"
+
+      - name: Spell Check
+        run: Rscript -e "devtools::spell_check()"
+
+      - name: Check URLs
+        run: Rscript -e "urlchecker::url_check()"
+
+      - name: Devtools Check (Remote and Manual)
+        run: Rscript -e "devtools::check(remote = TRUE, manual = TRUE)"
+
+      - name: Check Windows Devel (win-builder)
+        run: Rscript -e "devtools::check_win_devel()"
+
+      - name: rhub Check for CRAN
+        run: Rscript -e "rhub::check_for_cran()"
+
+      - name: Reverse Dependency Check
+        run: Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
+
+      - name: Check Package Size
+        run: |
+          R CMD build .
+          TARBALL=$(ls *.tar.gz)
+          SIZE=$(stat -c%s "$TARBALL")
+          echo "Tarball size: $SIZE bytes"
+          if [ $SIZE -gt 5242880 ]; then
+            echo "Error: Package tarball exceeds the 5MB CRAN limit."
+            exit 1
+          fi
+          echo "Package size is within CRAN limits."
+
+      - name: Initialize/Update CRAN Comments
+        run: |
+          Rscript -e "usethis::use_cran_comments()"
+          echo -e "\n## Automated GitHub Actions ($(date +'%Y-%m-%d'))" >> cran-comments.md
+          echo "- devtools::spell_check() passed" >> cran-comments.md
+          echo "- urlchecker::url_check() passed" >> cran-comments.md
+          echo "- devtools::check(remote = TRUE, manual = TRUE) passed" >> cran-comments.md
+          echo "- devtools::check_win_devel() submitted" >> cran-comments.md
+          echo "- rhub::check_for_cran() completed" >> cran-comments.md
+          echo "- revdepcheck::revdep_check() completed" >> cran-comments.md
+          echo "- Package size verified < 5MB" >> cran-comments.md
+
+      - name: Commit and Push Updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add cran-comments.md and only the markdown summaries from revdep/
+          # We avoid committing the large revdep/library folder
+          git add cran-comments.md
+          git add revdep/*.md || true
+
+          # Commit and push if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: automated CRAN check updates [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi

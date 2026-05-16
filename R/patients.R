@@ -520,9 +520,18 @@ patientsCDM <- function(pathJson = NULL,
     schema = test_schema,
     overwrite = TRUE
   )
-  attr(cdm_remote, "dbcon") <- remote_con
 
-  # ---- Step 5: Clean up local DuckDB resources ----
+  # ---- Step 5: Create CDM referemce ----
+
+  cdm <- CDMConnector::cdmFromCon(
+    con = remote_con,
+    cdmSchema = test_schema,
+    writeSchema = test_schema,
+    cdmName = cdmName,
+    cdmVersion = cdmVersion
+    )
+
+  # ---- Step 6: Clean up local DuckDB resources ----
   cli::cli_progress_step("Step 5/{n_steps}: Cleaning up local DuckDB files")
   DBI::dbDisconnect(local_con, shutdown = TRUE)
 
@@ -533,25 +542,25 @@ patientsCDM <- function(pathJson = NULL,
   }
 
   cli::cli_alert_success("Remote test CDM ready on {dbms}")
-  return(cdm_remote)
+  return(cdm)
 }
 
 # Internal: early check that required env vars are set before doing any work
 .check_remote_env_vars <- function(dbms) {
   required_vars <- switch(dbms,
                           "sqlserver" = c(
-                            "DARWIN_SQLSERVER_SERVER",
-                            "DARWIN_SQLSERVER_DBNAME",
-                            "DARWIN_SQLSERVER_PORT",
-                            "DARWIN_SQLSERVER_USER",
-                            "DARWIN_SQLSERVER_PASSWORD"
+                            "SQLSERVER_SERVER",
+                            "SQLSERVER_DBNAME",
+                            "SQLSERVER_PORT",
+                            "SQLSERVER_USER",
+                            "SQLSERVER_PASSWORD"
                           ),
                           "postgresql" = c(
-                            "DARWIN_POSTGRESQL_SERVER",
-                            "DARWIN_POSTGRESQL_DBNAME",
-                            "DARWIN_POSTGRESQL_PORT",
-                            "DARWIN_POSTGRESQL_USER",
-                            "DARWIN_POSTGRESQL_PASSWORD"
+                            "POSTGRESQL_SERVER",
+                            "POSTGRESQL_DBNAME",
+                            "POSTGRESQL_PORT",
+                            "POSTGRESQL_USER",
+                            "POSTGRESQL_PASSWORD"
                           ),
                           "spark" = c(
                             "DATABRICKS_HOST",
@@ -574,51 +583,51 @@ patientsCDM <- function(pathJson = NULL,
 
 .connect_sqlserver <- function() {
   required_vars <- c(
-    "DARWIN_SQLSERVER_SERVER",
-    "DARWIN_SQLSERVER_DBNAME",
-    "DARWIN_SQLSERVER_PORT",
-    "DARWIN_SQLSERVER_USER",
-    "DARWIN_SQLSERVER_PASSWORD"
+    "SQLSERVER_SERVER",
+    "SQLSERVER_DBNAME",
+    "SQLSERVER_PORT",
+    "SQLSERVER_USER",
+    "SQLSERVER_PASSWORD"
   )
   .check_env_vars(required_vars, "SQL Server")
 
   DBI::dbConnect(
     odbc::odbc(),
     Driver   = Sys.getenv("SQL_SERVER_DRIVER", "ODBC Driver 18 for SQL Server"),
-    Server   = Sys.getenv("DARWIN_SQLSERVER_SERVER"),
-    Database = Sys.getenv("DARWIN_SQLSERVER_DBNAME"),
-    UID      = Sys.getenv("DARWIN_SQLSERVER_USER"),
-    PWD      = Sys.getenv("DARWIN_SQLSERVER_PASSWORD"),
+    Server   = Sys.getenv("SQLSERVER_SERVER"),
+    Database = Sys.getenv("SQLSERVER_DBNAME"),
+    UID      = Sys.getenv("SQLSERVER_USER"),
+    PWD      = Sys.getenv("SQLSERVER_PASSWORD"),
     TrustServerCertificate = "yes",
-    Port     = Sys.getenv("DARWIN_SQLSERVER_PORT")
+    Port     = Sys.getenv("SQLSERVER_PORT")
   )
 }
 
 .connect_postgresql <- function() {
   required_vars <- c(
-    "DARWIN_POSTGRESQL_SERVER",
-    "DARWIN_POSTGRESQL_DBNAME",
-    "DARWIN_POSTGRESQL_PORT",
-    "DARWIN_POSTGRESQL_USER",
-    "DARWIN_POSTGRESQL_PASSWORD"
+    "POSTGRESQL_SERVER",
+    "POSTGRESQL_DBNAME",
+    "POSTGRESQL_PORT",
+    "POSTGRESQL_USER",
+    "POSTGRESQL_PASSWORD"
   )
   .check_env_vars(required_vars, "Postgresql")
 
-  portStr <- trimws(Sys.getenv("DARWIN_POSTGRESQL_PORT"))
+  portStr <- trimws(Sys.getenv("POSTGRESQL_PORT"))
   if (!grepl("^[0-9]+$", portStr)) {
     cli::cli_abort(
-      "{.envvar DARWIN_POSTGRESQL_PORT} must be a valid integer for PostgreSQL."
+      "{.envvar POSTGRESQL_PORT} must be a valid integer for PostgreSQL."
     )
   }
   port <- as.integer(portStr)
 
   DBI::dbConnect(
     RPostgres::Postgres(),
-    host     = Sys.getenv("DARWIN_POSTGRESQL_SERVER"),
-    dbname   = Sys.getenv("DARWIN_POSTGRESQL_DBNAME"),
+    host     = Sys.getenv("POSTGRESQL_SERVER"),
+    dbname   = Sys.getenv("POSTGRESQL_DBNAME"),
     port     = port,
-    user     = Sys.getenv("DARWIN_POSTGRESQL_USER"),
-    password = Sys.getenv("DARWIN_POSTGRESQL_PASSWORD")
+    user     = Sys.getenv("POSTGRESQL_USER"),
+    password = Sys.getenv("POSTGRESQL_PASSWORD")
   )
 }
 
@@ -626,19 +635,25 @@ patientsCDM <- function(pathJson = NULL,
   required_vars <- c(
     "DATABRICKS_HOST",
     "DATABRICKS_TOKEN",
-    "DATABRICKS_HTTPPATH"
+    "DATABRICKS_HTTPPATH",
+    "DATABRICKS_USER"
   )
   .check_env_vars(required_vars, "Databricks/Spark")
 
   DBI::dbConnect(
-    odbc::databricks(),
-    Host           = Sys.getenv("DATABRICKS_HOST"),
-    AuthMech       = 3,
-    HTTPPath       = Sys.getenv("DATABRICKS_HTTPPATH"),
-    UID            = Sys.getenv("DATABRICKS_USER", "token"),
-    PWD            = Sys.getenv("DATABRICKS_TOKEN"),
-    useNativeQuery = FALSE,
-    bigint         = "numeric"
+    drv = odbc::odbc(),
+    Driver = "Databricks ODBC Driver",
+    Host = sub("^https://", "", Sys.getenv("DATABRICKS_HOST")),
+    Port = 443,
+    SSL = 1,
+    ThriftTransport = 2,
+    SparkServerType = 3,
+    AuthMech = 3,
+    HTTPPath = Sys.getenv("DATABRICKS_HTTPPATH"),
+    UID = Sys.getenv("DATABRICKS_USER", "token"),
+    PWD = Sys.getenv("DATABRICKS_TOKEN"),
+    UseNativeQuery = 0,
+    bigint = "numeric"
   )
 }
 
@@ -657,7 +672,7 @@ patientsCDM <- function(pathJson = NULL,
 
 # Internal: create a unique test schema on the remote database
 .create_test_schema <- function(con, dbms) {
-  schema_name <- paste0("testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
+  schema_name <- paste0("cdm_testgenerator_", format(Sys.time(), "%Y%m%d_%H%M%S"), "_", sample(1000:9999, 1))
 
   switch(dbms,
          "sqlserver" = {
