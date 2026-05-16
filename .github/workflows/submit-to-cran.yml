@@ -48,11 +48,11 @@ jobs:
         run: |
           Rscript -e "usethis::use_cran_comments()"
           echo -e "\n## Automated GitHub Actions ($(date +'%Y-%m-%d'))" >> cran-comments.md
-          echo "- devtools::spell_check() passed in CRAN-release-check.yml" >> cran-comments.md
-          echo "- urlchecker::url_check() passed in CRAN-release-check.yml" >> cran-comments.md
-          echo "- devtools::check(remote = TRUE, manual = TRUE) passed in CRAN-release-check.yml" >> cran-comments.md
-          echo "- revdepcheck::revdep_check() completed in CRAN-release-check.yml" >> cran-comments.md
-          echo "- Package size verified < 5MB in CRAN-release-check.yml" >> cran-comments.md
+          echo "- devtools::spell_check() passed in cran-release-check.yml" >> cran-comments.md
+          echo "- urlchecker::url_check() passed in cran-release-check.yml" >> cran-comments.md
+          echo "- devtools::check(remote = TRUE, manual = TRUE) passed in cran-release-check.yml" >> cran-comments.md
+          echo "- revdepcheck::revdep_check() completed in cran-release-check.yml" >> cran-comments.md
+          echo "- Package size verified < 5MB in cran-release-check.yml" >> cran-comments.md
 
       - name: Submit to CRAN
         run: Rscript -e "devtools::submit_cran()"

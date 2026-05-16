@@ -32,7 +32,7 @@ jobs:
               {
                 owner,
                 repo,
-                workflow_id: 'R-CMD-check.yaml',
+                workflow_id: 'r-cmd-check.yaml',
                 branch: 'develop',
                 head_sha: context.sha,
                 status: 'completed',
@@ -46,13 +46,13 @@ jobs:
 
             if (!successfulRun) {
               core.setFailed(
-                `No successful completed R-CMD-check.yaml run was found for develop at ${context.sha}.`
+                `No successful completed r-cmd-check.yaml run was found for develop at ${context.sha}.`
               );
               return;
             }
 
             core.setOutput('run-id', successfulRun.id);
-            core.info(`Found successful R-CMD-check.yaml run: ${successfulRun.html_url}`);
+            core.info(`Found successful r-cmd-check.yaml run: ${successfulRun.html_url}`);
 
   cran-checks:
     needs: require-r-cmd-check

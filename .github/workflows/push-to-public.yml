@@ -44,7 +44,7 @@ jobs:
               {
                 owner,
                 repo,
-                workflow_id: 'CRAN-release-check.yml',
+                workflow_id: 'cran-release-check.yml',
                 branch: 'develop',
                 head_sha: pr.head.sha,
                 status: 'completed',
@@ -58,13 +58,13 @@ jobs:
 
             if (!successfulRun) {
               core.setFailed(
-                `No successful completed CRAN-release-check.yml run was found on develop for ${pr.head.sha}.`
+                `No successful completed cran-release-check.yml run was found on develop for ${pr.head.sha}.`
               );
               return;
             }
 
             core.setOutput('run-id', successfulRun.id);
-            core.info(`Found successful CRAN-release-check.yml run: ${successfulRun.html_url}`);
+            core.info(`Found successful cran-release-check.yml run: ${successfulRun.html_url}`);
 
   deploy:
     needs: require-cran-release-check
@@ -91,7 +91,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           git rm -f \
-            .github/workflows/CRAN-release-check.yml \
+            .github/workflows/cran-release-check.yml \
             .github/workflows/rhub.yaml \
             .github/workflows/push-to-public.yml
           git commit -m "chore: prepare public release" \
