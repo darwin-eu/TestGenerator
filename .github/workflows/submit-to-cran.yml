@@ -1,0 +1,46 @@
+name: Submit to CRAN
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: submit-to-cran
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    name: Submit package to CRAN
+    if: >-
+      ${{
+        github.repository == 'darwin-eu/TestGenerator' &&
+        github.ref == 'refs/heads/main' &&
+        github.event.deleted == false &&
+        contains(github.event.head_commit.message, 'Source-Repository: darwin-eu-dev/TestGenerator') &&
+        contains(github.event.head_commit.message, 'Source-Branch: develop')
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install submission dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::devtools
+          needs: build
+
+      - name: Submit to CRAN
+        run: Rscript -e "devtools::submit_cran()"

@@ -84,7 +84,6 @@ jobs:
             any::remotes
             any::usethis
             any::spelling
-            any::rhub
           needs: check
 
       - name: Install revdepcheck
@@ -125,7 +124,6 @@ jobs:
           echo "- urlchecker::url_check() passed" >> cran-comments.md
           echo "- devtools::check(remote = TRUE, manual = TRUE) passed" >> cran-comments.md
           echo "- devtools::check_win_devel() submitted" >> cran-comments.md
-          echo "- rhub::check_for_cran() completed" >> cran-comments.md
           echo "- revdepcheck::revdep_check() completed" >> cran-comments.md
           echo "- Package size verified < 5MB" >> cran-comments.md
 

@@ -25,6 +25,13 @@ jobs:
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
 
+            if (`${owner}/${repo}` !== 'darwin-eu-dev/TestGenerator') {
+              core.setFailed(
+                `Push to public can only run from darwin-eu-dev/TestGenerator. Current repository: ${owner}/${repo}.`
+              );
+              return;
+            }
+
             if (pr.head.repo.full_name !== `${owner}/${repo}` || pr.head.ref !== 'develop') {
               core.setFailed(
                 `Push to public requires a merged PR from ${owner}/${repo}:develop into main. Found ${pr.head.repo.full_name}:${pr.head.ref}.`
@@ -87,7 +94,9 @@ jobs:
             .github/workflows/CRAN-release-check.yml \
             .github/workflows/rhub.yaml \
             .github/workflows/push-to-public.yml
-          git commit -m "chore: prepare public release [skip ci]"
+          git commit -m "chore: prepare public release" \
+            -m "Source-Repository: darwin-eu-dev/TestGenerator" \
+            -m "Source-Branch: develop"
 
           # Add the remote using the PAT for HTTPS authentication
           git remote add public https://x-access-token:${API_TOKEN_GITHUB}@github.com/darwin-eu/TestGenerator.git
