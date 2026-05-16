@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: submit-to-cran
@@ -56,3 +56,27 @@ jobs:
 
       - name: Submit to CRAN
         run: Rscript -e "devtools::submit_cran()"
+
+      - name: Read package version
+        id: package-version
+        run: |
+          VERSION=$(Rscript -e "cat(read.dcf('DESCRIPTION')[1, 'Version'])")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.package-version.outputs.tag }}"
+          VERSION="${{ steps.package-version.outputs.version }}"
+
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "GitHub release ${TAG} already exists."
+            exit 0
+          fi
+
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "TestGenerator ${VERSION}" \
+            --notes "Submitted to CRAN from darwin-eu/TestGenerator@${GITHUB_SHA}."
