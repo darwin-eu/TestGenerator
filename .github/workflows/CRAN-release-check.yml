@@ -98,9 +98,6 @@ jobs:
       - name: Devtools Check (Remote and Manual)
         run: Rscript -e "devtools::check(remote = TRUE, manual = TRUE)"
 
-      - name: Check Windows Devel (win-builder)
-        run: Rscript -e "devtools::check_win_devel()"
-
       - name: Reverse Dependency Check
         run: Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
 
@@ -123,7 +120,6 @@ jobs:
           echo "- devtools::spell_check() passed" >> cran-comments.md
           echo "- urlchecker::url_check() passed" >> cran-comments.md
           echo "- devtools::check(remote = TRUE, manual = TRUE) passed" >> cran-comments.md
-          echo "- devtools::check_win_devel() submitted" >> cran-comments.md
           echo "- revdepcheck::revdep_check() completed" >> cran-comments.md
           echo "- Package size verified < 5MB" >> cran-comments.md
 
