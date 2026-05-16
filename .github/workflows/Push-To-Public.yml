@@ -9,6 +9,8 @@ jobs:
 
     steps:
       - name: Checkout private repository
+        env:
+            API_TOKEN_GITHUB: ${{ secrets.PUBLIC_REPO_TOKEN }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -19,7 +21,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # Replace 'username/public-repo-name' with your actual public repo details
-          git remote add public https://x-access-token:${{ secrets.PUBLIC_REPO_TOKEN }}@github.com/darwin-eu/TestGenerator.git
+          git remote add public https://x-access-token:${{API_TOKEN_GITHUB}}@github.com/darwin-eu/TestGenerator.git
 
           # Pushes the main branch to the public repo
           git push public HEAD:main --force
