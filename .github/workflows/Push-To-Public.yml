@@ -1,7 +1,6 @@
 name: Push to Public Repo
 
 on:
-  workflow_dispatch:
   workflow_run:
     workflows: ["CRAN-release-check"]
     types:
