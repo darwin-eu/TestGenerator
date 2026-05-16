@@ -83,6 +83,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          git rm -f \
+            .github/workflows/CRAN-release-check.yml \
+            .github/workflows/rhub.yaml \
+            .github/workflows/push-to-public.yml
+          git commit -m "chore: prepare public release [skip ci]"
+
           # Add the remote using the PAT for HTTPS authentication
           git remote add public https://x-access-token:${API_TOKEN_GITHUB}@github.com/darwin-eu/TestGenerator.git
 
