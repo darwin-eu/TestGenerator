@@ -5,7 +5,7 @@ on:
 
 permissions:
   actions: read
-  contents: write
+  contents: read
 
 jobs:
   require-r-cmd-check:
@@ -123,20 +123,8 @@ jobs:
           echo "- revdepcheck::revdep_check() completed" >> cran-comments.md
           echo "- Package size verified < 5MB" >> cran-comments.md
 
-      - name: Commit and Push Updates
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Add cran-comments.md and only the markdown summaries from revdep/
-          # We avoid committing the large revdep/library folder
-          git add cran-comments.md
-          git add revdep/*.md || true
-
-          # Commit and push if there are changes
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: automated CRAN check updates [skip ci]"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+      - name: Upload CRAN Comments
+        uses: actions/upload-artifact@v4
+        with:
+          name: cran-comments
+          path: cran-comments.md
