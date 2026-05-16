@@ -23,11 +23,6 @@ on:
         description: 'Unique ID. You can leave this empty now.'
         type: string
 
-  workflow_run:
-    workflows: ["CRAN-release-check"]
-    types:
-      - completed
-
 jobs:
 
   setup:
@@ -37,10 +32,11 @@ jobs:
       platforms: ${{ steps.rhub-setup.outputs.platforms }}
 
     steps:
-      - uses: r-hub/actions/setup-rhub@v1
-        id: setup
-        with:
-          config: ${{ inputs.config || 'linux,windows,macos' }}
+    # NO NEED TO CHECKOUT HERE
+    - uses: r-hub/actions/setup@v1
+      with:
+        config: ${{ github.event.inputs.config }}
+      id: rhub-setup
 
   linux-containers:
     needs: setup
