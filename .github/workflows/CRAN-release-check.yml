@@ -2,20 +2,61 @@ name: CRAN-release-check
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["R-CMD-check"]
-    types:
-      - completed
 
 permissions:
+  actions: read
   contents: write
 
 jobs:
-  cran-checks:
+  require-r-cmd-check:
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    outputs:
+      r-cmd-check-run-id: ${{ steps.check-r-cmd.outputs.run-id }}
+    steps:
+      - name: Require develop branch
+        if: ${{ github.ref != 'refs/heads/develop' }}
+        run: |
+          echo "CRAN-release-check can only be dispatched from develop."
+          echo "Current ref: $GITHUB_REF"
+          exit 1
+
+      - name: Require successful R-CMD-check
+        id: check-r-cmd
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            const runs = await github.paginate(
+              github.rest.actions.listWorkflowRuns,
+              {
+                owner,
+                repo,
+                workflow_id: 'R-CMD-check.yaml',
+                branch: 'develop',
+                head_sha: context.sha,
+                status: 'completed',
+                per_page: 100
+              }
+            );
+
+            const successfulRun = runs
+              .filter((run) => run.conclusion === 'success')
+              .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0];
+
+            if (!successfulRun) {
+              core.setFailed(
+                `No successful completed R-CMD-check.yaml run was found for develop at ${context.sha}.`
+              );
+              return;
+            }
+
+            core.setOutput('run-id', successfulRun.id);
+            core.info(`Found successful R-CMD-check.yaml run: ${successfulRun.html_url}`);
+
+  cran-checks:
+    needs: require-r-cmd-check
+    runs-on: ubuntu-latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
