@@ -1,5 +1,22 @@
 # Changelog
 
+## TestGenerator 0.8.0
+
+- Fixed missing `cdm_schema` attribute in `cdm_reference` when using
+  remote databases (e.g., SQL Server).
+
+- Implemented dynamic, unique schema names (prefixed with
+  `cdm_testgenerator_`) to prevent database collisions.
+
+- Fixed [`patientsCDM()`](../reference/patientsCDM.md) to ensure the
+  correct remote CDM reference is returned during the injection process.
+
+- Added regression tests to verify `cdm_schema` attribute presence and
+  `CohortConstructor` compatibility on SQL Server.
+
+- Removed `DARWIN_` prefix from environment variables to run tests on
+  SQL Server and Postgres.
+
 ## TestGenerator 0.7.0
 
 CRAN release: 2026-04-30
