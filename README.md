@@ -11,18 +11,18 @@
 status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
 <!-- badges: end -->
 
-Does my cohort picked the correct number patients? Am I calculating an
+Did my cohort pick the correct number of patients? Am I calculating an
 intersection in the right way? Is that the expected value for treatment
-duration? It just takes one incorrect parameter to get incoherent
-results in a pharmacoepidemiological study, and it is very challenging
-to test calculations on huge and complex databases.
+duration? It only takes one incorrect parameter to get incoherent
+results in a pharmacoepidemiological study, and testing calculations on
+huge, complex databases is very challenging.
 
-That is why TestGenerator is useful to push a small sample of patients
-to unit test a study on the OMOP-CDM. It includes tools to create a
-blank CDM with a complete vocabulary and check if the code is doing what
-we expect in very specific cases.
+That is why TestGenerator is useful: it lets you push a small sample of
+patients to unit test a study on the OMOP CDM. It includes tools to
+create a blank CDM with a complete vocabulary and check whether the code
+is doing what we expect in very specific cases.
 
-This package is based on the unit testing written for the [Eramus MC
+This package is based on the unit tests written for the [Erasmus MC
 Ranitidine
 Study](https://github.com/mi-erasmusmc/RanitidineStudy/blob/master/unitTesting_README.md).
 
