@@ -327,7 +327,7 @@ createOutputFolder <- function(outputPath, testName) {
 #' @param testName Name of the sample population JSON file. If NULL it will push the first sample population in the testCases directory.
 #' @param cdmVersion cdm version, default "5.4".
 #' @param cdmName Name of the cdm, default NULL.
-#' @param dbms Database management system to use. One of "duckdb", "spark",
+#' @param dbms Database management system to use. One of "duckdb", "databricks",
 #'   "sqlserver" or "postgresql". Default is "duckdb" which creates a local
 #'   DuckDB CDM. For remote databases the function creates the CDM locally,
 #'   trims the vocabulary, uploads to a new schema on the remote database,
@@ -361,7 +361,7 @@ patientsCDM <- function(pathJson = NULL,
                         dbms = "duckdb",
                         writeSchema = NULL) {
 
-  dbms <- match.arg(dbms, c("duckdb", "spark", "sqlserver", "postgresql"))
+  dbms <- match.arg(dbms, c("duckdb", "databricks", "sqlserver", "postgresql"))
 
   if (dbms != "duckdb") {
     .check_remote_env_vars(dbms)

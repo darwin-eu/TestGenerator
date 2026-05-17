@@ -417,6 +417,20 @@
       ],
       "Hash": "e8a1e41acf02548751f45c718d55aa6a"
     },
+    "credentials": {
+      "Package": "credentials",
+      "Version": "2.0.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "askpass",
+        "curl",
+        "jsonlite",
+        "openssl",
+        "sys"
+      ],
+      "Hash": "bda033f0a309540bb66d5e85872c6973"
+    },
     "curl": {
       "Package": "curl",
       "Version": "7.1.0",
@@ -620,6 +634,21 @@
       ],
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86"
     },
+    "gert": {
+      "Package": "gert",
+      "Version": "2.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "askpass",
+        "credentials",
+        "openssl",
+        "rstudioapi",
+        "sys",
+        "zip"
+      ],
+      "Hash": "8c696f49b5150a2541af009311c2fc83"
+    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.4.4",
@@ -644,6 +673,34 @@
         "withr"
       ],
       "Hash": "313d31eff2274ecf4c1d3581db7241f9"
+    },
+    "gh": {
+      "Package": "gh",
+      "Version": "1.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "cli",
+        "gitcreds",
+        "glue",
+        "httr2",
+        "ini",
+        "jsonlite",
+        "lifecycle",
+        "rlang"
+      ],
+      "Hash": "d92acb7afad09df6839e4e456e538d03"
+    },
+    "gitcreds": {
+      "Package": "gitcreds",
+      "Version": "0.1.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "ab08ac61f3e1be454ae21911eb8bc2fe"
     },
     "glue": {
       "Package": "glue",
@@ -747,6 +804,13 @@
         "withr"
       ],
       "Hash": "c20959a9442c0e3adb1e8d3809c5d1f7"
+    },
+    "ini": {
+      "Package": "ini",
+      "Version": "0.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6154ec2223172bce8162d4153cda21f7"
     },
     "isoband": {
       "Package": "isoband",
@@ -1274,6 +1338,13 @@
       ],
       "Hash": "b2453de2d29aa646afe4781defdc7903"
     },
+    "rstudioapi": {
+      "Package": "rstudioapi",
+      "Version": "0.18.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d6e1ecf8e39b6d53c8acde372b2f92d1"
+    },
     "sass": {
       "Package": "sass",
       "Version": "0.4.10",
@@ -1505,6 +1576,38 @@
         "cpp11"
       ],
       "Hash": "09e3961e87b7bafa4a9340bbb34aeda8"
+    },
+    "usethis": {
+      "Package": "usethis",
+      "Version": "3.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "cli",
+        "clipr",
+        "crayon",
+        "curl",
+        "desc",
+        "fs",
+        "gert",
+        "gh",
+        "glue",
+        "jsonlite",
+        "lifecycle",
+        "purrr",
+        "rappdirs",
+        "rlang",
+        "rprojroot",
+        "rstudioapi",
+        "stats",
+        "tools",
+        "utils",
+        "whisker",
+        "withr",
+        "yaml"
+      ],
+      "Hash": "caa93b7eada0b69e299f61db5984faa7"
     },
     "utf8": {
       "Package": "utf8",
