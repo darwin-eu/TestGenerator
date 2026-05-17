@@ -9,6 +9,12 @@
 [![codecov](https://codecov.io/github/darwin-eu/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu/TestGenerator?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
+[![PostgreSQL
+Test](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/postgresql-test.yml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/postgresql-test.yml)
+[![SQL Server
+Test](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/sqlserver-test.yml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/sqlserver-test.yml)
+[![Databricks
+Test](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/databricks-test.yml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/databricks-test.yml)
 <!-- badges: end -->
 
 Did my cohort pick the correct number of patients? Am I calculating an
