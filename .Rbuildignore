@@ -19,3 +19,4 @@
 ^\.positai$
 ^\.claude$
 ^CRAN-CI-WORKFLOW\.md$
+^\\.mailmap$

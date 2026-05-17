@@ -1,4 +1,4 @@
-name: R Package Tests (SQL Server)
+name: SQL Server Test
 
 on:
   push:

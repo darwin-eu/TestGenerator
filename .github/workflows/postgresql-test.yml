@@ -1,4 +1,4 @@
-name: R Package Tests (PostgreSQL)
+name: PostgreSQL Test
 
 on:
   push:
