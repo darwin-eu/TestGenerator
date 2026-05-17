@@ -28,6 +28,7 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
   )
 
   attr(cdm, "cdm_schema") |>
+    paste(collapse = ".") |>
     stringr::str_detect("testgenerator") |>
     expect_true()
 
