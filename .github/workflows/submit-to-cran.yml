@@ -1,8 +1,7 @@
 name: Submit to CRAN
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,10 +16,7 @@ jobs:
     if: >-
       ${{
         github.repository == 'darwin-eu/TestGenerator' &&
-        github.ref == 'refs/heads/main' &&
-        github.event.deleted == false &&
-        contains(github.event.head_commit.message, 'Source-Repository: darwin-eu-dev/TestGenerator') &&
-        contains(github.event.head_commit.message, 'Source-Branch: develop')
+        github.ref == 'refs/heads/main'
       }}
     runs-on: ubuntu-latest
 
@@ -55,7 +51,8 @@ jobs:
           echo "- Package size verified < 5MB in cran-release-check.yml" >> cran-comments.md
 
       - name: Submit to CRAN
-        run: Rscript -e "devtools::submit_cran()"
+        run: |
+          yes | R --vanilla --interactive -e "devtools::submit_cran()"
 
       - name: Read package version
         id: package-version
