@@ -1,8 +1,8 @@
 ---
-title: "Remote databases and GitHub Actions"
+title: "Remote databases"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Remote databases and GitHub Actions}
+  %\VignetteIndexEntry{Remote databases}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -118,71 +118,6 @@ DATABRICKS_HTTPPATH=/sql/1.0/warehouses/your-warehouse
 Use values that match your own database or Databricks workspace. The database
 user needs permission to create schemas, create tables, insert data, read data,
 and drop the test schema during cleanup.
-
-## Automate backend tests in GitHub Actions
-
-The same remote database workflow can be used in continuous integration. The
-goal is to let GitHub Actions prove that your package tests work on the database
-engines you care about.
-
-TestGenerator includes workflow templates for PostgreSQL, SQL Server, and
-Databricks. You can copy all of them into your package with:
-
-```{r all-actions}
-useGithubAction(overwrite = TRUE)
-```
-
-You can also create only the workflow you need:
-
-```{r one-action}
-useGithubAction(dbms_type = "postgresql", overwrite = TRUE)
-useGithubAction(dbms_type = "sqlserver", overwrite = TRUE)
-useGithubAction(dbms_type = "databricks", overwrite = TRUE)
-```
-
-This writes workflow files to `.github/workflows`. Commit those files to your
-repository so GitHub Actions can run them.
-
-## What each action expects
-
-The workflow templates run fixed test files. Your package must provide the file
-for each backend you enable:
-
-| Backend | Required test file |
-| --- | --- |
-| PostgreSQL | `tests/testthat/test-postgresql.R` |
-| SQL Server | `tests/testthat/test-sqlserver.R` |
-| Databricks/Spark | `tests/testthat/test-databricks.R` |
-
-Each test file should call your package code, create the test CDM with
-`patientsCDM(dbms = ...)`, run the study logic, and use `testthat` expectations
-to check the result. If a test has an error or a failed expectation, the action
-is intended to fail.
-
-For PostgreSQL and SQL Server, the GitHub Actions workflow creates a Docker
-container inside the action run. That means users do not need to configure
-database secrets for these two workflows. The action sets the connection
-environment variables itself and tests against the temporary container.
-
-For Databricks, the action connects to your own remote Databricks workspace.
-You must configure the required repository secrets in GitHub:
-
-| GitHub secret | Purpose |
-| --- | --- |
-| `DATABRICKS_HOST` | URL of the Databricks workspace |
-| `DATABRICKS_TOKEN` | Token used to connect |
-| `DATABRICKS_HTTPPATH` | SQL warehouse or cluster HTTP path |
-
-Optional Databricks secrets are:
-
-| GitHub secret | Default when not set |
-| --- | --- |
-| `DATABRICKS_WORKSPACE` | `hive_metastore` |
-| `DATABRICKS_ODBC_DRIVER_URL` | The default Simba Spark ODBC driver URL used by the workflow |
-
-Because Databricks uses a real remote workspace, make sure the token has enough
-permission to create schemas and tables, insert the test data, query the result,
-and remove the test schema afterwards.
 
 ## A minimal backend test pattern
 

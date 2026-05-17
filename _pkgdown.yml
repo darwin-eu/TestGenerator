@@ -8,3 +8,5 @@ articles:
     contents:
       - gettingStarted
       - remoteDatabases
+      - githubActions
+      - CRAN-CI-WORKFLOW

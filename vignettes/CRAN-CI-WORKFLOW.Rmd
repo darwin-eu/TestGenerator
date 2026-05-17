@@ -1,0 +1,78 @@
+---
+title: "CRAN CI workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CRAN CI workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This article documents the release integration cycle used by the development
+repository. It is intended for maintainers working in
+`darwin-eu-dev/TestGenerator`.
+
+## Integration cycle
+
+The CRAN CI workflow is designed as a controlled path from development work to
+public release. Each step has a separate responsibility, so maintainers can see
+where a release candidate is in the process and avoid submitting to CRAN before
+the required checks have passed.
+
+## Step 1: prepare changes on `develop`
+
+Development work is integrated into `develop` in `darwin-eu-dev/TestGenerator`.
+This branch is the source branch for the release candidate. Before moving
+forward, the regular package checks should pass for the commit that will be
+released.
+
+## Step 2: run the CRAN release check
+
+Run the `CRAN-release-check` workflow from `develop`. This workflow is intended
+to confirm that the release candidate has passed the extra checks expected
+before publication.
+
+The workflow should be run only after the regular R CMD check has passed for the
+same commit. This keeps the CRAN-focused checks tied to a commit that has
+already passed the normal package test matrix.
+
+## Step 3: merge `develop` into `main`
+
+After the CRAN release check passes, open and merge the release pull request
+from `develop` into `main` in `darwin-eu-dev/TestGenerator`.
+
+The public push workflow checks that the merged pull request came from
+`develop` and that the matching `CRAN-release-check` workflow completed
+successfully for that commit.
+
+## Step 4: push the release candidate to the public repository
+
+When the release pull request is merged, the private repository prepares a public
+release commit and pushes it to `darwin-eu/TestGenerator`.
+
+This step removes private-only automation files before pushing to the public
+repository. The public repository receives the release-ready package source and
+the public-facing workflows.
+
+## Step 5: submit from `darwin-eu/TestGenerator`
+
+The public repository contains the `Submit to CRAN` workflow. This workflow is
+manual-only. A maintainer should trigger it from `darwin-eu/TestGenerator` when
+the release is ready to submit.
+
+The workflow prepares `cran-comments.md`, submits the package to CRAN, and then
+creates the GitHub release tag if it does not already exist.
+
+## Step 6: monitor the CRAN submission
+
+After the manual submission workflow runs, monitor the CRAN submission email and
+the GitHub Actions run. If CRAN requests changes, make the fix in
+`darwin-eu-dev/TestGenerator`, restart the cycle from `develop`, and submit a
+new release candidate when the checks pass again.

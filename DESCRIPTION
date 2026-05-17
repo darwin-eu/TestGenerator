@@ -29,7 +29,6 @@ Imports:
     cli,
     rlang,
     withr,
-    ggplot2,
     tibble,
     testthat,
     openxlsx,

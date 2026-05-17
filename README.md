@@ -154,37 +154,3 @@ excluded_records <- cohortAttrition %>%
   
 expect_equal(excluded_records, 0)
 ```
-
-With `graphCohort()` it is possible to visualise the timeline for
-particular patient.
-
-``` r
-
-diazepam <- cdm[["test_cohorts"]] %>% 
-  filter(cohort_definition_id == 1) %>% 
-  collect()
-
-hospitalisation <- cdm[["test_cohorts"]] %>% 
-  filter(cohort_definition_id == 2) %>% 
-  collect()
-
-icu_visit <- cdm[["test_cohorts"]] %>% 
-  filter(cohort_definition_id == 3) %>% 
-  collect()
-
-TestGenerator::graphCohort(subject_id = 4, list("diazepam" = diazepam,
-                                                "hospitalisation" = hospitalisation,
-                                                "icu_visit" = icu_visit))
-#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-#> ℹ Please use `linewidth` instead.
-#> ℹ The deprecated feature was likely used in the TestGenerator package.
-#>   Please report the issue at
-#>   <https://github.com/darwin-eu/TestGenerator/issues>.
-#> This warning is displayed once per session.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
-#> Warning in geom_segment(aes(x = cohort_start_date, y = cohort, xend =
-#> cohort_end_date, : Ignoring unknown aesthetics: fill
-```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />

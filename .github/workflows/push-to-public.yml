@@ -90,10 +90,14 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git rm -f \
+          git rm -f --ignore-unmatch \
             .github/workflows/cran-release-check.yml \
             .github/workflows/rhub.yaml \
-            .github/workflows/push-to-public.yml
+            .github/workflows/push-to-public.yml \
+            vignettes/CRAN-CI-WORKFLOW.Rmd \
+            vignettes/CRAN-CI-WORKFLOW.md
+          sed -i '/      - CRAN-CI-WORKFLOW/d' _pkgdown.yml
+          git add _pkgdown.yml
           git commit -m "chore: prepare public release" \
             -m "Source-Repository: darwin-eu-dev/TestGenerator" \
             -m "Source-Branch: develop"
