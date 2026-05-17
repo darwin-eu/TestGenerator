@@ -67,7 +67,7 @@ TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
 cdm <- TestGenerator::patientsCDM(pathJson = tempdir(), testName = "test")
 #> 
 #> Download completed!
-#> Creating CDM database /tmp/RtmpMEqXiC/empty_cdm_5.4.zip
+#> Creating CDM database /tmp/RtmpAv131e/empty_cdm_5.4.zip
 #> ■■■■■■■■■■■■■■■■■■■■■             65% | ETA:  2s
 #> ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  3s
 #> ! cdm name not specified and could not be inferred from the cdm source table
