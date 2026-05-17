@@ -1,5 +1,40 @@
 test_that("workflow files created correctly in .github/workflows", {
 
+  test_project <- file.path(
+    tempdir(),
+    "testgenerator-github-action-test"
+  )
+  unlink(
+    test_project,
+    recursive = TRUE
+  )
+  withr::defer(
+    unlink(
+      test_project,
+      recursive = TRUE
+    ),
+    envir = testthat::teardown_env()
+  )
+  dir.create(
+    test_project,
+    recursive = TRUE
+  )
+  writeLines(
+    c(
+      "Package: testgeneratorActionTest",
+      "Title: Test Project",
+      "Version: 0.0.0.9000",
+      "Description: Temporary project for TestGenerator tests.",
+      "License: MIT",
+      "Encoding: UTF-8"
+    ),
+    file.path(test_project, "DESCRIPTION")
+  )
+  usethis::local_project(
+    test_project,
+    .local_envir = testthat::teardown_env()
+  )
+
   workflows_folder <- system.file(
     "workflows",
     package = "TestGenerator"
