@@ -30,8 +30,8 @@ the required checks have passed.
 
 Development work is integrated into `develop` in `darwin-eu-dev/TestGenerator`.
 This branch is the source branch for the release candidate. Before moving
-forward, the regular package checks should pass for the commit that will be
-released.
+forward, the regular package checks and the backend-specific CI checks should
+pass for the commit that will be released.
 
 ## Step 2: run the CRAN release check
 
@@ -39,9 +39,20 @@ Run the `CRAN-release-check` workflow from `develop`. This workflow is intended
 to confirm that the release candidate has passed the extra checks expected
 before publication.
 
-The workflow should be run only after the regular R CMD check has passed for the
-same commit. This keeps the CRAN-focused checks tied to a commit that has
-already passed the normal package test matrix.
+The workflow can only continue when all required prerequisite workflows have
+already passed for the same commit:
+
+| Required workflow | What it checks |
+| --- | --- |
+| `R-CMD-check` | The package passes the standard R package check matrix. |
+| `R Package Tests (PostgreSQL)` | The package tests pass against PostgreSQL. |
+| `R Package Tests (Spark Databricks)` | The package tests pass against Databricks/Spark. |
+| `R Package Tests (SQL Server)` | The package tests pass against SQL Server. |
+
+This keeps the CRAN-focused checks tied to a commit that has already passed the
+normal package test matrix and the remote database test matrix. If one of these
+workflows is missing, still running, cancelled, or failing for that commit, the
+CRAN release check stops before running the CRAN-specific checks.
 
 ## Step 3: merge `develop` into `main`
 

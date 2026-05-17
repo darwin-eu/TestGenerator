@@ -99,3 +99,11 @@ from GitHub Actions.
 Keep the backend-specific tests small and deterministic. A good CI test should
 load a small Unit Test Definition, run one important part of your package logic,
 and assert the expected counts, dates, or cohort records.
+
+For release preparation, these backend-specific workflows can also act as a
+quality gate. In `darwin-eu-dev/TestGenerator`, the `CRAN-release-check`
+workflow only continues when the same `develop` commit already has successful
+runs for `R-CMD-check`, `R Package Tests (PostgreSQL)`,
+`R Package Tests (Spark Databricks)`, and `R Package Tests (SQL Server)`.
+This means the CRAN checks are run on a commit that has already been tested
+against the supported database backends.

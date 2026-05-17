@@ -8,10 +8,8 @@ permissions:
   contents: read
 
 jobs:
-  require-r-cmd-check:
+  require-prerequisite-checks:
     runs-on: ubuntu-latest
-    outputs:
-      r-cmd-check-run-id: ${{ steps.check-r-cmd.outputs.run-id }}
     steps:
       - name: Require develop branch
         if: ${{ github.ref != 'refs/heads/develop' }}
@@ -20,42 +18,60 @@ jobs:
           echo "Current ref: $GITHUB_REF"
           exit 1
 
-      - name: Require successful R-CMD-check
-        id: check-r-cmd
+      - name: Require successful prerequisite workflows
         uses: actions/github-script@v7
         with:
           script: |
             const { owner, repo } = context.repo;
-
-            const runs = await github.paginate(
-              github.rest.actions.listWorkflowRuns,
+            const requiredWorkflows = [
               {
-                owner,
-                repo,
                 workflow_id: 'r-cmd-check.yaml',
-                branch: 'develop',
-                head_sha: context.sha,
-                status: 'completed',
-                per_page: 100
+                label: 'R-CMD-check'
+              },
+              {
+                workflow_id: 'postgresql-test.yml',
+                label: 'R Package Tests (PostgreSQL)'
+              },
+              {
+                workflow_id: 'databricks-test.yml',
+                label: 'R Package Tests (Spark Databricks)'
+              },
+              {
+                workflow_id: 'sqlserver-test.yml',
+                label: 'R Package Tests (SQL Server)'
               }
-            );
+            ];
 
-            const successfulRun = runs
-              .filter((run) => run.conclusion === 'success')
-              .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0];
-
-            if (!successfulRun) {
-              core.setFailed(
-                `No successful completed r-cmd-check.yaml run was found for develop at ${context.sha}.`
+            for (const workflow of requiredWorkflows) {
+              const runs = await github.paginate(
+                github.rest.actions.listWorkflowRuns,
+                {
+                  owner,
+                  repo,
+                  workflow_id: workflow.workflow_id,
+                  branch: 'develop',
+                  head_sha: context.sha,
+                  status: 'completed',
+                  per_page: 100
+                }
               );
-              return;
+
+              const successfulRun = runs
+                .filter((run) => run.conclusion === 'success')
+                .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0];
+
+              if (!successfulRun) {
+                core.setFailed(
+                  `No successful completed ${workflow.label} run was found for develop at ${context.sha}.`
+                );
+                return;
+              }
+
+              core.info(`Found successful ${workflow.label} run: ${successfulRun.html_url}`);
             }
 
-            core.setOutput('run-id', successfulRun.id);
-            core.info(`Found successful r-cmd-check.yaml run: ${successfulRun.html_url}`);
-
   cran-checks:
-    needs: require-r-cmd-check
+    needs: require-prerequisite-checks
     runs-on: ubuntu-latest
 
     env:
