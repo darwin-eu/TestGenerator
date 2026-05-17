@@ -14,7 +14,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GH_PAT }}
       SQLSERVER_SERVER: localhost
       SQLSERVER_DBNAME: cdm
-      SQLSERVER_USER: ${{ secrets.SQLSERVER_USER }} # Ensure this secret is "sa"
+      SQLSERVER_USER: sa
       SQLSERVER_PASSWORD: 'TestPass123!'
       SQLSERVER_PORT: 1433
 
