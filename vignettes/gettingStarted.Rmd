@@ -193,39 +193,6 @@ readPatients.csv(
 For source datasets with very large integer identifiers, set
 `reduceLargeIds = TRUE`.
 
-## Remote Databases
-
-DuckDB is the default and is usually enough for unit tests. When you need to
-test SQL translation on another backend, `patientsCDM()` can also create a
-test CDM in Spark, SQL Server, or PostgreSQL.
-
-```{r remote-cdm}
-cdm <- patientsCDM(
-  pathJson = output_path,
-  testName = "icu_sample",
-  cdmVersion = "5.4",
-  dbms = "postgresql"
-)
-
-# Drop the remote test schema and disconnect when finished.
-cleanupTestCdm(cdm)
-```
-
-Remote database connections require the relevant environment variables to be
-configured before calling `patientsCDM()`.
-
-| Backend | Required environment variables |
-| --- | --- |
-| Spark | `DATABRICKS_HOST`, `DATABRICKS_TOKEN`, `DATABRICKS_HTTPPATH` |
-| SQL Server | `SQLSERVER_SERVER`, `SQLSERVER_DBNAME`, `SQLSERVER_PORT`, `SQLSERVER_USER`, `SQLSERVER_PASSWORD` |
-| PostgreSQL | `POSTGRESQL_SERVER`, `POSTGRESQL_DBNAME`, `POSTGRESQL_PORT`, `POSTGRESQL_USER`, `POSTGRESQL_PASSWORD` |
-
-Spark also reads `DATABRICKS_USER` and `DATABRICKS_WORKSPACE` when they are set.
-If they are not set, TestGenerator uses `token` as the Databricks user and
-`hive_metastore` as the workspace/catalog. SQL Server reads
-`SQL_SERVER_DRIVER` when it is set; otherwise it uses
-`ODBC Driver 18 for SQL Server`.
-
 ## Clean Up
 
 For local DuckDB examples, disconnect when the test has finished.
