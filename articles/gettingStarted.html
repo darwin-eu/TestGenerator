@@ -34,6 +34,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/gettingStarted.html">Getting started with TestGenerator</a></li>
+    <li><a class="dropdown-item" href="../articles/remoteDatabases.html">Remote databases</a></li>
+    <li><a class="dropdown-item" href="../articles/githubActions.html">GitHub Actions</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -169,38 +171,11 @@ dates, durations, or intersections that your study should produce for
 the micro population.</p>
 </div>
 <div class="section level2">
-<h2 id="visualise-cohort-timelines">Visualise Cohort Timelines<a class="anchor" aria-label="anchor" href="#visualise-cohort-timelines"></a>
-</h2>
-<p><code><a href="../reference/graphCohort.html">graphCohort()</a></code> can help inspect whether cohort
-intersections and timing look as expected for a single subject.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diazepam</span> <span class="op">&lt;-</span> <span class="va">cdm</span><span class="op">[[</span><span class="st">"test_cohorts"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">cohort_definition_id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">hospitalisation</span> <span class="op">&lt;-</span> <span class="va">cdm</span><span class="op">[[</span><span class="st">"test_cohorts"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">cohort_definition_id</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">icu_visit</span> <span class="op">&lt;-</span> <span class="va">cdm</span><span class="op">[[</span><span class="st">"test_cohorts"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">cohort_definition_id</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/graphCohort.html">graphCohort</a></span><span class="op">(</span></span>
-<span>  subject_id <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  cohorts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    diazepam <span class="op">=</span> <span class="va">diazepam</span>,</span>
-<span>    hospitalisation <span class="op">=</span> <span class="va">hospitalisation</span>,</span>
-<span>    icu_visit <span class="op">=</span> <span class="va">icu_visit</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="start-from-a-blank-excel-template">Start from a Blank Excel Template<a class="anchor" aria-label="anchor" href="#start-from-a-blank-excel-template"></a>
 </h2>
 <p>If you want to design a new test population from scratch, create an
 Excel workbook with the required CDM table columns.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/generateTestTables.html">generateTestTables</a></span><span class="op">(</span></span>
 <span>  tableNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"person"</span>,</span>
@@ -224,7 +199,7 @@ your test, then pass the completed workbook to
 <p>For CSV inputs, place one file per CDM table in a folder. File names
 should match the table names, for example <code>person.csv</code> and
 <code>observation_period.csv</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">csv_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"extdata"</span>,</span>
 <span>  <span class="st">"mimic_sample"</span>,</span>
@@ -241,72 +216,10 @@ should match the table names, for example <code>person.csv</code> and
 <code>reduceLargeIds = TRUE</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="remote-databases">Remote Databases<a class="anchor" aria-label="anchor" href="#remote-databases"></a>
-</h2>
-<p>DuckDB is the default and is usually enough for unit tests. When you
-need to test SQL translation on another backend,
-<code><a href="../reference/patientsCDM.html">patientsCDM()</a></code> can also create a test CDM in Spark, SQL
-Server, or PostgreSQL.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/patientsCDM.html">patientsCDM</a></span><span class="op">(</span></span>
-<span>  pathJson <span class="op">=</span> <span class="va">output_path</span>,</span>
-<span>  testName <span class="op">=</span> <span class="st">"icu_sample"</span>,</span>
-<span>  cdmVersion <span class="op">=</span> <span class="st">"5.4"</span>,</span>
-<span>  dbms <span class="op">=</span> <span class="st">"postgresql"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Drop the remote test schema and disconnect when finished.</span></span>
-<span><span class="fu"><a href="../reference/cleanupTestCdm.html">cleanupTestCdm</a></span><span class="op">(</span><span class="va">cdm</span><span class="op">)</span></span></code></pre></div>
-<p>Remote database connections require the relevant environment
-variables to be configured before calling
-<code><a href="../reference/patientsCDM.html">patientsCDM()</a></code>.</p>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th>Backend</th>
-<th>Required environment variables</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Spark</td>
-<td>
-<code>DATABRICKS_HOST</code>, <code>DATABRICKS_TOKEN</code>,
-<code>DATABRICKS_HTTPPATH</code>
-</td>
-</tr>
-<tr class="even">
-<td>SQL Server</td>
-<td>
-<code>SQLSERVER_SERVER</code>, <code>SQLSERVER_DBNAME</code>,
-<code>SQLSERVER_PORT</code>, <code>SQLSERVER_USER</code>,
-<code>SQLSERVER_PASSWORD</code>
-</td>
-</tr>
-<tr class="odd">
-<td>PostgreSQL</td>
-<td>
-<code>POSTGRESQL_SERVER</code>, <code>POSTGRESQL_DBNAME</code>,
-<code>POSTGRESQL_PORT</code>, <code>POSTGRESQL_USER</code>,
-<code>POSTGRESQL_PASSWORD</code>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Spark also reads <code>DATABRICKS_USER</code> and
-<code>DATABRICKS_WORKSPACE</code> when they are set. If they are not
-set, TestGenerator uses <code>token</code> as the Databricks user and
-<code>hive_metastore</code> as the workspace/catalog. SQL Server reads
-<code>SQL_SERVER_DRIVER</code> when it is set; otherwise it uses
-<code>ODBC Driver 18 for SQL Server</code>.</p>
-</div>
-<div class="section level2">
 <h2 id="clean-up">Clean Up<a class="anchor" aria-label="anchor" href="#clean-up"></a>
 </h2>
 <p>For local DuckDB examples, disconnect when the test has finished.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="fu">CDMConnector</span><span class="fu">::</span><span class="fu"><a href="https://darwin-eu.github.io/CDMConnector/reference/cdmCon.html" class="external-link">cdmCon</a></span><span class="op">(</span><span class="va">cdm</span><span class="op">)</span>, shutdown <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">output_path</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>

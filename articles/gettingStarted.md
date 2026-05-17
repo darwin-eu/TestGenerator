@@ -111,35 +111,6 @@ In a package test, place this code in `tests/testthat/test-*.R` and
 assert the specific counts, dates, durations, or intersections that your
 study should produce for the micro population.
 
-## Visualise Cohort Timelines
-
-[`graphCohort()`](../reference/graphCohort.md) can help inspect whether
-cohort intersections and timing look as expected for a single subject.
-
-``` r
-
-diazepam <- cdm[["test_cohorts"]] |>
-  filter(cohort_definition_id == 1) |>
-  collect()
-
-hospitalisation <- cdm[["test_cohorts"]] |>
-  filter(cohort_definition_id == 2) |>
-  collect()
-
-icu_visit <- cdm[["test_cohorts"]] |>
-  filter(cohort_definition_id == 3) |>
-  collect()
-
-graphCohort(
-  subject_id = 4,
-  cohorts = list(
-    diazepam = diazepam,
-    hospitalisation = hospitalisation,
-    icu_visit = icu_visit
-  )
-)
-```
-
 ## Start from a Blank Excel Template
 
 If you want to design a new test population from scratch, create an
@@ -190,42 +161,6 @@ readPatients.csv(
 
 For source datasets with very large integer identifiers, set
 `reduceLargeIds = TRUE`.
-
-## Remote Databases
-
-DuckDB is the default and is usually enough for unit tests. When you
-need to test SQL translation on another backend,
-[`patientsCDM()`](../reference/patientsCDM.md) can also create a test
-CDM in Spark, SQL Server, or PostgreSQL.
-
-``` r
-
-cdm <- patientsCDM(
-  pathJson = output_path,
-  testName = "icu_sample",
-  cdmVersion = "5.4",
-  dbms = "postgresql"
-)
-
-# Drop the remote test schema and disconnect when finished.
-cleanupTestCdm(cdm)
-```
-
-Remote database connections require the relevant environment variables
-to be configured before calling
-[`patientsCDM()`](../reference/patientsCDM.md).
-
-| Backend | Required environment variables |
-|----|----|
-| Spark | `DATABRICKS_HOST`, `DATABRICKS_TOKEN`, `DATABRICKS_HTTPPATH` |
-| SQL Server | `SQLSERVER_SERVER`, `SQLSERVER_DBNAME`, `SQLSERVER_PORT`, `SQLSERVER_USER`, `SQLSERVER_PASSWORD` |
-| PostgreSQL | `POSTGRESQL_SERVER`, `POSTGRESQL_DBNAME`, `POSTGRESQL_PORT`, `POSTGRESQL_USER`, `POSTGRESQL_PASSWORD` |
-
-Spark also reads `DATABRICKS_USER` and `DATABRICKS_WORKSPACE` when they
-are set. If they are not set, TestGenerator uses `token` as the
-Databricks user and `hive_metastore` as the workspace/catalog. SQL
-Server reads `SQL_SERVER_DRIVER` when it is set; otherwise it uses
-`ODBC Driver 18 for SQL Server`.
 
 ## Clean Up
 

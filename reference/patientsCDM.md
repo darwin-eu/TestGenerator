@@ -37,7 +37,7 @@ patientsCDM(
 
 - dbms:
 
-  Database management system to use. One of "duckdb", "spark",
+  Database management system to use. One of "duckdb", "databricks",
   "sqlserver" or "postgresql". Default is "duckdb" which creates a local
   DuckDB CDM. For remote databases the function creates the CDM locally,
   trims the vocabulary, uploads to a new schema on the remote database,
@@ -67,9 +67,8 @@ TestGenerator::readPatients(filePath = filePath, outputPath = tempdir())
 cdm <- TestGenerator::patientsCDM(pathJson = tempdir(), testName = "test")
 #> 
 #> Download completed!
-#> Creating CDM database /tmp/RtmpkTUhNK/empty_cdm_5.4.zip
+#> Creating CDM database /tmp/Rtmp3tYwCp/empty_cdm_5.4.zip
 #> ■■■■■■■■■■■■■■■■■■■■■             65% | ETA:  2s
-#> ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  3s
 #> ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  3s
 #> ! cdm name not specified and could not be inferred from the cdm source table
 #> ✔ Standard table(s) in test data: person, observation_period, condition_occurrence, visit_occurrence, visit_detail and death

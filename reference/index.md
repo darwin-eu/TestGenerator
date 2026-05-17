@@ -11,9 +11,8 @@
 - [`downloadTestData()`](downloadTestData.md) : Download Test Data Files
 - [`generateTestTables()`](generateTestTables.md) : Generates an Excel
   file with sheets that correspond to an OMOP-CDM tables.
-- [`graphCohort()`](graphCohort.md) : \`graphCohort()\` aids in the
-  visualisation of cohorts timelines, useful to get a grip on
-  intersections.
+- [`graphCohort()`](graphCohort.md) : Deprecated cohort timeline
+  visualisation
 - [`patientsCDM()`](patientsCDM.md) : Pushes test population into a
   blank CDM.
 - [`readPatients()`](readPatients.md) : Converts a sample of patients
@@ -22,3 +21,5 @@
   patients in CSV format into a Unit Testing Definition JSON file.
 - [`readPatients.xl()`](readPatients.xl.md) : Converts a sample of
   patients in XLSX format into Unit Testing Definition JSON file.
+- [`useGithubAction()`](useGithubAction.md) : Create GitHub Action
+  workflows for specific DBMS
