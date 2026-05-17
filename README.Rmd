@@ -32,94 +32,139 @@ This package is based on the unit testing written for the [Eramus MC Ranitidine 
 
 ## Installation
 
-To install TestGenerator:
+Install the released version from CRAN:
 
 ```{r, eval=FALSE}
-# CRAN version
 install.packages("TestGenerator")
 ```
 
-## Example
+## Basic workflow
 
-The user can provide an Excel file [(link to sample)](https://github.com/darwin-eu/TestGenerator/raw/main/inst/extdata/icu_sample_population.xlsx) or a set of CSV files that represent tables of the OMOP-CDM, with a micro population of just 8 patients for testing purposes. 
+TestGenerator starts from a small patient dataset. The data can be stored in an
+Excel workbook, with one sheet per OMOP CDM table, or in a folder of CSV files,
+with one file per table.
 
-`readPatients()` will read either Excel or CSVs, and then saves the data in a JSON file. This is useful if the user wants to create more than one Unit Test Definitions. If the parameter `outputPath` is `NULL` The files are saved in the `testthat/testCases` folder of the package. Alterna
+For help creating an Excel input from scratch, see the
+[Start from a Blank Excel Template](https://darwin-eu.github.io/TestGenerator/articles/gettingStarted.html#start-from-a-blank-excel-template)
+section of the website.
 
-```{r, eval=FALSE}
-TestGenerator::readPatients(filePath = "~/pathto/testPatients.xlsx",
-                            testName = "test",
-                            outputPath = NULL,
-                            cdmVersion = "5.4")
+The package then converts those files into a Unit Test Definition JSON file.
+This JSON file is the object you keep in your package tests.
+
+```{r read-patients, eval=FALSE}
+TestGenerator::readPatients(
+  filePath = "inst/extdata/icu_sample_population.xlsx",
+  testName = "icu_sample",
+  outputPath = "tests/testthat/testCases",
+  cdmVersion = "5.4"
+)
 ```
 
-Alternatively, the user can use the functions `readPatients.xl` or `readPatients.csv` directly. 
+If `outputPath = NULL`, the JSON file is written to
+`tests/testthat/testCases`, which is the usual location for package tests.
 
-```{r, eval=FALSE}
-TestGenerator::readPatients.xl(filePath = "~/pathto/testPatients.xlsx",
-                               testName = "test",
-                               outputPath = NULL,
-                               cdmVersion = "5.4")
+You can also call the Excel and CSV readers directly:
 
-TestGenerator::readPatients.csv(filePath = "~/pathto/csv/files",
-                                testName = "test",
-                                outputPath = NULL,
-                                cdmVersion = "5.4",
-                                reduceLargeIds = FALSE)
+```{r direct-readers, eval=FALSE}
+TestGenerator::readPatients.xl(
+  filePath = "inst/extdata/icu_sample_population.xlsx",
+  testName = "icu_sample",
+  outputPath = "tests/testthat/testCases",
+  cdmVersion = "5.4"
+)
+
+TestGenerator::readPatients.csv(
+  filePath = "inst/extdata/icu_sample_population_csv",
+  testName = "icu_sample",
+  outputPath = "tests/testthat/testCases",
+  cdmVersion = "5.4",
+  reduceLargeIds = FALSE
+)
 ```
 
-`patientCDM()` pushes one of those Unit Test Definitions into a blank CDM reference with a complete version of the vocabulary. If the `pathJSON` parameter is `NULL`, `TestGenerator` will look for the JSON test files in the `testthat/testCases` folder. 
+## Create a test CDM
 
-```{r, eval=FALSE}
-cdm <- TestGenerator::patientsCDM(pathJson = NULL, 
-                                  testName = "test",
-                                  cdmVersion = "5.4")
+Use `patientsCDM()` to load one Unit Test Definition into a blank OMOP CDM.
+By default, this creates a local DuckDB CDM with the small patient population
+and the vocabulary needed for testing.
 
+```{r create-cdm, eval=FALSE}
+cdm <- TestGenerator::patientsCDM(
+  pathJson = "tests/testthat/testCases",
+  testName = "icu_sample",
+  cdmVersion = "5.4"
+)
 ```
 
-Now the user has a CDM reference with a complete vocabulary and just 8 patients.
+If `pathJson = NULL`, TestGenerator looks for the JSON file in
+`tests/testthat/testCases`.
 
-```{r}
-filePath <- system.file("extdata/icu_sample_population.xlsx", 
-                        package = "TestGenerator")
+The example below uses the sample ICU population included in the package.
 
-outputPath <- file.path(tempdir(), "test")
+```{r example-cdm, eval=FALSE}
+file_path <- system.file(
+  "extdata",
+  "icu_sample_population.xlsx",
+  package = "TestGenerator"
+)
 
-dir.create(outputPath)
+output_path <- file.path(tempdir(), "testgenerator-example")
+dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
 
-TestGenerator::readPatients(filePath = filePath, 
-                            testName = "test", 
-                            outputPath = outputPath, 
-                            cdmVersion = "5.4")
-cdm <- TestGenerator::patientsCDM(pathJson = outputPath, 
-                                  testName = "test",
-                                  cdmVersion = "5.4")
+TestGenerator::readPatients(
+  filePath = file_path,
+  testName = "icu_sample",
+  outputPath = output_path,
+  cdmVersion = "5.4"
+)
 
-cdm[["person"]] %>% glimpse()
+cdm <- TestGenerator::patientsCDM(
+  pathJson = output_path,
+  testName = "icu_sample",
+  cdmVersion = "5.4"
+)
+
+DBI::dbDisconnect(CDMConnector::cdmCon(cdm), shutdown = TRUE)
+unlink(output_path, recursive = TRUE)
 ```
 
-The reference can be used to create a cohort and create unit tests. 
+## Use it in a package test
 
-```{r}
-test_cohorts <- system.file("extdata",
-                            "test_cohorts",
-                            package = "TestGenerator")
+The most useful pattern is to keep a small JSON test case in
+`tests/testthat/testCases`, build a CDM inside a `testthat` test, run your study
+code, and assert the expected result.
 
-cohort_set <- CDMConnector::readCohortSet(test_cohorts)
-  
-cdm <- CDMConnector::generateCohortSet(cdm,
-                                       cohort_set,
-                                       name = "test_cohorts")
+```{r package-test, eval=FALSE}
+testthat::test_that("cohort construction returns the expected patients", {
+  cdm <- TestGenerator::patientsCDM(
+    pathJson = "tests/testthat/testCases",
+    testName = "icu_sample",
+    cdmVersion = "5.4"
+  )
+  withr::defer(
+    DBI::dbDisconnect(CDMConnector::cdmCon(cdm), shutdown = TRUE)
+  )
 
-cohortAttrition <- CDMConnector::attrition(cdm[["test_cohorts"]])
-  
-excluded_records <- cohortAttrition %>% 
-    pull(excluded_records) %>% 
-    sum()
-  
-expect_equal(excluded_records, 0)
+  cohort_set <- CDMConnector::readCohortSet(
+    system.file("extdata", "test_cohorts", package = "TestGenerator")
+  )
+
+  cdm <- CDMConnector::generateCohortSet(
+    cdm = cdm,
+    cohortSet = cohort_set,
+    name = "test_cohorts"
+  )
+
+  result <- cdm[["test_cohorts"]] |>
+    dplyr::collect()
+
+  testthat::expect_equal(
+    sort(unique(result$subject_id)),
+    c(1, 2, 4, 5, 6, 7)
+  )
+})
 ```
 
-```{r, echo=FALSE}
-unlink(outputPath, recursive = TRUE)
-duckdb::duckdb_shutdown(duckdb::duckdb())
-```
+The exact expectation should come from the micro population you designed. Good
+tests usually check subject counts, inclusion or exclusion rules, cohort dates,
+or treatment durations that are easy to verify by hand.
