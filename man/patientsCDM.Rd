@@ -22,7 +22,7 @@ patientsCDM(
 
 \item{cdmName}{Name of the cdm, default NULL.}
 
-\item{dbms}{Database management system to use. One of "duckdb", "spark",
+\item{dbms}{Database management system to use. One of "duckdb", "databricks",
 "sqlserver" or "postgresql". Default is "duckdb" which creates a local
 DuckDB CDM. For remote databases the function creates the CDM locally,
 trims the vocabulary, uploads to a new schema on the remote database,
