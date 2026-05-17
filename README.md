@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu/TestGenerator/actions/workflows/r-cmd-check.yaml)
+[![R-CMD-check](https://github.com/darwin-eu/TestGenerator/actions/workflows/r-cmd-check.yaml/badge.svg)](https://github.com/darwin-eu/TestGenerator/actions/workflows/r-cmd-check.yaml)
 [![codecov](https://codecov.io/github/darwin-eu/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu/TestGenerator?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
