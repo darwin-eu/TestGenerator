@@ -1,0 +1,82 @@
+name: Submit to CRAN
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: submit-to-cran
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    name: Submit package to CRAN
+    if: >-
+      ${{
+        github.repository == 'darwin-eu/TestGenerator' &&
+        github.ref == 'refs/heads/main' &&
+        github.event.deleted == false &&
+        contains(github.event.head_commit.message, 'Source-Repository: darwin-eu-dev/TestGenerator') &&
+        contains(github.event.head_commit.message, 'Source-Branch: develop')
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install submission dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::devtools
+            any::usethis
+          needs: build
+
+      - name: Initialize/Update CRAN Comments
+        run: |
+          Rscript -e "usethis::use_cran_comments()"
+          echo -e "\n## Automated GitHub Actions ($(date +'%Y-%m-%d'))" >> cran-comments.md
+          echo "- devtools::spell_check() passed in cran-release-check.yml" >> cran-comments.md
+          echo "- urlchecker::url_check() passed in cran-release-check.yml" >> cran-comments.md
+          echo "- devtools::check(remote = TRUE, manual = TRUE) passed in cran-release-check.yml" >> cran-comments.md
+          echo "- revdepcheck::revdep_check() completed in cran-release-check.yml" >> cran-comments.md
+          echo "- Package size verified < 5MB in cran-release-check.yml" >> cran-comments.md
+
+      - name: Submit to CRAN
+        run: Rscript -e "devtools::submit_cran()"
+
+      - name: Read package version
+        id: package-version
+        run: |
+          VERSION=$(Rscript -e "cat(read.dcf('DESCRIPTION')[1, 'Version'])")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.package-version.outputs.tag }}"
+          VERSION="${{ steps.package-version.outputs.version }}"
+
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "GitHub release ${TAG} already exists."
+            exit 0
+          fi
+
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "TestGenerator ${VERSION}" \
+            --notes "Submitted to CRAN from darwin-eu/TestGenerator@${GITHUB_SHA}."

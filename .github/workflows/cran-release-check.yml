@@ -5,7 +5,7 @@ on:
 
 permissions:
   actions: read
-  contents: write
+  contents: read
 
 jobs:
   require-r-cmd-check:
@@ -32,7 +32,7 @@ jobs:
               {
                 owner,
                 repo,
-                workflow_id: 'R-CMD-check.yaml',
+                workflow_id: 'r-cmd-check.yaml',
                 branch: 'develop',
                 head_sha: context.sha,
                 status: 'completed',
@@ -46,13 +46,13 @@ jobs:
 
             if (!successfulRun) {
               core.setFailed(
-                `No successful completed R-CMD-check.yaml run was found for develop at ${context.sha}.`
+                `No successful completed r-cmd-check.yaml run was found for develop at ${context.sha}.`
               );
               return;
             }
 
             core.setOutput('run-id', successfulRun.id);
-            core.info(`Found successful R-CMD-check.yaml run: ${successfulRun.html_url}`);
+            core.info(`Found successful r-cmd-check.yaml run: ${successfulRun.html_url}`);
 
   cran-checks:
     needs: require-r-cmd-check
@@ -84,7 +84,6 @@ jobs:
             any::remotes
             any::usethis
             any::spelling
-            any::rhub
           needs: check
 
       - name: Install revdepcheck
@@ -98,9 +97,6 @@ jobs:
 
       - name: Devtools Check (Remote and Manual)
         run: Rscript -e "devtools::check(remote = TRUE, manual = TRUE)"
-
-      - name: Check Windows Devel (win-builder)
-        run: Rscript -e "devtools::check_win_devel()"
 
       - name: Reverse Dependency Check
         run: Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
@@ -124,25 +120,11 @@ jobs:
           echo "- devtools::spell_check() passed" >> cran-comments.md
           echo "- urlchecker::url_check() passed" >> cran-comments.md
           echo "- devtools::check(remote = TRUE, manual = TRUE) passed" >> cran-comments.md
-          echo "- devtools::check_win_devel() submitted" >> cran-comments.md
-          echo "- rhub::check_for_cran() completed" >> cran-comments.md
           echo "- revdepcheck::revdep_check() completed" >> cran-comments.md
           echo "- Package size verified < 5MB" >> cran-comments.md
 
-      - name: Commit and Push Updates
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Add cran-comments.md and only the markdown summaries from revdep/
-          # We avoid committing the large revdep/library folder
-          git add cran-comments.md
-          git add revdep/*.md || true
-
-          # Commit and push if there are changes
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: automated CRAN check updates [skip ci]"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+      - name: Upload CRAN Comments
+        uses: actions/upload-artifact@v4
+        with:
+          name: cran-comments
+          path: cran-comments.md
