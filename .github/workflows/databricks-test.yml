@@ -1,0 +1,87 @@
+name: R Package Tests (Spark Databricks)
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GH_PAT }}
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_HTTPPATH: ${{ secrets.DATABRICKS_HTTPPATH }}
+      DATABRICKS_USER: token
+      DATABRICKS_WORKSPACE: ${{ secrets.DATABRICKS_WORKSPACE != '' && secrets.DATABRICKS_WORKSPACE || 'hive_metastore' }}
+      DATABRICKS_ODBC_DRIVER_URL: ${{ secrets.DATABRICKS_ODBC_DRIVER_URL != '' && secrets.DATABRICKS_ODBC_DRIVER_URL || 'https://databricks-bi-artifacts.s3.us-east-2.amazonaws.com/simbaspark-drivers/odbc/2.6.29/SimbaSparkODBC-2.6.29.1049-Debian-64bit.zip' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.4.1'
+          use-public-rspm: true
+
+      - name: Install System Dependencies
+        run: |
+          set -euxo pipefail
+
+          # GitHub's Ubuntu runner can keep stale package paths behind the
+          # mirror+file source. Use the direct Ubuntu archive and refresh lists.
+          sudo sed -i 's|mirror+file:/etc/apt/apt-mirrors.txt|http://archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates \
+            curl \
+            libcurl4-openssl-dev \
+            libsasl2-modules-gssapi-mit \
+            odbcinst \
+            unixodbc \
+            unixodbc-dev \
+            unzip
+
+      - name: Install Databricks ODBC Driver
+        if: ${{ env.DATABRICKS_HOST != '' && env.DATABRICKS_TOKEN != '' && env.DATABRICKS_HTTPPATH != '' }}
+        run: |
+          set -euxo pipefail
+
+          curl -fsSL "$DATABRICKS_ODBC_DRIVER_URL" -o /tmp/databricks-odbc.zip
+          unzip /tmp/databricks-odbc.zip -d /tmp/databricks-odbc
+          sudo dpkg -i /tmp/databricks-odbc/*.deb
+
+          driver_dirs=()
+          for driver_dir in /opt/databricks /opt/simba; do
+            if [ -d "$driver_dir" ]; then
+              driver_dirs+=("$driver_dir")
+            fi
+          done
+
+          driver_path="$(find "${driver_dirs[@]}" -type f \( -name 'libdatabricksodbc*.so' -o -name 'libsparkodbc*.so' \) | head -n 1)"
+          test -n "$driver_path"
+
+          printf '%s\n' \
+            '[Databricks ODBC Driver]' \
+            'Description=Databricks ODBC Driver' \
+            "Driver=$driver_path" \
+            'UsageCount=1' | sudo tee -a /etc/odbcinst.ini
+
+          odbcinst -q -d
+
+      - name: Restore renv library
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Install package
+        run: R CMD INSTALL .
+
+      - name: Run Tests
+        run: |
+          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-Spark-Databricks.R")); if (any(as.data.frame(test_results)$failed > 0)) stop("Test failures detected!")'

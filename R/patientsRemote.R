@@ -82,7 +82,7 @@
                             "POSTGRESQL_USER",
                             "POSTGRESQL_PASSWORD"
                           ),
-                          "spark" = c(
+                          "databricks" = c(
                             "DATABRICKS_HOST",
                             "DATABRICKS_TOKEN",
                             "DATABRICKS_HTTPPATH"
@@ -95,7 +95,7 @@
 .connect_remote <- function(dbms) {
   switch(dbms,
          "sqlserver" = .connect_sqlserver(),
-         "spark" = .connect_spark(),
+         "databricks" = .connect_databricks(),
          "postgresql" = .connect_postgresql(),
          cli::cli_abort("Unsupported dbms: {.val {dbms}}")
   )
@@ -151,14 +151,14 @@
   )
 }
 
-.connect_spark <- function() {
+.connect_databricks <- function() {
   required_vars <- c(
     "DATABRICKS_HOST",
     "DATABRICKS_TOKEN",
     "DATABRICKS_HTTPPATH",
     "DATABRICKS_USER"
   )
-  .check_env_vars(required_vars, "Databricks/Spark")
+  .check_env_vars(required_vars, "Databricks")
 
   DBI::dbConnect(
     drv = odbc::odbc(),
@@ -203,7 +203,7 @@
            DBI::dbExecute(con, paste("CREATE SCHEMA", schema_name))
            schema_name
          },
-         "spark" = {
+         "databricks" = {
            catalog <- Sys.getenv("DATABRICKS_WORKSPACE", "hive_metastore")
            schema <- c(catalog = catalog, schema = schema_name)
            DBI::dbExecute(con, paste0(
