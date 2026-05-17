@@ -81,4 +81,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-sqlserver.R")); if (any(as.data.frame(test_results)$failed > 0)) stop("Test failures detected!")'
+          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-sqlserver.R")); results <- as.data.frame(test_results); problem_columns <- intersect(c("failed", "failure", "error", "errors"), names(results)); if (length(problem_columns) > 0 && any(results[problem_columns] > 0)) stop("Test failures or errors detected!", call. = FALSE)'

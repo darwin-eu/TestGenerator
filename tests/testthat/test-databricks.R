@@ -39,7 +39,7 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
   })
 
   cdm$cohort |>
-    collect() |>
+    dplyr::collect() |>
     nrow() |>
     expect_equal(2)
 

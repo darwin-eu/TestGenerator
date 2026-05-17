@@ -12,7 +12,9 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
     }
   }, add = TRUE)
   cdmVersion <- "5.4"
-  filePath <- testthat::test_path("test_cdm_data_pregnancy.xlsx")
+  filePath <- testthat::test_path(
+    "test_cdm_data_pregnancy.xlsx"
+    )
   TestGenerator::readPatients(
     filePath = filePath,
     testName = "pregnancy",
@@ -31,7 +33,9 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
   )
 
   attr(cdm, "cdm_schema") |>
-    stringr::str_detect("testgenerator") |>
+    stringr::str_detect(
+      "testgenerator"
+      ) |>
     expect_true()
 
   expect_no_error({
@@ -42,7 +46,7 @@ test_that("Patients to CDM sqlserver and check cdm reference has attributes", {
   })
 
   cdm$cohort |>
-    collect() |>
+    dplyr::collect() |>
     nrow() |>
     expect_equal(2)
 
