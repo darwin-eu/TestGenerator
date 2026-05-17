@@ -8,7 +8,7 @@ Authors@R: c(
     person("Ger", "Inberg", , "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Adam", "Black", , "black@ohdsi.org", role = "aut", comment = c(ORCID = "0000-0001-5576-8701"))
   )
-Maintainer: Ger Inberg <g.inberg@erasmusmc.nl>
+Maintainer: Cesar Barboza <c.barboza@darwin-eu.org>
 Description: An R interface to load testing data in the 'OMOP' Common Data Model ('CDM'). An input file, csv or xlsx, can be converted to a 'CDMConnector' object. This object can be used to execute and test studies that use the 'CDM' <https://www.ohdsi.org/data-standardization/>.
 License: Apache License (>= 2)
 Encoding: UTF-8
