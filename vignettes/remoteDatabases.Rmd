@@ -1,0 +1,215 @@
+---
+title: "Remote databases and GitHub Actions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Remote databases and GitHub Actions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+DuckDB is the default backend in TestGenerator, and it is usually the fastest
+place to start. Remote database testing is useful when you also want to check
+that your study code works on another SQL engine. This is especially helpful
+for code that will run in PostgreSQL, SQL Server, or Databricks/Spark in
+production.
+
+The idea is the same as with local testing: you create a small, controlled test
+population, load it into a CDM, run your study code, and assert the expected
+result. The difference is that `patientsCDM()` uploads the test CDM to a remote
+database and returns a CDM reference connected to that backend.
+
+## Use `patientsCDM()` with a remote database
+
+First create a Unit Test Definition JSON file with `readPatients()` or
+`readPatients.csv()`. Then call `patientsCDM()` with the backend you want to
+test.
+
+```{r postgresql-example}
+library(TestGenerator)
+
+cdm <- patientsCDM(
+  pathJson = "tests/testthat/testCases",
+  testName = "my_test_population",
+  cdmVersion = "5.4",
+  dbms = "postgresql"
+)
+```
+
+The supported remote values for `dbms` are:
+
+| Backend | `dbms` value |
+| --- | --- |
+| PostgreSQL | `"postgresql"` |
+| SQL Server | `"sqlserver"` |
+| Databricks/Spark | `"databricks"` |
+
+For remote databases, `patientsCDM()` creates the CDM locally first, trims the
+vocabulary to what the test population needs, uploads the result to the remote
+database, and returns the remote CDM reference. By default, TestGenerator creates
+a temporary test schema for the upload. You can also provide `writeSchema` if
+you want to choose the schema name yourself.
+
+```{r write-schema}
+cdm <- patientsCDM(
+  pathJson = "tests/testthat/testCases",
+  testName = "my_test_population",
+  cdmVersion = "5.4",
+  dbms = "sqlserver",
+  writeSchema = "testgenerator_my_case"
+)
+```
+
+When the test has finished, clean up the remote schema and close the connection:
+
+```{r cleanup-remote}
+cleanupTestCdm(cdm)
+```
+
+This is important for shared remote databases. The test schemas are small, but
+cleaning them up keeps the database tidy and avoids name conflicts in later
+runs.
+
+## Environment variables for direct use
+
+When you call `patientsCDM()` directly against a remote database, TestGenerator
+reads the connection details from environment variables.
+
+| Backend | Required environment variables |
+| --- | --- |
+| PostgreSQL | `POSTGRESQL_SERVER`, `POSTGRESQL_DBNAME`, `POSTGRESQL_PORT`, `POSTGRESQL_USER`, `POSTGRESQL_PASSWORD` |
+| SQL Server | `SQLSERVER_SERVER`, `SQLSERVER_DBNAME`, `SQLSERVER_PORT`, `SQLSERVER_USER`, `SQLSERVER_PASSWORD` |
+| Databricks/Spark | `DATABRICKS_HOST`, `DATABRICKS_TOKEN`, `DATABRICKS_HTTPPATH` |
+
+For Databricks, TestGenerator also reads `DATABRICKS_USER` and
+`DATABRICKS_WORKSPACE` when they are set. If they are not set, it uses `token`
+as the user and `hive_metastore` as the workspace/catalog.
+
+For SQL Server, TestGenerator reads `SQL_SERVER_DRIVER` when it is set. If it is
+not set, it uses `ODBC Driver 18 for SQL Server`.
+
+A typical local `.Renviron` setup could look like this:
+
+```{bash envvars, eval=FALSE}
+POSTGRESQL_SERVER=localhost
+POSTGRESQL_DBNAME=cdm
+POSTGRESQL_PORT=5432
+POSTGRESQL_USER=postgres
+POSTGRESQL_PASSWORD=your-password
+
+SQLSERVER_SERVER=localhost
+SQLSERVER_DBNAME=cdm
+SQLSERVER_PORT=1433
+SQLSERVER_USER=sa
+SQLSERVER_PASSWORD=your-password
+
+DATABRICKS_HOST=https://your-workspace.cloud.databricks.com
+DATABRICKS_TOKEN=your-token
+DATABRICKS_HTTPPATH=/sql/1.0/warehouses/your-warehouse
+```
+
+Use values that match your own database or Databricks workspace. The database
+user needs permission to create schemas, create tables, insert data, read data,
+and drop the test schema during cleanup.
+
+## Automate backend tests in GitHub Actions
+
+The same remote database workflow can be used in continuous integration. The
+goal is to let GitHub Actions prove that your package tests work on the database
+engines you care about.
+
+TestGenerator includes workflow templates for PostgreSQL, SQL Server, and
+Databricks. You can copy all of them into your package with:
+
+```{r all-actions}
+useGithubAction(overwrite = TRUE)
+```
+
+You can also create only the workflow you need:
+
+```{r one-action}
+useGithubAction(dbms_type = "postgresql", overwrite = TRUE)
+useGithubAction(dbms_type = "sqlserver", overwrite = TRUE)
+useGithubAction(dbms_type = "databricks", overwrite = TRUE)
+```
+
+This writes workflow files to `.github/workflows`. Commit those files to your
+repository so GitHub Actions can run them.
+
+## What each action expects
+
+The workflow templates run fixed test files. Your package must provide the file
+for each backend you enable:
+
+| Backend | Required test file |
+| --- | --- |
+| PostgreSQL | `tests/testthat/test-postgresql.R` |
+| SQL Server | `tests/testthat/test-sqlserver.R` |
+| Databricks/Spark | `tests/testthat/test-databricks.R` |
+
+Each test file should call your package code, create the test CDM with
+`patientsCDM(dbms = ...)`, run the study logic, and use `testthat` expectations
+to check the result. If a test has an error or a failed expectation, the action
+is intended to fail.
+
+For PostgreSQL and SQL Server, the GitHub Actions workflow creates a Docker
+container inside the action run. That means users do not need to configure
+database secrets for these two workflows. The action sets the connection
+environment variables itself and tests against the temporary container.
+
+For Databricks, the action connects to your own remote Databricks workspace.
+You must configure the required repository secrets in GitHub:
+
+| GitHub secret | Purpose |
+| --- | --- |
+| `DATABRICKS_HOST` | URL of the Databricks workspace |
+| `DATABRICKS_TOKEN` | Token used to connect |
+| `DATABRICKS_HTTPPATH` | SQL warehouse or cluster HTTP path |
+
+Optional Databricks secrets are:
+
+| GitHub secret | Default when not set |
+| --- | --- |
+| `DATABRICKS_WORKSPACE` | `hive_metastore` |
+| `DATABRICKS_ODBC_DRIVER_URL` | The default Simba Spark ODBC driver URL used by the workflow |
+
+Because Databricks uses a real remote workspace, make sure the token has enough
+permission to create schemas and tables, insert the test data, query the result,
+and remove the test schema afterwards.
+
+## A minimal backend test pattern
+
+A backend-specific test usually follows this shape:
+
+```{r test-pattern}
+testthat::test_that("study logic works on PostgreSQL", {
+  cdm <- NULL
+  on.exit({
+    if (!is.null(cdm)) {
+      TestGenerator::cleanupTestCdm(cdm)
+    }
+  }, add = TRUE)
+
+  cdm <- TestGenerator::patientsCDM(
+    pathJson = "tests/testthat/testCases",
+    testName = "my_test_population",
+    cdmVersion = "5.4",
+    dbms = "postgresql"
+  )
+
+  result <- myPackage::runMyStudy(cdm)
+
+  testthat::expect_equal(result$n_subjects, 3)
+})
+```
+
+The exact expectations should be specific to your micro population. Good tests
+usually check counts, dates, cohort entry and exit, exclusions, or any other
+result that should be predictable from the small input dataset.
