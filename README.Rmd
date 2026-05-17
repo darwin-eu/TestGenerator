@@ -22,6 +22,9 @@ library(testthat)
 [![R-CMD-check](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu/TestGenerator/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/github/darwin-eu/TestGenerator/branch/main/graph/badge.svg)](https://app.codecov.io/github/darwin-eu/TestGenerator?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/TestGenerator)](https://CRAN.R-project.org/package=TestGenerator)
+[![PostgreSQL Test](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/postgresql-test.yml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/postgresql-test.yml)
+[![SQL Server Test](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/sqlserver-test.yml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/sqlserver-test.yml)
+[![Databricks Test](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/databricks-test.yml/badge.svg)](https://github.com/darwin-eu-dev/TestGenerator/actions/workflows/databricks-test.yml)
 <!-- badges: end -->
 
 Did my cohort pick the correct number of patients? Am I calculating an intersection in the right way? Is that the expected value for treatment duration? It only takes one incorrect parameter to get incoherent results in a pharmacoepidemiological study, and testing calculations on huge, complex databases is very challenging.
