@@ -1,3 +1,35 @@
+#' Create GitHub Action workflows for specific DBMS
+#'
+#' Copies GitHub Action workflow templates from the package's
+#' \code{inst/workflows} directory to the \code{.github/workflows} directory of
+#' the current project. The copied workflows can be used to run backend-specific
+#' tests for PostgreSQL, SQL Server, and Databricks.
+#'
+#' @param dbms_type A character vector of supported DBMS types to process.
+#'   Supported values are \code{"postgresql"}, \code{"sqlserver"}, and
+#'   \code{"databricks"}.
+#' @param overwrite A logical value indicating whether to overwrite existing
+#'   workflow files in the \code{.github/workflows} directory. Defaults to
+#'   \code{FALSE}.
+#'
+#' @return Invisibly returns \code{TRUE} when the selected workflow files are
+#'   copied successfully.
+#'
+#' @importFrom checkmate assertCharacter assertDirectoryExists
+#' @importFrom fs path_file
+#' @importFrom stringr str_subset
+#' @importFrom usethis proj_path
+#'
+#' @examples
+#' \dontrun{
+#' useGithubAction(dbms_type = "postgresql")
+#' useGithubAction(
+#'   dbms_type = c("postgresql", "sqlserver", "databricks"),
+#'   overwrite = TRUE
+#' )
+#' }
+#'
+#' @export
 useGithubAction <- function(
   dbms_type = c(
     "postgresql",
