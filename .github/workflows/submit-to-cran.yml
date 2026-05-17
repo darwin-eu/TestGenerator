@@ -52,7 +52,7 @@ jobs:
 
       - name: Submit to CRAN
         run: |
-          yes | R --vanilla --interactive -e "devtools::submit_cran()"
+          Rscript -e 'pkg <- devtools::as.package("."); built_path <- pkgbuild::build(pkg$path, tempdir(), manual = TRUE); devtools:::upload_cran(pkg, built_path); usethis::with_project(pkg$path, devtools:::flag_release(pkg))'
 
       - name: Read package version
         id: package-version

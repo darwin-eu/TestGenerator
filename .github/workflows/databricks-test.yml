@@ -1,4 +1,4 @@
-name: R Package Tests (Spark Databricks)
+name: Databricks Test
 
 on:
   push:
