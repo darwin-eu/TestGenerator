@@ -59,8 +59,10 @@ jobs:
             libcurl4-openssl-dev \
             libpq-dev
 
-      - name: Restore renv library
-        uses: r-lib/actions/setup-renv@v2
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          needs: check
 
       - name: Install PostgreSQL R driver
         run: |
@@ -71,4 +73,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-PostgreSQL.R")); if (any(as.data.frame(test_results)$failed > 0)) stop("Test failures detected!")'
+          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-postgresql.R")); if (any(as.data.frame(test_results)$failed > 0)) stop("Test failures detected!")'

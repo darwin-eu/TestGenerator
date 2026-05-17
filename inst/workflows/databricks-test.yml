@@ -76,12 +76,14 @@ jobs:
 
           odbcinst -q -d
 
-      - name: Restore renv library
-        uses: r-lib/actions/setup-renv@v2
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          needs: check
 
       - name: Install package
         run: R CMD INSTALL .
 
       - name: Run Tests
         run: |
-          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-Spark-Databricks.R")); if (any(as.data.frame(test_results)$failed > 0)) stop("Test failures detected!")'
+          Rscript -e 'test_results <- suppressWarnings(testthat::test_file("tests/testthat/test-databricks.R")); if (any(as.data.frame(test_results)$failed > 0)) stop("Test failures detected!")'
